@@ -12,7 +12,7 @@ public class Map : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        generateCity(11, 11); //change these variables later
+        GenerateCity(11, 11); //change these variables later
     }
 
     // Update is called once per frame
@@ -23,17 +23,18 @@ public class Map : MonoBehaviour
 
     public GameObject HexPrefab;
 
-    public void generateCity(float xParam, float yParam)
+    private void GenerateCity(float xParam, float yParam)
     {
         Tiles = new GameObject[(int)xParam, (int)yParam];
-
-        for (float x = 0; x < xParam; x++)
+        //for (float y = yParam; y >= 0; y--)
+        for (float y = 0; y < yParam; y++)
         {
-            for (float y = 0; y < yParam; y++)
+            for (float x = 0; x < xParam; x++)
             {
-                TilePosition tp = new TilePosition(x, y);
+                float z = y;
+                TilePosition tp = new TilePosition(x, y, z);
                 //best tile size = 0.102, y=0.117
-                Vector2 tileVector = tp.pos();
+                Vector3 tileVector = tp.Pos();
 
                 GameObject tile = (GameObject) Instantiate(HexPrefab,
                     tileVector,

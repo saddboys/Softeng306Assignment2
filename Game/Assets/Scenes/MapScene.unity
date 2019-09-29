@@ -267,11 +267,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f42f309aab822c04290691a3f881acb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HexTerrainMaterials:
-  - {fileID: 2100000, guid: dd30d14c2348a8644b6c768f11f84371, type: 2}
-  - {fileID: 2100000, guid: c73acf50aac20d740aa71df36bd6c19b, type: 2}
-  - {fileID: 2100000, guid: 975259d68c601394280e59151458681f, type: 2}
-  HexPrefab: {fileID: 1663779384581931641, guid: 3a4134acbd6ec8941a088523774da4db,
+  HexPrefab: {fileID: 4038444034346003228, guid: 4622ab86d759bf945ab3fee9e90f7584,
     type: 3}
 --- !u!4 &952381769
 Transform:

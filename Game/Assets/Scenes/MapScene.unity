@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 952381769}
   - component: {fileID: 952381768}
   m_Layer: 0
-  m_Name: City
+  m_Name: Map
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -264,9 +264,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 952381767}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c9988485f1b46c499e44af767a810d3, type: 3}
+  m_Script: {fileID: 11500000, guid: f42f309aab822c04290691a3f881acb4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  HexTerrainMaterials:
+  - {fileID: 2100000, guid: dd30d14c2348a8644b6c768f11f84371, type: 2}
+  - {fileID: 2100000, guid: c73acf50aac20d740aa71df36bd6c19b, type: 2}
+  - {fileID: 2100000, guid: 975259d68c601394280e59151458681f, type: 2}
   HexPrefab: {fileID: 1663779384581931641, guid: 3a4134acbd6ec8941a088523774da4db,
     type: 3}
 --- !u!4 &952381769

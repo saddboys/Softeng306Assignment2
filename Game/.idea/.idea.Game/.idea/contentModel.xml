@@ -8,10 +8,14 @@
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
           <e p="AnotherRandomTile.cs" t="Include" />
+          <e p="City.cs" t="Include" />
+          <e p="Controller.cs" t="Include" />
           <e p="ParentTile.cs" t="Include" />
           <e p="RandomTile.cs" t="Include" />
           <e p="Rock.cs" t="Include" />
+          <e p="Stats.cs" t="Include" />
           <e p="Structure.cs" t="Include" />
+          <e p="ToolBar.cs" t="Include" />
           <e p="Tower.cs" t="Include" />
           <e p="WorldGenerator.cs" t="Include" />
         </e>

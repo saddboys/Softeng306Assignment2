@@ -48,7 +48,7 @@ namespace Game.CityMap
         public Stats GetStatsContribution()
         {
             // Get stats from its tiles.
-            Stats sum;
+            Stats sum = new Stats();
             foreach (var t in Tiles) {
                 sum += t.GetStatsContribution();
             }

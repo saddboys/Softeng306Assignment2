@@ -65,7 +65,7 @@ namespace Game
         /// Checks if the current temperature has exceeded the temperature upper bound.
         /// </summary>
         /// <returns> True if the current temperature has exceeded the temperature upper bound. </returns>
-        public boolean isTempTooHigh(Stats stats) {
+        public bool IsTempTooHigh(Stats stats) {
             if (stats.Temperature >= TEMPERATURE_UPPER_BOUND) {
                 return true;
             }

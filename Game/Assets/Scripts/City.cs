@@ -8,6 +8,7 @@ namespace Game
     {
         public Stats Stats { get; }
         public CityMap.CityMap Map { get; }
+        public int Turn { get; private set; }
 
         // Start is called before the first frame update
         void Start()
@@ -19,6 +20,14 @@ namespace Game
         void Update()
         {
 
+        }
+
+        /// <summary>
+        /// Function called at the end of the turn to do stat calculations.
+        /// </summary>
+        public void EndTurn() {
+            Stats.AddContribution(Map.GetStatsContribution());
+            Turn++;
         }
     }
 }

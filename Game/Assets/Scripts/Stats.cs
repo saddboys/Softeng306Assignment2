@@ -8,19 +8,19 @@ namespace Game
     {
         public const double TEMPERATURE_UPPER_BOUND = 3;
 
-        // MegaTonnes
+        // MegaTonnes (0 - infinite)
         public double CO2 { get; private set; }
-        // C anomaly 
+        // C anomaly (infinite - 3)
         public double Temperature { get; private set; }
-        // Thousands
+        // Thousands (0 - infinite)
         public int Population { get; private set; }
-        // -20 to 20 "electricity tokens"
+        // "electricity tokens" (-20 to 20)
         public double ElectricCapacity { get; private set; }
-        // 0% (none) to 100% (max)
+        // "reputation rate" (0% to 100%) 
         public double Reputation { get; private set; }
-        // 1000 - infinite
+        // "points" (0 - infinite)
         public double Score { get; private set; }
-        // $1,000
+        // k dollars ($0 - $infinite)
         public double Wealth { get; private set; }
 
         // Start is called before the first frame update

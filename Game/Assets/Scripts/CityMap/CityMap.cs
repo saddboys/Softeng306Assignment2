@@ -26,7 +26,7 @@ namespace Game.CityMap
         /// </summary>
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
-        public List<MapTile> Tiles { get; }
+        public MapTile[] Tiles { get; }
 
         // Start is called before the first frame update
         void Start()

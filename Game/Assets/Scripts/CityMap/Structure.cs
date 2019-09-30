@@ -18,8 +18,6 @@ namespace Game.CityMap
 
         }
 
-        public abstract bool CanBuildOn(Terrain terrain);
-
         /// <summary>
         /// Calculate how much this structure will contribute to the stats, such
         /// as CO2 generated, profits/losses, etc.

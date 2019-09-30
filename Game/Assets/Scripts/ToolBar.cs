@@ -9,12 +9,12 @@ namespace Game
         public ToolBar(City city)
         {
             // E.g.
-            city.Map.TileClickedEvent += HandleTileClick;
-        }
-
-        private void HandleTileClick(object sender, CityMap.TileClickArgs e)
-        {
-            throw new System.NotImplementedException();
+            city.Map.TileClickedEvent += (s, e) =>
+            {
+                // TODO: handle when the tile e.Tile has been clicked.
+                Debug.Log(e.Tile);
+                throw new System.NotImplementedException();
+            };
         }
 
         // Start is called before the first frame update

@@ -2,46 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using UnityEngine;
 
 namespace Game.CityMap
-{
-    public class StructureBuildArgs : EventArgs
-    {
-        public StructureBuildArgs(Structure structure, MapTile tile)
-        {
-            this.Structure = structure;
-            this.Tile = tile;
-        }
-
-        public Structure Structure { get; }
-        public MapTile Tile { get; }
-    }
-
-    public class StructureBuildRequestArgs : StructureBuildArgs
-    {
-        public StructureBuildRequestArgs(Structure structure, MapTile tile) : base(structure, tile)
-        {
-        }
-
-        public bool IsCancelled { get; private set; }
-        public string CancelledReason { get; private set; }
-
-        public void Cancel(String reason)
-        {
-            IsCancelled = true;
-            CancelledReason = reason;
-        }
-    }
-
-    public class TileClickArgs : EventArgs
-    {
-        public TileClickArgs(MapTile tile)
-        {
-            this.Tile = tile;
-        }
-        public MapTile Tile { get; }
-    }
-
+{   
     public class MapTile : Tile
     {
         /// <summary>
@@ -85,7 +49,7 @@ namespace Game.CityMap
         public StructureBuildRequestArgs CanBuildStructure(Structure structure)
         {
             // E.g.
-            StructureBuildRequestArgs args = new StructureBuildRequestArgs(structure, this);
+            var args = new StructureBuildRequestArgs(structure, this);
             StructureBuildRequestEvent(this, args);
             return args;
         }
@@ -99,7 +63,7 @@ namespace Game.CityMap
             // E.g.
             StructureBuildRequestArgs args = CanBuildStructure(structure);
             // And check if it is cancelled.
-            System.Console.WriteLine(args.IsCancelled);
+            Debug.Log(args.IsCancelled);
             // Add it in if it is not cancelled,
             // TODO
             // Finally notify.

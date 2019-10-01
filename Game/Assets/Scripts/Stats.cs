@@ -6,13 +6,13 @@ namespace Game
 {
     public class Stats : MonoBehaviour
     {
-        public double CO2 { get; private set; }
-        public double Temperature { get; private set; }
-        public int Population { get; private set; }
-        public double ElectricCapacity { get; private set; }
-        public double Reputation { get; private set; }
-        public double Score { get; private set; }
-        public double Wealth { get; private set; }
+        public double CO2 { get; set; }
+        public double Temperature { get; set; }
+        public int Population { get; set; }
+        public double ElectricCapacity { get; set; }
+        public double Reputation { get; set; }
+        public double Score { get; set; }
+        public double Wealth { get; set; }
 
         // Start is called before the first frame update
         void Start()

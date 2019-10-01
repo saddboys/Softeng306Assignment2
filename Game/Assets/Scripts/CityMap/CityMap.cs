@@ -11,18 +11,6 @@ namespace Game.CityMap
     public class CityMap : MonoBehaviour
     {
         /// <summary>
-        /// Subscribe to this event (map.StructureBuildRequestEvent += YourHandler) to
-        /// add logic to test whether structures can be built on certain tiles.
-        /// </summary>
-        public event EventHandler<StructureBuildRequestArgs> StructureBuildRequestEvent;
-
-        /// <summary>
-        /// Subscribe to this event (map.StructureBuildEvent += YourListener) to
-        /// get notified when a new structure is built.
-        /// </summary>
-        public event EventHandler<StructureBuildRequestArgs> StructureBuiltEvent;
-
-        /// <summary>
         /// Subscribe to this event (map.TileClickedEvent += YourListener) to
         /// get notified when the user clicks on any tile. Useful for implementing
         /// things like the toolbar when adding structures.

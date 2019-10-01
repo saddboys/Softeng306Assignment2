@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.CityMap
@@ -25,10 +23,14 @@ namespace Game.CityMap
         {
             this.canvas = canvas;
             this.vector = vector;
-            //Create();
         }
         
 
+        /// <summary>
+        /// Adds the created structure to the canvas via an Image.
+        /// </summary>
+        /// <param name="spriteNumber"></param>
+        /// <param name="imageSize"></param>
         protected void Create(int spriteNumber,Vector2 imageSize)
         {
             GameObject structure = new GameObject();

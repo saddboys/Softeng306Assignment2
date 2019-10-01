@@ -6,8 +6,9 @@ using UnityEngine.Tilemaps;
 
 namespace Game.CityMap
 {
-    public abstract class Terrain : MonoBehaviour
+    public abstract class Terrain
     {
+        private const string TERRAIN_PATH = "Textures/terrain";
 
         public Sprite Sprite
         {
@@ -15,6 +16,7 @@ namespace Game.CityMap
             set
             {
                 sprite = value;
+                // Check if the spriteChange is null first before invoking the event
                 SpriteChange?.Invoke();
             }
         }
@@ -22,21 +24,14 @@ namespace Game.CityMap
         private Sprite sprite;
 
         public event Action SpriteChange;
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        
+        /// <summary>
+        /// Get all the sprites in the terrain resources
+        /// </summary>
+        /// <returns></returns>
         public Sprite[] GetSprites()
         {
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
-            Debug.Log("Length is: " + sprites.Length);
+            Sprite[] sprites = Resources.LoadAll<Sprite>(TERRAIN_PATH);
             return sprites;
         }
     }

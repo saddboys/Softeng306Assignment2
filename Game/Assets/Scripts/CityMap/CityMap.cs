@@ -33,7 +33,9 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
+
         public MapTile[] Tiles { get; }
+
 
         // Start is called before the first frame update
         void Start()
@@ -50,22 +52,21 @@ namespace Game.CityMap
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
                 Vector3Int position = map.WorldToCell(worldPoint);
-                Debug.Log("Position of: " + position.x +" , " +  position.y);
                 MapTile someOtherTile = map.GetTile<MapTile>(position);
-
-                Debug.Log("fak" + someOtherTile.Structure);
                 if (someOtherTile.Structure != null)
                 {
-                    Debug.Log("goes here!!!");
+                    // Testing if the structures correctly store the cost
                     display.text = someOtherTile.Structure.Cost.ToString();
                 }
                 someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
                 map.RefreshTile(position);
-                //  test();
-            
             }
         }
 
+        /// <summary>
+        /// Generates the Tilemap by randomly allocating terrains to tiles and sometimes
+        /// adding structures to certain tiles.
+        /// </summary>
         private void Generate()
         {
             int width = 10;
@@ -81,20 +82,18 @@ namespace Game.CityMap
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     tile.Terrain = new TestTerrain();
-//                    RandomTile tile2 = ScriptableObject.CreateInstance<RandomTile>();
-//                    AnotherRandomTile tile1 = ScriptableObject.CreateInstance<AnotherRandomTile>();
                     Random random = new Random();
                     int value =  random.Next(0,2);
-                    Debug.Log(value);
+                    // A vector used for hex position
                     Vector3Int vector = new Vector3Int(-i + width/2, -j + height/2, 0);
+                    // Find the real position (the position on the screen)
                     Vector3 mappedVector = map.CellToWorld(vector);
+                    // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
                         Tower tower = new Tower(parent,mappedVector);
                         tile.Structure = tower;
                         map.SetTile(vector, tile);
-                        
-                        Debug.Log("Position i: " + vector.x +" , " + "j: " + vector.y );
                     }
                     else
                     {
@@ -102,9 +101,7 @@ namespace Game.CityMap
                         if (random.Next(1, 6) == 4)
                         {
                             Rock rocks = new Rock(parent,mappedVector);
-                            // Rock rocks = obj.AddComponent<Rock>(parent,mappedVector);
                             tile.Structure = rocks;
-                            Debug.Log("yeS"+ tile.Structure);
                         }
 
                         map.SetTile(vector, tile);

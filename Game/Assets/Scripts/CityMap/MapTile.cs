@@ -16,6 +16,7 @@ namespace Game.CityMap
             get { return terrain;}
             set
             {
+                // Gets called whenever the sprite has been changed
                 if (terrain != null)
                 {
                     terrain.SpriteChange -= UpdateSprite;

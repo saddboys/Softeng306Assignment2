@@ -36,7 +36,6 @@ namespace Game.CityMap
         {
             if (Input.GetMouseButtonDown(0))
             {
-
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
                 Vector3Int position = map.WorldToCell(worldPoint);
@@ -46,8 +45,12 @@ namespace Game.CityMap
                     // Testing if the structures correctly store the cost
                     display.text = someOtherTile.Structure.Cost.ToString();
                 }
+
+                // Notify the click event for things like the ToolBar or other user feedback.
+                TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+
+                // For testing purposes:
                 someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
-                map.RefreshTile(position);
             }
         }
 
@@ -94,6 +97,9 @@ namespace Game.CityMap
 
                         map.SetTile(vector, tile);
                     }
+
+                    // Refresh the tile whenever its sprite changes.
+                    tile.SpriteChange += () => map.RefreshTile(vector);
                 }
             }
         }

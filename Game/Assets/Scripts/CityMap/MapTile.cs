@@ -29,18 +29,13 @@ namespace Game.CityMap
 
         private Terrain terrain;
 
+        public event Action SpriteChange;
+
         private void UpdateSprite()
         {
-            
             sprite = terrain.Sprite;
+            SpriteChange?.Invoke();
         }
-
-        /// <summary>
-        /// Subscribe to this event (tile.TileClickedEvent += YourListener) to
-        /// get notified when the user clicks on this tile. Useful for implementing
-        /// things like the toolbar when adding structures.
-        /// </summary>
-        public event EventHandler<TileClickArgs> TileClickedEvent;
 
         /// <summary>
         /// Calculate how much this tile will contribute to the stats, such
@@ -52,8 +47,6 @@ namespace Game.CityMap
             // Get stats from its terrain and structure.GetStatsContribution
             throw new System.NotImplementedException();
         }
-        
-        
-        
+
     }
 }

@@ -8,6 +8,32 @@ namespace Game.CityMap
 {   
     public class MapTile : Tile
     {
+
+        public Structure Structure { get; set; }
+
+        public Terrain Terrain
+        {
+            get { return terrain;}
+            set
+            {
+                if (terrain != null)
+                {
+                    terrain.SpriteChange -= UpdateSprite;
+                }
+                terrain = value;
+                terrain.SpriteChange += UpdateSprite;
+                UpdateSprite();
+            }
+        }
+
+        private Terrain terrain;
+
+        private void UpdateSprite()
+        {
+            
+            sprite = terrain.Sprite;
+        }
+
         /// <summary>
         /// Subscribe to this event (tile.StructureBuildRequestEvent += YourHandler) to
         /// add logic to test whether structures can be built on certain tiles.
@@ -30,7 +56,7 @@ namespace Game.CityMap
         // Start is called before the first frame update
         void Start()
         {
-
+            Debug.Log("TEST");
         }
 
         // Update is called once per frame
@@ -81,5 +107,8 @@ namespace Game.CityMap
             // Get stats from its terrain and structure.GetStatsContribution
             throw new System.NotImplementedException();
         }
+        
+        
+        
     }
 }

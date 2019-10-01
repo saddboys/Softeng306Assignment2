@@ -41,4 +41,5 @@ namespace Game.CityMap
         }
         public MapTile Tile { get; }
     }
+    
 }

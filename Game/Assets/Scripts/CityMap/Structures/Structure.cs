@@ -15,7 +15,8 @@ namespace Game.CityMap
         private GameObject gameObject;
 
         /// <summary>
-        /// Adds the created structure to the canvas via an Image.
+        /// Helper for Structure implementations to generate the required game object and image
+        /// to render the structure onto the map.
         /// </summary>
         /// <param name="spriteNumber"></param>
         /// <param name="imageSize"></param>
@@ -36,8 +37,16 @@ namespace Game.CityMap
             gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Add the game objects to draw this structure onto the screen.
+        /// </summary>
+        /// <param name="canvas"></param>
+        /// <param name="position"></param>
         public abstract void RenderOnto(GameObject canvas, Vector3 position);
 
+        /// <summary>
+        /// Remove the structure from the screen.
+        /// </summary>
         public void Unrender()
         {
             if (gameObject != null)

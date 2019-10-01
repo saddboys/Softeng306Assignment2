@@ -23,6 +23,10 @@ namespace Game.CityMap
 
         private Sprite sprite;
 
+        /// <summary>
+        /// Fires whenever the sprite for this terrain has changed.
+        /// Useful for updating a Tile's sprite based on its Terrain.
+        /// </summary>
         public event Action SpriteChange;
 
         /// <summary>

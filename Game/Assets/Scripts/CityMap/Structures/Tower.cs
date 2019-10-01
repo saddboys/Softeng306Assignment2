@@ -1,4 +1,4 @@
-﻿using Game;
+using Game;
 using Game.CityMap;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -8,12 +8,6 @@ namespace Game
 {
     public class Tower : Structure
     {
-        public Tower()
-        {
-            Random random = new Random();
-            Cost = random.Next(1, 50);
-        }
-
         public override Stats GetStatsContribution()
         {
             throw new System.NotImplementedException();

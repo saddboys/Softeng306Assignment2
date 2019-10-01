@@ -6,11 +6,6 @@ namespace Game
 {
     public class Rock : Structure
     {
-        public Rock()
-        {
-            Cost = 20;
-        }
-
         public override Stats GetStatsContribution()
         {
             throw new System.NotImplementedException();

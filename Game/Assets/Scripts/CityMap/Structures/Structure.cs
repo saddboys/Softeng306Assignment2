@@ -14,8 +14,6 @@ namespace Game.CityMap
 
         private GameObject gameObject;
 
-        public int Cost { get; set; }
-
         /// <summary>
         /// Adds the created structure to the canvas via an Image.
         /// </summary>

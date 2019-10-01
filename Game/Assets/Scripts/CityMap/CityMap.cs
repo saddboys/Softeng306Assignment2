@@ -40,18 +40,15 @@ namespace Game.CityMap
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
                 Vector3Int position = map.WorldToCell(worldPoint);
                 MapTile someOtherTile = map.GetTile<MapTile>(position);
-                if (someOtherTile.Structure != null)
+                if (someOtherTile != null)
                 {
-                    // Testing if the structures correctly store the cost
-                    display.text = someOtherTile.Structure.Cost.ToString();
+                    // Notify the click event for things like the ToolBar or other user feedback.
+                    TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+
+                    // For testing purposes:
+                    //someOtherTile.Structure = new Rock();
+                    //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
                 }
-
-                // Notify the click event for things like the ToolBar or other user feedback.
-                TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
-
-                // For testing purposes:
-                //someOtherTile.Structure = new Rock();
-                //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
 

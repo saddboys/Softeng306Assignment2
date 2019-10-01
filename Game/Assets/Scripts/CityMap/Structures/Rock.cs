@@ -2,7 +2,7 @@ using Game;
 using Game.CityMap;
 using UnityEngine;
 
-namespace Game
+namespace Game.CityMap
 {
     public class Rock : Structure
     {

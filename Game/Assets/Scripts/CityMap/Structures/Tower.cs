@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Random = System.Random;
 
-namespace Game
+namespace Game.CityMap
 {
     public class Tower : Structure
     {

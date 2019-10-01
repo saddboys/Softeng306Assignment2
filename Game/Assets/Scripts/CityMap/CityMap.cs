@@ -22,7 +22,14 @@ namespace Game.CityMap
         public Text display;
         private int[,] terrainMap;
 
-        public MapTile[] Tiles { get; }
+        public MapTile[] Tiles
+        {
+            get
+            {
+                return Array.ConvertAll(map.GetTilesBlock(map.cellBounds),
+                    tileBase => (MapTile)tileBase);
+            }
+        }
 
 
         // Start is called before the first frame update

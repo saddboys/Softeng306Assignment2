@@ -50,7 +50,8 @@ namespace Game.CityMap
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                 // For testing purposes:
-                someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
+                //someOtherTile.Structure = new Rock();
+                //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
 
@@ -79,11 +80,14 @@ namespace Game.CityMap
                     Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
                     // Find the real position (the position on the screen)
                     Vector3 mappedVector = map.CellToWorld(vector);
+
+                    tile.Canvas = parent;
+                    tile.ScreenPosition = mappedVector;
+
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
-                        Tower tower = new Tower(parent, mappedVector);
-                        tile.Structure = tower;
+                        tile.Structure = new Tower();
                         map.SetTile(vector, tile);
                     }
                     else
@@ -91,8 +95,7 @@ namespace Game.CityMap
                         // Only random tiles have the mountain on it
                         if (random.Next(1, 6) == 4)
                         {
-                            Rock rocks = new Rock(parent, mappedVector);
-                            tile.Structure = rocks;
+                            tile.Structure = new Rock();
                         }
 
                         map.SetTile(vector, tile);

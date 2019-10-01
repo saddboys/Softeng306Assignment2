@@ -85,7 +85,7 @@ namespace Game.CityMap
         /// <param name="tile">The tile to test building on.</param>
         /// <param name="reason">Reason if building is disallowed.</param>
         /// <returns>True if building onto the tile is allowed.</returns>
-        public virtual bool CanBuildOn(MapTile tile, out string reason)
+        public virtual bool CanBuildOnto(MapTile tile, out string reason)
         {
             if (!CanBuild(out reason))
             {
@@ -102,9 +102,9 @@ namespace Game.CityMap
         /// implementations can add more complex behaviour if needed.
         /// </summary>
         /// <returns></returns>
-        public virtual void BuildOn(MapTile tile)
+        public virtual void BuildOnto(MapTile tile)
         {
-            Assert.IsTrue(CanBuildOn(tile, out _));
+            Assert.IsTrue(CanBuildOnto(tile, out _));
 
             if (City != null)
             {

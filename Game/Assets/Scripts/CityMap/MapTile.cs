@@ -8,7 +8,27 @@ namespace Game.CityMap
 {
     public class MapTile : Tile
     {
-        public Structure Structure { get; set; }
+        public GameObject Canvas { set; get; }
+
+        public Vector3 ScreenPosition { set; get; }
+
+        public Structure Structure {
+            get
+            {
+                return structure;
+            }
+            set
+            {
+                if (structure != null)
+                {
+                    structure.Unrender();
+                }
+                structure = value;
+                structure.RenderOnto(Canvas, ScreenPosition);
+            }
+        }
+
+        private Structure structure;
 
         public Terrain Terrain
         {

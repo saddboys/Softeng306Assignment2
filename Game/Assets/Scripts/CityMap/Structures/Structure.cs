@@ -12,37 +12,40 @@ namespace Game.CityMap
         /// <returns>The structure's stats contribution.</returns>
         public abstract Stats GetStatsContribution();
 
-        private Image structureImage;
-        private GameObject canvas;
-        private Vector3 vector;
+        private GameObject gameObject;
 
         public int Cost { get; set; }
-
-        public Structure(GameObject canvas, Vector3 vector)
-        {
-            this.canvas = canvas;
-            this.vector = vector;
-        }
 
         /// <summary>
         /// Adds the created structure to the canvas via an Image.
         /// </summary>
         /// <param name="spriteNumber"></param>
         /// <param name="imageSize"></param>
-        protected void Create(int spriteNumber, Vector2 imageSize)
+        protected void RenderOnto(GameObject canvas, Vector3 position, int spriteNumber, Vector2 imageSize)
         {
-            GameObject structure = new GameObject();
-            Image image = structure.AddComponent<Image>();
+            Unrender();
+            gameObject = new GameObject();
+            Image image = gameObject.AddComponent<Image>();
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/structures");
             image.sprite = sprites[spriteNumber];
             Vector2 structureSize = imageSize;
             // Determines the size of the structure
-            structure.GetComponent<RectTransform>().sizeDelta = structureSize;
-            Vector2 xy = new Vector2(vector.x + structureSize.x - 1, vector.y + structureSize.y - 1);
+            gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;
+            Vector2 xy = new Vector2(position.x + structureSize.x - 1, position.y + structureSize.y - 1);
             // Determines where the structure will be placed
-            structure.GetComponent<RectTransform>().anchoredPosition = xy;
-            structure.GetComponent<RectTransform>().SetParent(canvas.transform);
-            structure.SetActive(true);
+            gameObject.GetComponent<RectTransform>().anchoredPosition = xy;
+            gameObject.GetComponent<RectTransform>().SetParent(canvas.transform);
+            gameObject.SetActive(true);
+        }
+
+        public abstract void RenderOnto(GameObject canvas, Vector3 position);
+
+        public void Unrender()
+        {
+            if (gameObject != null)
+            {
+                Object.Destroy(gameObject);
+            }
         }
     }
 }

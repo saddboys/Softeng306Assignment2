@@ -1,4 +1,4 @@
-﻿using Game;
+using Game;
 using Game.CityMap;
 using UnityEngine;
 
@@ -6,15 +6,27 @@ namespace Game
 {
     public class Rock : Structure
     {
-        public Rock(GameObject canvas, Vector3 vector) : base(canvas, vector)
+        public Rock()
         {
             Cost = 20;
-            Create(29, new Vector2(1, 1.5f));
         }
 
         public override Stats GetStatsContribution()
         {
             throw new System.NotImplementedException();
+        }
+
+        public override void RenderOnto(GameObject canvas, Vector3 position)
+        {
+            RenderOnto(canvas, position, 29, new Vector2(1, 1.5f));
+        }
+    }
+
+    public class RockFactory : StructureFactory
+    {
+        protected override Structure Create()
+        {
+            return new Rock();
         }
     }
 }

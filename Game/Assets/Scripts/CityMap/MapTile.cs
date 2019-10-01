@@ -5,18 +5,19 @@ using UnityEngine.Tilemaps;
 using UnityEngine;
 
 namespace Game.CityMap
-{   
+{
     public class MapTile : Tile
     {
-
         public Structure Structure { get; set; }
 
         public Terrain Terrain
         {
-            get { return terrain;}
+            get
+            {
+                return terrain;
+            }
             set
             {
-                // Gets called whenever the sprite has been changed
                 if (terrain != null)
                 {
                     terrain.SpriteChange -= UpdateSprite;
@@ -31,6 +32,9 @@ namespace Game.CityMap
 
         public event Action SpriteChange;
 
+        /// <summary>
+        /// Note: Gets called whenever the sprite has been changed.
+        /// </summary>
         private void UpdateSprite()
         {
             sprite = terrain.Sprite;
@@ -47,6 +51,5 @@ namespace Game.CityMap
             // Get stats from its terrain and structure.GetStatsContribution
             throw new System.NotImplementedException();
         }
-
     }
 }

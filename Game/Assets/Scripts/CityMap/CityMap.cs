@@ -65,7 +65,7 @@ namespace Game.CityMap
 
             if (terrainMap == null)
             {
-                terrainMap = new int[width,height];
+                terrainMap = new int[width, height];
             }
             for (int i = 0; i < width; i++)
             {
@@ -74,15 +74,15 @@ namespace Game.CityMap
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     tile.Terrain = new TestTerrain();
                     Random random = new Random();
-                    int value =  random.Next(0,2);
+                    int value = random.Next(0, 2);
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + width/2, -j + height/2, 0);
+                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
                     // Find the real position (the position on the screen)
                     Vector3 mappedVector = map.CellToWorld(vector);
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
-                        Tower tower = new Tower(parent,mappedVector);
+                        Tower tower = new Tower(parent, mappedVector);
                         tile.Structure = tower;
                         map.SetTile(vector, tile);
                     }
@@ -91,7 +91,7 @@ namespace Game.CityMap
                         // Only random tiles have the mountain on it
                         if (random.Next(1, 6) == 4)
                         {
-                            Rock rocks = new Rock(parent,mappedVector);
+                            Rock rocks = new Rock(parent, mappedVector);
                             tile.Structure = rocks;
                         }
 

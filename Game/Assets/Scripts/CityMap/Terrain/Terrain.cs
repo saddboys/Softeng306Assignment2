@@ -24,7 +24,7 @@ namespace Game.CityMap
         private Sprite sprite;
 
         public event Action SpriteChange;
-        
+
         /// <summary>
         /// Get all the sprites in the terrain resources
         /// </summary>

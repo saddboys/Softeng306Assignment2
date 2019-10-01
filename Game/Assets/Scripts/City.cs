@@ -7,13 +7,15 @@ namespace Game
     public class City : MonoBehaviour
     {
         public Stats Stats { get; }
-        public CityMap.CityMap map;
+        [SerializeField]
+        private CityMap.CityMap map;
         public CityMap.CityMap Map
         {
-            get { return map; }
+            get
+            {
+                return map;
+            }
         }
-
-      
 
         // Start is called before the first frame update
         void Start()

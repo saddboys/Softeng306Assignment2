@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ContentModelStore">
+    <e p="C:\Users\sabat\.Rider2019.2\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\sabat\.Rider2019.2\system\resharper-host\local\Transient\ReSharperHost\v192\SolutionCaches\_Game.83474968.00" t="ExcludeRecursive" />
+    <e p="D:\School\mypart3\softeng306_pt2\Game" t="IncludeRecursive">
+      <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
+      <e p="Assets" t="Include">
+        <e p="Scripts" t="Include">
+          <e p="City.cs" t="Include" />
+          <e p="CityMap" t="Include">
+            <e p="CityMap.cs" t="Include" />
+            <e p="Events.cs" t="Include" />
+            <e p="MapTile.cs" t="Include" />
+            <e p="StructureFactory.cs" t="Include" />
+            <e p="Structures" t="Include">
+              <e p="Rock.cs" t="Include" />
+              <e p="Structure.cs" t="Include" />
+              <e p="Tower.cs" t="Include" />
+            </e>
+            <e p="Terrain" t="Include">
+              <e p="Terrain.cs" t="Include" />
+              <e p="TestTerrain.cs" t="Include" />
+            </e>
+          </e>
+          <e p="Controller.cs" t="Include" />
+          <e p="Stats.cs" t="Include" />
+          <e p="Story" t="Include">
+            <e p="StoryEvent.cs" t="Include" />
+            <e p="StoryManager.cs" t="Include" />
+            <e p="StoryRequest.cs" t="Include" />
+          </e>
+          <e p="ToolBar.cs" t="Include" />
+        </e>
+        <e p="Sprites" t="Include">
+          <e p="Spritesheets" t="Include">
+            <e p="hexagonAll_sheet.xml" t="Include" />
+            <e p="hexagonBuildings_sheet.xml" t="Include" />
+            <e p="hexagonObjects_sheet.xml" t="Include" />
+            <e p="hexagonTerrain_sheet.xml" t="Include" />
+          </e>
+        </e>
+      </e>
+      <e p="Game.sln" t="IncludeFlat" />
+      <e p="obj" t="ExcludeRecursive" />
+      <e p="Packages" t="ExcludeRecursive" />
+      <e p="Temp\bin" t="ExcludeRecursive" />
+    </e>
+  </component>
+</project>

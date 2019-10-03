@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Game.CityMap;
+
 namespace Game
 {
     public class ToolBar : MonoBehaviour
@@ -45,13 +46,11 @@ namespace Game
         GameObject rockBtn = GameObject.FindWithTag("RockButton");
         string tag = "RockButton";
         Debug.Log("find the object with tag" + tag);
-        //create a new rock 
-        Rock rock = (RockFactory)sf.Create();
         
         }else{
         //deselect the buttons 
-        //TODO: now deselect all
-        Selection.activeGameObject = null;
+        GameObject btn = GameObject.Find("RockButton").GetComponent<Button>();
+        
         }
         }
 

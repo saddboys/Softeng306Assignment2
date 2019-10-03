@@ -21,6 +21,9 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
+        
+        // For testing of event pop up
+        public Button button;
 
         public MapTile[] Tiles
         {
@@ -65,8 +68,9 @@ namespace Game.CityMap
         /// </summary>
         private void Generate()
         {
-            int width = 10;
-            int height = 10;
+            Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
+            int width = 20;
+            int height = 20;
 
             if (terrainMap == null)
             {
@@ -85,6 +89,7 @@ namespace Game.CityMap
                     Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
                     // Find the real position (the position on the screen)
                     Vector3 mappedVector = map.CellToWorld(vector);
+                    
 
                     tile.Canvas = parent;
                     tile.ScreenPosition = mappedVector;

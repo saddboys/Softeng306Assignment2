@@ -27,10 +27,11 @@ namespace Game.CityMap
             Image image = gameObject.AddComponent<Image>();
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/structures");
             image.sprite = sprites[spriteNumber];
-            Vector2 structureSize = imageSize;
+            Vector2 structureSize = new Vector2(imageSize.x+canvas.GetComponent<RectTransform>().rect.width/25,imageSize.y+canvas.GetComponent<RectTransform>().rect.height/9);
+            //Vector2 structureSize = new Vector2(imageSize.x,imageSize.y*S);
             // Determines the size of the structure
             gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;
-            Vector2 xy = new Vector2(position.x + structureSize.x - 1, position.y + structureSize.y - 1);
+            Vector2 xy = new Vector2(position.x, position.y+imageSize.y-1);
             // Determines where the structure will be placed
             gameObject.GetComponent<RectTransform>().anchoredPosition = xy;
             gameObject.GetComponent<RectTransform>().SetParent(canvas.transform);

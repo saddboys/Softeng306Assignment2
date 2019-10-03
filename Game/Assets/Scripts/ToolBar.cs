@@ -8,6 +8,9 @@ namespace Game
 {
     public class ToolBar : MonoBehaviour
     {
+        private Toggle toggle ;
+        private Rock rock;
+        private bool btnSelected;
         public ToolBar(City city)
         {
             // E.g.
@@ -22,8 +25,8 @@ namespace Game
         // Start is called before the first frame update
         void Start()
         {
-        //load structure items dynamically, assume static here
-        //Populate();
+       toggle = GetComponent<Toggle>();
+         toggle.onValueChanged.AddListener(OnToggleValueChanged);
         }
 
         // Update is called once per frame
@@ -50,9 +53,19 @@ namespace Game
         
         }else{
         //deselect the buttons 
-        GameObject btn = GameObject.Find("RockButton").GetComponent<Button>();
-        
+        GameObject btn = GameObject.Find("RockButton").GetComponent<GameObject>();
         }
+        }
+
+        void OnNotify(){
+        //check if one of the toggle is selected
+        if(btnSelected){
+            //get the tile clicked
+            MapTile Tile = 
+            someTile.Structure = new Rock();
+            someTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0]; 
+        }
+
         }
 
         //call method in StructureFactory create a specified strcuture component
@@ -65,6 +78,11 @@ namespace Game
         
         }
 
+       
+     private void OnToggleValueChanged( bool isOn )
+    {     
+      //toggle.Color = isOn ? new Color(0.5f, 0.5f, 0.5f ) : new Color(1, 1, 1 ) ;
+    }
 
     }
 }

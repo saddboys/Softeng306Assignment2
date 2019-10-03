@@ -8,7 +8,7 @@ namespace Game.CityMap
 {
     public abstract class Terrain
     {
-        private const string TERRAIN_PATH = "Textures/terrain";
+
 
         public Sprite Sprite
         {
@@ -28,15 +28,5 @@ namespace Game.CityMap
         /// Useful for updating a Tile's sprite based on its Terrain.
         /// </summary>
         public event Action SpriteChange;
-
-        /// <summary>
-        /// Get all the sprites in the terrain resources
-        /// </summary>
-        /// <returns></returns>
-        public Sprite[] GetSprites()
-        {
-            Sprite[] sprites = Resources.LoadAll<Sprite>(TERRAIN_PATH);
-            return sprites;
-        }
     }
 }

@@ -53,8 +53,8 @@ namespace Game.CityMap
                     TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                     // For testing purposes:
-                    //someOtherTile.Structure = new Rock();
-                    //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
+                    someOtherTile.Structure = new Rock();
+                    someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
                 }
             }
         }
@@ -77,7 +77,8 @@ namespace Game.CityMap
                 for (int j = 0; j < height; j++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-                    tile.Terrain = new TestTerrain();
+                    TerrainFactory terrainFactory = new TerrainFactory();
+                    
                     Random random = new Random();
                     int value = random.Next(0, 2);
                     // A vector used for hex position
@@ -91,11 +92,13 @@ namespace Game.CityMap
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
+                        tile.Terrain = terrainFactory.CreateTerrain(TerrainFactory.TerrainTypes.Grass);
                         tile.Structure = new Tower();
                         map.SetTile(vector, tile);
                     }
                     else
                     {
+                        tile.Terrain = terrainFactory.CreateTerrain(TerrainFactory.TerrainTypes.Test);
                         // Only random tiles have the mountain on it
                         if (random.Next(1, 6) == 4)
                         {

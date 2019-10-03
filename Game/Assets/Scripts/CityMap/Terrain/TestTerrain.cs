@@ -8,10 +8,5 @@ namespace Game.CityMap
     /// </summary>
     public class TestTerrain : Terrain
     {
-        public TestTerrain()
-        {
-            Sprite[] sprites = GetSprites();
-            Sprite = sprites[1];
-        }
     }
 }

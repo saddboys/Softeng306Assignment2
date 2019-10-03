@@ -1082,6 +1082,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   map: {fileID: 919822513}
   parent: {fileID: 1136636419}
+  startScreen: {fileID: 1302545852}
   display: {fileID: 970244761}
 --- !u!1 &1302545852
 GameObject:

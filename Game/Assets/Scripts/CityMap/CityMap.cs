@@ -43,7 +43,7 @@ namespace Game.CityMap
         void Update()
         {
             
-            if (Input.GetMouseButtonDown(0) && !startScreen.activeSelf)
+            if (!startScreen.activeSelf && Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);

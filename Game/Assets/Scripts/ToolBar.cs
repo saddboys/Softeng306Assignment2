@@ -19,6 +19,8 @@ namespace Game
                 // TODO: handle when the tile e.Tile has been clicked.
                 Debug.Log(e.Tile);
                 throw new System.NotImplementedException();
+
+                OnNotify(e.Tile);
             };
         }
 
@@ -42,29 +44,28 @@ namespace Game
 
         //trigger button select event 
         void OnSelect(){
-        //check if the button is clickable 
-        StructureFactory sf = new RockFactory();
+        // //check if the button is clickable 
+        // StructureFactory sf = new RockFactory();
         
-        if(sf.CanBuild(out string reason)){
-        //only one component now for testing use
-        GameObject rockBtn = GameObject.FindWithTag("RockButton");
-        string tag = "RockButton";
-        Debug.Log("find the object with tag" + tag);
+        // if(sf.CanBuild(out string reason)){
+        // //only one component now for testing use
+        // GameObject rockBtn = GameObject.FindWithTag("RockButton");
+        // string tag = "RockButton";
+        // Debug.Log("find the object with tag" + tag);
         
-        }else{
-        //deselect the buttons 
-        GameObject btn = GameObject.Find("RockButton").GetComponent<GameObject>();
-        }
+        // }else{
+        // //deselect the buttons 
+        // GameObject btn = GameObject.Find("RockButton").GetComponent<GameObject>();
+        // }
         }
 
-        void OnNotify(){
-        //check if one of the toggle is selected
-        if(btnSelected){
-            //get the tile clicked
-            MapTile Tile = 
-            someTile.Structure = new Rock();
-            someTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0]; 
-        }
+        void OnNotify(MapTile tile) {
+            //check if one of the toggle is selected
+            if (btnSelected) {
+                // build the structure
+                tile.Structure = new Rock();
+                tile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0]; 
+            }
 
         }
 

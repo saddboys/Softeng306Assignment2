@@ -330,7 +330,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+      - m_Target: {fileID: 0}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:
@@ -501,6 +501,7 @@ GameObject:
   - component: {fileID: 213307681}
   - component: {fileID: 213307680}
   - component: {fileID: 213307683}
+  - component: {fileID: 213307684}
   m_Layer: 5
   m_Name: Panel
   m_TagString: Untagged
@@ -607,6 +608,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 1
+--- !u!114 &213307684
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 213307678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &214744627
 GameObject:
   m_ObjectHideFlags: 0
@@ -760,7 +773,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+      - m_Target: {fileID: 0}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:
@@ -1079,7 +1092,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+      - m_Target: {fileID: 0}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:
@@ -1644,7 +1657,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+      - m_Target: {fileID: 0}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:
@@ -2460,7 +2473,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+      - m_Target: {fileID: 0}
         m_MethodName: 
         m_Mode: 1
         m_Arguments:

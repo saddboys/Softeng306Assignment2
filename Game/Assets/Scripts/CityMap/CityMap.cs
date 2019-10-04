@@ -19,6 +19,7 @@ namespace Game.CityMap
 
         public Tilemap map;
         public GameObject parent;
+        public GameObject startScreen; 
         public Text display;
         private int[,] terrainMap;
         
@@ -44,7 +45,7 @@ namespace Game.CityMap
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!startScreen.activeSelf && Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);

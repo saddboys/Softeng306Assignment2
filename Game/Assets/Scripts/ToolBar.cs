@@ -60,10 +60,10 @@ namespace Game
         void OnNotify(){
         //check if one of the toggle is selected
         if(btnSelected){
-            //get the tile clicked
-            MapTile Tile = 
-            someTile.Structure = new Rock();
-            someTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0]; 
+            //TODO:get the tile clicked
+            // MapTile Tile = 
+            // someTile.Structure = new Rock();
+            // someTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0]; 
         }
 
         }

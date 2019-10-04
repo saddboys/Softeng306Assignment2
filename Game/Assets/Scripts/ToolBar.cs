@@ -26,7 +26,29 @@ namespace Game
         // Update is called once per frame
         void Update()
         {
+        
+        }
+
+        //initialise list of structures on the toolbar
+        void Populate(){
+ 
+        }
+
+        //trigger button select event 
+        void OnSelect(){
 
         }
+
+        //call method in StructureFactory create a specified strcuture component
+        void CreateStructure(string tag){
+        
+        }
+
+        //add the strcuture component to the grid at a specified position
+        void AddToGrid(){
+
+        }
+
+
     }
 }

@@ -38,12 +38,12 @@ namespace Game
         }
 
         //initialise list of structures on the toolbar
-        void Populate(){
+        // void Populate(){
  
-        }
+        // }
 
         //trigger button select event 
-        void OnSelect(){
+        // void OnSelect(){
         // //check if the button is clickable 
         // StructureFactory sf = new RockFactory();
         
@@ -57,14 +57,16 @@ namespace Game
         // //deselect the buttons 
         // GameObject btn = GameObject.Find("RockButton").GetComponent<GameObject>();
         // }
-        }
+        // }
 
         void OnNotify(MapTile tile) {
             //check if one of the toggle is selected
             if (btnSelected) {
                 // build the structure
                 tile.Structure = new Rock();
-                tile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0]; 
+                tile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[29]; 
+                // StructureFactory factory = new RockFactory(city);
+                // factory.BuildOnto(tile);
             }
 
         }
@@ -75,11 +77,11 @@ namespace Game
         // }
 
         //add the strcuture component to the grid at a specified position
-        void ClickGrid(){
+        // void ClickGrid(){
         
-        }
+        // }
 
-       
+    // Called whenever something is toggled on
      public void OnToggleValueChanged( bool isOn ) {
          btnSelected = isOn;
      }

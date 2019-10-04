@@ -8,27 +8,27 @@ namespace Game
 {
     public class ToolBar : MonoBehaviour
     {
-        private Toggle toggle ;
+        [SerializeField] private City city;
+        [SerializeField] private Toggle toggle ;
         private Rock rock;
         private bool btnSelected;
-        public ToolBar(City city)
-        {
+
+        public ToolBar(City city) { }
+
+        // Start is called before the first frame update
+        void Start() {
+        //  toggle = GetComponent<Toggle>();
+        //  toggle.onValueChanged.AddListener(OnToggleValueChanged);
+
             // E.g.
             city.Map.TileClickedEvent += (s, e) =>
             {
                 // TODO: handle when the tile e.Tile has been clicked.
                 Debug.Log(e.Tile);
-                throw new System.NotImplementedException();
+                // throw new System.NotImplementedException();
 
                 OnNotify(e.Tile);
             };
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-       toggle = GetComponent<Toggle>();
-         toggle.onValueChanged.AddListener(OnToggleValueChanged);
         }
 
         // Update is called once per frame
@@ -80,10 +80,9 @@ namespace Game
         }
 
        
-     private void OnToggleValueChanged( bool isOn )
-    {     
-      //toggle.Color = isOn ? new Color(0.5f, 0.5f, 0.5f ) : new Color(1, 1, 1 ) ;
-    }
+     public void OnToggleValueChanged( bool isOn ) {
+         btnSelected = isOn;
+     }
 
     }
 }

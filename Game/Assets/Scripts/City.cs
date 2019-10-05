@@ -22,16 +22,13 @@ namespace Game
         }
         private int turnsLeft;
 
-        public Stats Stats { get; } = new Stats
+        [SerializeField]
+        private Stats stats;
+
+        public Stats Stats
         {
-            CO2 = 0,
-            Temperature = 0,
-            Population = 30, // TODO: Random - based on houses
-            ElectricCapacity = 4, // TODO: Random
-            Reputation = 50,
-            Score = 0,
-            Wealth = 10000,
-        };
+            get { return stats; }
+        }
 
         [SerializeField]
         private CityMap.CityMap map;
@@ -47,11 +44,20 @@ namespace Game
         [SerializeField]
         private Text turnLeftText;
 
+
+
         // Start is called before the first frame update
         void Start()
         {
             endTurnButton.onClick.AddListener(EndTurn);
             TurnsLeft = 50;
+            stats.CO2 = 0;
+            stats.Temperature = 0;
+            stats.Population = 30; // TODO: Random - based on houses
+            stats.ElectricCapacity = 4; // TODO: Random
+            stats.Reputation = 50;
+            stats.Score = 0;
+            stats.Wealth = 10000;
         }
 
         // Update is called once per frame

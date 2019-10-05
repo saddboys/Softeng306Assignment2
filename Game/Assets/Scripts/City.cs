@@ -1,4 +1,4 @@
-
+using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -44,7 +44,12 @@ namespace Game
         [SerializeField]
         private Text turnLeftText;
 
-
+        /// <summary>
+        /// Fires at the beginning of each new turn.
+        /// Useful for spawning events and for updating structures.
+        /// E.g. Some structures take 3 turns to build, etc.
+        /// </summary>
+        public event Action NextTurnEvent;
 
         // Start is called before the first frame update
         void Start()
@@ -72,6 +77,7 @@ namespace Game
         public void EndTurn() {
             Stats.AddContribution(Map.GetStatsContribution());
             TurnsLeft--;
+            NextTurnEvent?.Invoke();
         }
     }
 }

@@ -6,17 +6,25 @@ namespace Game.Story
 {
     
     /// <summary>
-    /// A storage class which defines an event
+    /// A skeleton for an event.
+    /// Events are occurrences in the story that cannot be declined.
     /// </summary>
     public abstract class StoryEvent 
     {
-        public enum EventType  { Request, Event}
-        public enum Events { Event_Flood, Request_Tower}
-        public string Title { get; set; }
-        public string Description { get; set; }
-        public string Type { get; set; }
-        public Events Event { get; set; }
-        public Sprite EventImage { get; set; }
+        public enum EventTypes  { Request, Event}
+
+        public abstract string Title { get; }
+        public abstract string Description { get; }
+        public abstract Sprite EventImage { get; }
+        public virtual EventTypes EventType
+        {
+            get { return EventTypes.Event; }
+        }
+        
+        /// <summary>
+        /// Both events and requests will have an option to accept the event.
+        /// </summary>
+        public abstract void OnYesClick();
 
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Game.Story.Events
 {
-    public class FloodEvent : StoryEvent
+    public class BridgeRequest : StoryRequest
     {
         public override string Title
         {
@@ -19,12 +19,17 @@ namespace Game.Story.Events
             get { return SPRITE; }
         }
 
-        private const string TITLE = "Flood event";
-        private const string DESCRIPTION = "Flooding happened bad luck :(";
+        private const string TITLE = "Bridge Request";
+        private const string DESCRIPTION = " Bridge description here";
         private const Sprite SPRITE = null;
+        public override void OnNoClick()
+        {
+            Debug.Log("BRIDGE REQUEST NO");
+        }
+
         public override void OnYesClick()
         {
-            Debug.Log("FLOOD EVENT ACTIVATED");
+            Debug.Log("BRIDGE REQUEST YES");
         }
     }
 }

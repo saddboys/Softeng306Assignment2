@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.CityMap;
 using UnityEngine.UI;
-
+using System;
 namespace Game
 {
     public class ToolBar : MonoBehaviour
@@ -62,9 +62,13 @@ namespace Game
         void OnNotify(MapTile tile) {
             //check if one of the toggle is selected
             if (btnSelected) {
-                // build the structure
+                //check if the tile is free
+                if(tile.Structure == null){
                 tile.Structure = new Rock();
-                tile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[29]; 
+                }
+                // build the structure
+                
+                //tile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[28]; 
                 // StructureFactory factory = new RockFactory(city);
                 // factory.BuildOnto(tile);
             }

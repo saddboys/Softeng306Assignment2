@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Game
 {
-    public class Stats : MonoBehaviour
+    public class Stats
     {
         public const double TEMPERATURE_UPPER_BOUND = 3;
 
@@ -22,18 +22,6 @@ namespace Game
         public double Score { get; set; }
         // k dollars ($0 - $infinite)
         public double Wealth { get; set; }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
 
         /// <summary>
         /// An addition operator that will add all the fields of 2 Stats objects together.

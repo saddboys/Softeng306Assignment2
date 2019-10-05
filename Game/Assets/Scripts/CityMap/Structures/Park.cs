@@ -8,7 +8,12 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            throw new System.NotImplementedException();
+            return new Stat
+            {
+                Reputation = 0,
+                Score = 500,
+                Wealth = -2,
+            };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)

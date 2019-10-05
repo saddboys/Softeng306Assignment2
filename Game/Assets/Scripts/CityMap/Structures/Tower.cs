@@ -10,7 +10,10 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            throw new System.NotImplementedException();
+            return new Stat
+            {
+                Wealth = 4,
+            };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)

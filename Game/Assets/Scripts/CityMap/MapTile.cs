@@ -77,7 +77,7 @@ namespace Game.CityMap
         public Stats GetStatsContribution()
         {
             // Get stats from its terrain and structure.GetStatsContribution
-            throw new System.NotImplementedException();
+            return Structure.GetStatsContribution();
         }
     }
 }

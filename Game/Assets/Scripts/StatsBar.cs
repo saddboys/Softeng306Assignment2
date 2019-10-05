@@ -18,7 +18,7 @@ namespace Game
                 {
                     return;
                 }
-                co2ValueText.text = co2.ToString();
+                co2ValueText.text = co2.ToString() + " MT";
             }
         }
         // C anomaly (infinite - 3)
@@ -32,7 +32,7 @@ namespace Game
                 {
                     return;
                 }
-                temperatureValueText.text = temperature.ToString();
+                temperatureValueText.text = temperature.ToString() + "°C Change";
             }
         }
         // Thousands (0 - infinite)
@@ -46,7 +46,7 @@ namespace Game
                 {
                     return;
                 }
-                populationValueText.text = population.ToString();
+                populationValueText.text = population.ToString() + "k";
             }
         }
         // "electricity tokens" (-20 to 20)
@@ -74,7 +74,7 @@ namespace Game
                 {
                     return;
                 }
-                reputationValueText.text = reputation.ToString();
+                reputationValueText.text = reputation.ToString() + "%";
             }
         }
         // "points" (0 - infinite)
@@ -102,7 +102,7 @@ namespace Game
                 {
                     return;
                 }
-                moneyValueText.text = wealth.ToString();
+                moneyValueText.text = "$" + wealth.ToString() + "k";
             }
         }
 

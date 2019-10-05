@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.WSA;
 
 public class EventPopUp : MonoBehaviour
 {
@@ -23,13 +24,38 @@ public class EventPopUp : MonoBehaviour
         // TODO: Need some way to make the background darker probably.
         cityMap.active = false;
 
-        // Creating the panel
+        // Creating the panel 
         GameObject panel = new GameObject("Panel");
         panel.AddComponent<CanvasRenderer>();
         Image i = panel.AddComponent<Image>();
         i.color = Color.white;
         panel.transform.SetParent(canvas.transform, false);
         panel.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+        
+        // Creating the title
+        GameObject title = new GameObject("Title");
+        Text titleText = title.AddComponent<Text>();
+        titleText.text = "I am the title";
+        titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        titleText.color = Color.black;
+        titleText.fontSize = 1;
+        titleText.alignment = TextAnchor.UpperCenter;
+        title.transform.SetParent(panel.transform,false);
+        title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+        
+        // Creating the description
+        GameObject description = new GameObject("Description");
+        Text descriptionText = description.AddComponent<Text>();
+        descriptionText.text = "I am the description";
+        descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        descriptionText.color = Color.black;
+        descriptionText.fontSize = 1;
+        descriptionText.alignment = TextAnchor.UpperCenter;
+        description.transform.SetParent(panel.transform,false);
+        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/2 + 1);
+        description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
+        
         
         // Setting the buttons
         // YES?
@@ -43,6 +69,7 @@ public class EventPopUp : MonoBehaviour
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-2,-1);
         
+        // The no button or whatever it is going to be called
         GameObject buttonObj2 = new GameObject();
         Button noButton = buttonObj2.AddComponent<Button>();
         noButton.onClick.AddListener(OnButtonClick);

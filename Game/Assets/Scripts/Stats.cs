@@ -7,8 +7,6 @@ namespace Game
 {
     public class Stats
     {
-        public const double TEMPERATURE_UPPER_BOUND = 3;
-
         // MegaTonnes (0 - infinite)
         public double CO2 { get; set; }
         // C anomaly (infinite - 3)
@@ -52,17 +50,6 @@ namespace Game
             Reputation += stats.Reputation;
             Score += stats.Reputation;
             Wealth += stats.Wealth;
-        }
-
-        /// <summary>
-        /// Checks if the current temperature has exceeded the temperature upper bound.
-        /// </summary>
-        /// <returns> True if the current temperature has exceeded the temperature upper bound. </returns>
-        public bool IsTempTooHigh(Stats stats) {
-            if (stats.Temperature >= TEMPERATURE_UPPER_BOUND) {
-                return true;
-            }
-            return false;
         }
     }
 }

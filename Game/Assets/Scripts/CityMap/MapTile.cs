@@ -3,72 +3,70 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 namespace Game.CityMap
-{   
+{
     public class MapTile : Tile
     {
-        /// <summary>
-        /// Subscribe to this event (tile.StructureBuildRequestEvent += YourHandler) to
-        /// add logic to test whether structures can be built on certain tiles.
-        /// </summary>
-        public event EventHandler<StructureBuildRequestArgs> StructureBuildRequestEvent;
+        public GameObject Canvas { set; get; }
+
+        public Vector3 ScreenPosition { set; get; }
 
         /// <summary>
-        /// Subscribe to this event (tile.StructureBuildEvent += YourListener) to
-        /// get notified when a new structure is built.
+        /// Note that adding, changing or removing the structure will also update the
+        /// corresponding game objects to display the structure onto the screen.
         /// </summary>
-        public event EventHandler<StructureBuildRequestArgs> StructureBuiltEvent;
-
-        /// <summary>
-        /// Subscribe to this event (tile.TileClickedEvent += YourListener) to
-        /// get notified when the user clicks on this tile. Useful for implementing
-        /// things like the toolbar when adding structures.
-        /// </summary>
-        public event EventHandler<TileClickArgs> TileClickedEvent;
-
-        // Start is called before the first frame update
-        void Start()
+        public Structure Structure
         {
-
+            get { return structure; }
+            set
+            {
+                Assert.IsNotNull(Canvas,
+                    "The ScreenPosition and Canvas to draw the structure on should " +
+                    "be set before setting the structure");
+                structure?.Unrender();
+                structure = value;
+                structure?.RenderOnto(Canvas, ScreenPosition);
+            }
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
+        private Structure structure;
 
         /// <summary>
-        /// Test to see if a certain structure can be built on this tile.
-        /// Useful for changing the UI feedback when hovering over invalid tiles, etc.
-        /// and preventing invalid actions.
+        /// Note that the MapTile tracks the terrain for sprite changes.
         /// </summary>
-        /// <param name="structure">The structure to test if possible to build.</param>
-        /// <returns>An object containing IsCancelled and CancelledReason if invalid.</returns>
-        public StructureBuildRequestArgs CanBuildStructure(Structure structure)
+        public Terrain Terrain
         {
-            // E.g.
-            var args = new StructureBuildRequestArgs(structure, this);
-            StructureBuildRequestEvent(this, args);
-            return args;
+            get { return terrain; }
+            set
+            {
+                Assert.IsNotNull(value, "The tile should always have a terrain.");
+                if (terrain != null)
+                {
+                    terrain.SpriteChange -= UpdateSprite;
+                }
+                terrain = value;
+                terrain.SpriteChange += UpdateSprite;
+                UpdateSprite();
+            }
         }
 
+        private Terrain terrain;
+
         /// <summary>
-        /// Attempt to build a structure onto this tile, doing nothing if fails.
+        /// Fires whenever the sprite for this tile has changed.
+        /// Useful for refreshing the tile from the TileMap.
         /// </summary>
-        /// <param name="structure">The structure to build.</param>
-        public void RequestBuildStructure(Structure structure)
+        public event Action SpriteChange;
+
+        /// <summary>
+        /// Note: Gets called whenever the sprite has been changed.
+        /// </summary>
+        private void UpdateSprite()
         {
-            // E.g.
-            StructureBuildRequestArgs args = CanBuildStructure(structure);
-            // And check if it is cancelled.
-            Debug.Log(args.IsCancelled);
-            // Add it in if it is not cancelled,
-            // TODO
-            // Finally notify.
-            StructureBuiltEvent(this, args);
-            throw new System.NotImplementedException();
+            sprite = terrain.Sprite;
+            SpriteChange?.Invoke();
         }
 
         /// <summary>

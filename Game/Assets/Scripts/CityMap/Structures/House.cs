@@ -8,7 +8,11 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            throw new System.NotImplementedException();
+            return new Stats
+            {
+                Score = 100,
+                Wealth = 0.5,
+            };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
@@ -19,9 +23,34 @@ namespace Game.CityMap
 
     public class HouseFactory : StructureFactory
     {
+        public int Cost
+        {
+            get { return 500; }
+        }
+
         protected override Structure Create()
         {
             return new House();
+        }
+
+        public bool CanBuild(out string reason)
+        {
+            if (!base.CanBuild(out reason))
+            {
+                return false;
+            }
+            if (City.Stats.ElectricCapacity < 1)
+            {
+                reason = "Not enough electric capacity";
+                return false;
+            }
+            return true;
+        }
+
+        public void BuildOnto(MapTile tile)
+        {
+            City.Stats.ElectricCapacity -= 1;
+            base.BuildOnto(tile);
         }
     }
 }

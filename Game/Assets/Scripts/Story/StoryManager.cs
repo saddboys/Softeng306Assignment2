@@ -4,18 +4,21 @@ using UnityEngine;
 
 namespace Game.Story
 {
-    public class StoryManager : MonoBehaviour
+    public class StoryManager
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        private List<StoryEvent> eventPool;
 
+        public StoryManager()
+        {
+            
+        }
+        public StoryEvent CreateEvent()
+        {
+            return null;
         }
 
-        // Update is called once per frame
-        void Update()
+        private void GenerateEventPool()
         {
-
         }
     }
 }

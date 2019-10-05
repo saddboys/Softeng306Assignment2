@@ -4,18 +4,19 @@ using UnityEngine;
 
 namespace Game.Story
 {
-    public class StoryEvent : MonoBehaviour
+    
+    /// <summary>
+    /// A storage class which defines an event
+    /// </summary>
+    public abstract class StoryEvent 
     {
-        // Start is called before the first frame update
-        void Start()
-        {
+        public enum EventType  { Request, Event}
+        public enum Events { Event_Flood, Request_Tower}
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Type { get; set; }
+        public Events Event { get; set; }
+        public Sprite EventImage { get; set; }
 
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
     }
 }

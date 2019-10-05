@@ -14,6 +14,11 @@ namespace Game.CityMap
 
     public class DockFactory : StructureFactory
     {
+        public int Cost
+        {
+            get { return 1000; }
+        }
+
         protected override Structure Create()
         {
             return new Dock();

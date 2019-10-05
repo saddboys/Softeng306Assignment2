@@ -24,6 +24,11 @@ namespace Game.CityMap
 
     public class ParkFactory : StructureFactory
     {
+        public int Cost
+        {
+            get { return 300; }
+        }
+
         protected override Structure Create()
         {
             return new Park();

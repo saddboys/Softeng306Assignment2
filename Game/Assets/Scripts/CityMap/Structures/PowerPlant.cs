@@ -23,9 +23,20 @@ namespace Game.CityMap
 
     public class PowerPlantFactory : StructureFactory
     {
+        public int Cost
+        {
+            get { return 4000; }
+        }
+
         protected override Structure Create()
         {
             return new Factory();
+        }
+
+        public void BuildOnto(MapTile tile)
+        {
+            City.Stat.ElectricCapacity += 5;
+            base.BuildOnto(tile);
         }
     }
 }

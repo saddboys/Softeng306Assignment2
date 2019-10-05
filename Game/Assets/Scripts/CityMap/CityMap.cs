@@ -23,8 +23,6 @@ namespace Game.CityMap
         public Text display;
         private int[,] terrainMap;
         
-        // For testing of event pop up
-        public Button button;
 
         public MapTile[] Tiles
         {
@@ -41,7 +39,6 @@ namespace Game.CityMap
         {
             Generate();
         }
-
         // Update is called once per frame
         void Update()
         {
@@ -70,7 +67,7 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            int width = 20;
+            int width = 10;
             int height = 20;
 
             if (terrainMap == null)

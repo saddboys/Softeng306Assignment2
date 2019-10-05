@@ -7,12 +7,21 @@
       <e p="Assembly-CSharp.csproj" t="IncludeRecursive" />
       <e p="Assets" t="Include">
         <e p="Scripts" t="Include">
+          <e p="Camera" t="Include">
+            <e p="CameraDrag.cs" t="Include" />
+            <e p="CameraZoom.cs" t="Include" />
+          </e>
           <e p="City.cs" t="Include" />
           <e p="CityMap" t="Include">
             <e p="CityMap.cs" t="Include" />
             <e p="Events.cs" t="Include" />
             <e p="MapTile.cs" t="Include" />
             <e p="Structures" t="Include">
+              <e p="Docks.cs" t="Include" />
+              <e p="Factory.cs" t="Include" />
+              <e p="House.cs" t="Include" />
+              <e p="Park.cs" t="Include" />
+              <e p="PowerPlant.cs" t="Include" />
               <e p="Rock.cs" t="Include" />
               <e p="Structure.cs" t="Include" />
               <e p="StructureFactory.cs" t="Include" />
@@ -26,11 +35,9 @@
             </e>
           </e>
           <e p="Controller.cs" t="Include" />
-          <e p="Event" t="Include">
-            <e p="EventPopUp.cs" t="Include" />
-          </e>
           <e p="Stats.cs" t="Include" />
           <e p="Story" t="Include">
+            <e p="EventPopUp.cs" t="Include" />
             <e p="StoryEvent.cs" t="Include" />
             <e p="StoryManager.cs" t="Include" />
             <e p="StoryRequest.cs" t="Include" />

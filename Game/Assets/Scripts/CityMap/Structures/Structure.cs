@@ -27,7 +27,7 @@ namespace Game.CityMap
             Image image = gameObject.AddComponent<Image>();
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/structures");
             image.sprite = sprites[spriteNumber];
-            Vector2 structureSize = new Vector2(imageSize.x+canvas.GetComponent<RectTransform>().rect.width/25,imageSize.y+canvas.GetComponent<RectTransform>().rect.height/9);
+            Vector2 structureSize = new Vector2(imageSize.x,imageSize.y);
             //Vector2 structureSize = new Vector2(imageSize.x,imageSize.y*S);
             // Determines the size of the structure
             gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;

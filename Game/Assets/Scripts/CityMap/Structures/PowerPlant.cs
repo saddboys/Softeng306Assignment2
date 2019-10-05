@@ -35,7 +35,7 @@ namespace Game.CityMap
 
         public void BuildOnto(MapTile tile)
         {
-            City.Stat.ElectricCapacity += 5;
+            City.Stats.ElectricCapacity += 5;
             base.BuildOnto(tile);
         }
     }

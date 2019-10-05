@@ -8,7 +8,7 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            return new Stat
+            return new Stats
             {
                 Reputation = 0,
                 Score = 500,

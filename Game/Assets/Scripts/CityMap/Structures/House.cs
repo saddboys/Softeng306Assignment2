@@ -8,7 +8,7 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            return new Stat
+            return new Stats
             {
                 Score = 100,
                 Wealth = 0.5,
@@ -35,11 +35,11 @@ namespace Game.CityMap
 
         public bool CanBuild(out string reason)
         {
-            if (!base.CanBuild(reason))
+            if (!base.CanBuild(out reason))
             {
                 return false;
             }
-            if (City.Stat.ElectricCapacity < 1)
+            if (City.Stats.ElectricCapacity < 1)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -49,7 +49,7 @@ namespace Game.CityMap
 
         public void BuildOnto(MapTile tile)
         {
-            City.Stat.ElectricCapacity -= 1;
+            City.Stats.ElectricCapacity -= 1;
             base.BuildOnto(tile);
         }
     }

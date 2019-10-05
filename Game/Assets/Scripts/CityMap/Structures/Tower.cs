@@ -10,7 +10,7 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            return new Stat
+            return new Stats
             {
                 Wealth = 4,
             };

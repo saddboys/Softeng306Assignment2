@@ -23,9 +23,9 @@ namespace Game
         private int turnsLeft;
 
         [SerializeField]
-        private Stats stats;
+        private StatsBar stats;
 
-        public Stats Stats
+        public StatsBar Stats
         {
             get { return stats; }
         }

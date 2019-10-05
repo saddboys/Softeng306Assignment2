@@ -5,132 +5,24 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class Stats : MonoBehaviour
+    public class Stats
     {
         public const double TEMPERATURE_UPPER_BOUND = 3;
 
         // MegaTonnes (0 - infinite)
-        public double CO2
-        {
-            get { return co2; }
-            set
-            {
-                co2 = value;
-                if (co2ValueText == null)
-                {
-                    return;
-                }
-                co2ValueText.text = co2.ToString();
-            }
-        }
+        public double CO2 { get; set; }
         // C anomaly (infinite - 3)
-        public double Temperature
-        {
-            get { return temperature; }
-            set
-            {
-                temperature = value;
-                if (temperatureValueText == null)
-                {
-                    return;
-                }
-                temperatureValueText.text = temperature.ToString();
-            }
-        }
+        public double Temperature { get; set; }
         // Thousands (0 - infinite)
-        public int Population
-        {
-            get { return population; }
-            set
-            {
-                population = value;
-                if (populationValueText == null)
-                {
-                    return;
-                }
-                populationValueText.text = population.ToString();
-            }
-        }
+        public int Population { get; set; }
         // "electricity tokens" (-20 to 20)
-        public double ElectricCapacity
-        {
-            get { return electricCapacity; }
-            set
-            {
-                electricCapacity = value;
-                if (electricCapacityValueText == null)
-                {
-                    return;
-                }
-                electricCapacityValueText.text = electricCapacity.ToString();
-            }
-        }
+        public double ElectricCapacity { get; set; }
         // "reputation rate" (0% to 100%) 
-        public double Reputation
-        {
-            get { return reputation; }
-            set
-            {
-                reputation = value;
-                if (reputationValueText == null)
-                {
-                    return;
-                }
-                reputationValueText.text = reputation.ToString();
-            }
-        }
+        public double Reputation { get; set; }
         // "points" (0 - infinite)
-        public double Score
-        {
-            get { return score; }
-            set
-            {
-                score = value;
-                if (scoreValueText == null)
-                {
-                    return;
-                }
-                scoreValueText.text = score.ToString();
-            }
-        }
+        public double Score { get; set; }
         // k dollars ($0 - $infinite)
-        public double Wealth
-        {
-            get { return wealth; }
-            set
-            {
-                wealth = value;
-                if (moneyValueText == null)
-                {
-                    return;
-                }
-                moneyValueText.text = wealth.ToString();
-            }
-        }
-
-        private double co2;
-        private double temperature;
-        private int population;
-        private double electricCapacity;
-        private double reputation;
-        private double score;
-        private double wealth;
-
-        // UI properties
-        [SerializeField]
-        private Text moneyValueText;
-        [SerializeField]
-        private Text electricCapacityValueText;
-        [SerializeField]
-        private Text reputationValueText;
-        [SerializeField]
-        private Text populationValueText;
-        [SerializeField]
-        private Text temperatureValueText;
-        [SerializeField]
-        private Text co2ValueText;
-        [SerializeField]
-        private Text scoreValueText;
+        public double Wealth { get; set; }
 
         /// <summary>
         /// An addition operator that will add all the fields of 2 Stats objects together.
@@ -174,4 +66,3 @@ namespace Game
         }
     }
 }
-

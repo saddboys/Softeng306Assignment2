@@ -14,10 +14,6 @@ namespace Game
             set
             {
                 co2 = value;
-                if (co2ValueText == null)
-                {
-                    return;
-                }
                 co2ValueText.text = co2.ToString() + " MT";
             }
         }
@@ -28,10 +24,6 @@ namespace Game
             set
             {
                 temperature = value;
-                if (temperatureValueText == null)
-                {
-                    return;
-                }
                 temperatureValueText.text = temperature.ToString() + "°C Change";
             }
         }
@@ -42,10 +34,6 @@ namespace Game
             set
             {
                 population = value;
-                if (populationValueText == null)
-                {
-                    return;
-                }
                 populationValueText.text = population.ToString() + "k";
             }
         }
@@ -56,10 +44,6 @@ namespace Game
             set
             {
                 electricCapacity = value;
-                if (electricCapacityValueText == null)
-                {
-                    return;
-                }
                 electricCapacityValueText.text = electricCapacity.ToString();
             }
         }
@@ -70,10 +54,6 @@ namespace Game
             set
             {
                 reputation = value;
-                if (reputationValueText == null)
-                {
-                    return;
-                }
                 reputationValueText.text = reputation.ToString() + "%";
             }
         }
@@ -84,10 +64,6 @@ namespace Game
             set
             {
                 score = value;
-                if (scoreValueText == null)
-                {
-                    return;
-                }
                 scoreValueText.text = score.ToString();
             }
         }
@@ -98,10 +74,6 @@ namespace Game
             set
             {
                 wealth = value;
-                if (moneyValueText == null)
-                {
-                    return;
-                }
                 moneyValueText.text = "$" + wealth.ToString() + "k";
             }
         }

@@ -1218,6 +1218,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   map: {fileID: 1250365477}
+  endTurnButton: {fileID: 675100792}
+  turnLeftText: {fileID: 2019561805}
 --- !u!1 &1607891403
 GameObject:
   m_ObjectHideFlags: 0
@@ -1380,6 +1382,17 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1518473962}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
 --- !u!114 &1643662207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1450,10 +1463,10 @@ RectTransform:
   m_Father: {fileID: 1518473966}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 34.11, y: -154.48}
-  m_SizeDelta: {x: -575.87, y: -337.14}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -1.04, y: 50.62}
+  m_SizeDelta: {x: 328.92, y: 56.55}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1657771653
 MonoBehaviour:
@@ -1468,7 +1481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 0.47843137, g: 0.36078432, b: 0.972549, a: 0.392}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

@@ -40,6 +40,10 @@ namespace Game
         /// </summary>
         public void AddContribution(Stats stats)
         {
+            if (stats == null)
+            {
+                return;
+            }
             CO2 += stats.CO2;
             Temperature += stats.Temperature;
             Population += stats.Population;

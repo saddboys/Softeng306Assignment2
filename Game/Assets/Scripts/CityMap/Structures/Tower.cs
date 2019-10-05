@@ -10,7 +10,10 @@ namespace Game.CityMap
     {
         public override Stats GetStatsContribution()
         {
-            throw new System.NotImplementedException();
+            return new Stats
+            {
+                Wealth = 4,
+            };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
@@ -21,6 +24,11 @@ namespace Game.CityMap
 
     public class TowerFactory : StructureFactory
     {
+        public int Cost
+        {
+            get { return 2000; }
+        }
+
         protected override Structure Create()
         {
             return new Tower();

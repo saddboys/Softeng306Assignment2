@@ -14,7 +14,7 @@ namespace Game.CityMap
         /// Assume that all structures have a cost, as it is useful to display it to the user.
         /// This is to be set by each concrete StructureFactory implementation.
         /// </summary>
-        public int Cost { get; protected set; }
+        public virtual int Cost { get; }
 
         /// <summary>
         /// Reference to the city for requirement calculations. May be null if requirements

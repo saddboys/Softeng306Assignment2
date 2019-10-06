@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
- 
+using UnityEngine.EventSystems;
+
 public class CameraDrag : MonoBehaviour
 {
     public float dragSpeed;
@@ -10,14 +11,22 @@ public class CameraDrag : MonoBehaviour
     private float minY = -5f;
     private float maxY = 5f;
 
+    private bool dragEnabled = false;
+
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
-            dragOrigin = Input.mousePosition;
+            dragEnabled = false;
         }
 
-        if (!Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+        {
+            dragOrigin = Input.mousePosition;
+            dragEnabled = true;
+        }
+
+        if (!Input.GetMouseButton(0) || !dragEnabled)
         {
             return;
         }

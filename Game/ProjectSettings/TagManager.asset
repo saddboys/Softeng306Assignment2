@@ -42,3 +42,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: UI
+    uniqueID: 2225699817
+    locked: 0
+  - name: Structure
+    uniqueID: 331219289
+    locked: 0
+  - name: Terrain
+    uniqueID: 1324405941
+    locked: 0

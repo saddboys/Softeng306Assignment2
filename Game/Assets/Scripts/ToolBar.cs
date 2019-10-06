@@ -43,27 +43,27 @@ namespace Game
             } 
             else if (btnSelect01B) {
                 if (tile.Structure == null) {
-                    BuildStructure(new ParkFactory(city), tile);
+                    // BuildStructure(new ParkFactory(city), tile);
                 }
             }
             else if (btnSelect02A) {
                 if (tile.Structure == null) {
-                    BuildStructure(new TowerFactory(city), tile);
+                    // BuildStructure(new TowerFactory(city), tile);
                 }
             } 
             else if (btnSelect02B) {
                 if (tile.Structure == null) {
-                    BuildStructure(new DocksFactory(city), tile);
+                    // BuildStructure(new DocksFactory(city), tile);
                 }
             } 
             else if (btnSelect03A) {
                 if (tile.Structure == null) {
-                    BuildStructure(new PowerPlantFactory(city), tile);
+                    // BuildStructure(new PowerPlantFactory(city), tile);
                 }
             } 
             else if (btnSelect03B) {
                 if (tile.Structure == null) {
-                    BuildStructure(new FactoryFactory(city), tile);
+                    // BuildStructure(new FactoryFactory(city), tile);
                 }
             } 
             else if (btnRemove){

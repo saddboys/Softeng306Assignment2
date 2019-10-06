@@ -10,8 +10,15 @@ namespace Game.CityMap
     
     public class Terrain
     {
-        public enum TerrainTypes {Grass, Desert}
-        private const string TERRAIN_PATH = "Textures/terrain";
+        public enum TerrainTypes
+        {
+            Grass,
+            Desert,
+            Ocean,
+            Beach,
+            GrassHill,
+            DesertHill,
+        };
         public TerrainTypes TerrainType { get; set; }
 
         public Terrain(TerrainTypes terrainType, Sprite[] sprites)
@@ -46,15 +53,6 @@ namespace Game.CityMap
         /// Useful for updating a Tile's sprite based on its Terrain.
         /// </summary>
         public event Action SpriteChange;
-
-        /// <summary>
-        /// Get all the sprites in the terrain resources
-        /// </summary>
-        /// <returns></returns>
-        public Sprite[] GetSprites()
-        {
-            Sprite[] sprites = Resources.LoadAll<Sprite>(TERRAIN_PATH);
-            return sprites;
-        }
+        
     }
 }

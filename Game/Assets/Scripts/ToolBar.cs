@@ -9,7 +9,7 @@ namespace Game
     public class ToolBar : MonoBehaviour
     {
         [SerializeField] private City city;
-        [SerializeField] private Toggle toggle ;
+        // [SerializeField] private Toggle toggle ;
         private Rock rock;
         private bool rockBtnSelected, rmBtnSelected;
 

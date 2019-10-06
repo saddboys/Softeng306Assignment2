@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 161921295}
   - component: {fileID: 161921297}
   - component: {fileID: 161921298}
+  - component: {fileID: 161921299}
   m_Layer: 5
   m_Name: ToolBarPanel
   m_TagString: Untagged
@@ -507,6 +508,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_AllowSwitchOff: 1
+--- !u!114 &161921299
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 161921293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  city: {fileID: 1149500924}
 --- !u!1 &187348121
 GameObject:
   m_ObjectHideFlags: 0
@@ -683,7 +697,6 @@ GameObject:
   - component: {fileID: 213307679}
   - component: {fileID: 213307682}
   - component: {fileID: 213307681}
-  - component: {fileID: 213307684}
   - component: {fileID: 213307680}
   m_Layer: 5
   m_Name: PanelLeft
@@ -775,20 +788,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 213307678}
   m_CullTransparentMesh: 1
---- !u!114 &213307684
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 213307678}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  city: {fileID: 1149500924}
-  toggle: {fileID: 2010209610}
 --- !u!1 &305331170
 GameObject:
   m_ObjectHideFlags: 0
@@ -1912,12 +1911,12 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_MethodName: 
-        m_Mode: 1
+      - m_Target: {fileID: 161921299}
+        m_MethodName: OnRmToggleValueChanged
+        m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: 
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -2538,7 +2537,6 @@ GameObject:
   - component: {fileID: 1227836377}
   - component: {fileID: 1227836382}
   - component: {fileID: 1227836381}
-  - component: {fileID: 1227836380}
   - component: {fileID: 1227836379}
   m_Layer: 5
   m_Name: PanelRight
@@ -2595,20 +2593,6 @@ MonoBehaviour:
   m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
---- !u!114 &1227836380
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1227836376}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b0627e55d1c8f0248a53d84db9a77237, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  city: {fileID: 1149500924}
-  toggle: {fileID: 0}
 --- !u!114 &1227836381
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3818,7 +3802,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 213307684}
+      - m_Target: {fileID: 161921299}
         m_MethodName: OnToggleValueChanged
         m_Mode: 0
         m_Arguments:

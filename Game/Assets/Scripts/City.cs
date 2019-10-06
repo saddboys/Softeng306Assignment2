@@ -106,15 +106,35 @@ namespace Game
                 
             if (TurnsLeft == 0)
             {
-                EndTurnButton.interactable = false;
-                // end game success
-                Controller.GameWon();
-            } else if (wealth <= 0 || temp > 30)
+                string reason = "Congratulations! You have sustainably developed your city!";
+                EndGame(true, reason);
+            } else if (wealth <= 0)
             {
-                // game over
-                EndTurnButton.interactable = false;
-                Controller.GameOver();
+                string reason = "You've run out of assets to support your city!";
+                EndGame(false, reason);
+            } else if (temp > 2)
+            {
+                string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
+                EndGame(false, reason);
+            } 
+        }
+
+        /// <summary>
+        /// The function triggers the game over overlay, specifying the reason for failure
+        /// </summary>
+        /// <param name="reason">The reason the player has lost the game</param>
+        public void EndGame(bool isWon, string reason)
+        {
+            EndTurnButton.interactable = false;
+            if (isWon)
+            {
+                Controller.GameWon(reason);   
             }
+            else
+            {
+                Controller.GameOver(reason);    
+            }
+            
         }
     }
 }

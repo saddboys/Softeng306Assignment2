@@ -2,12 +2,13 @@ using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
 {
     public class City : MonoBehaviour
-    { 
+    {
         public int TurnsLeft
         {
             get
@@ -77,7 +78,27 @@ namespace Game
         public void EndTurn() {
             Stats.AddContribution(Map.GetStatsContribution());
             TurnsLeft--;
+            CheckEndGame();
             NextTurnEvent?.Invoke();
+        }
+
+        /// <summary>
+        /// Function called to check if the conditions to end game have been met
+        /// </summary>
+        public void CheckEndGame()
+        {
+            double temp = stats.Temperature;
+            double wealth = stats.Wealth;
+                
+            if (TurnsLeft == 0)
+            {
+                // end game success
+                SceneManager.LoadScene("EndScene");
+            } else if (wealth <= 0 || temp > 30)
+            {
+                // game over
+                SceneManager.LoadScene("EndScene");
+            }
         }
     }
 }

@@ -146,5 +146,17 @@ namespace Game.CityMap
             }
             return sum;
         }
+
+        public void Regenerate()
+        {
+            foreach (var t in Tiles)
+            {
+                // Unrender structure.
+                t.Structure = null;
+                // Remove tile from object graph.
+                Destroy(t);
+            }
+            Generate();
+        }
     }
 }

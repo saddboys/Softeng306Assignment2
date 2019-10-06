@@ -32,6 +32,7 @@ namespace Game.CityMap
             }
         }
 
+        private Vector3 mouseDownPosition;
 
         // Start is called before the first frame update
         void Start()
@@ -42,21 +43,40 @@ namespace Game.CityMap
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
-                Vector3Int position = map.WorldToCell(worldPoint);
-                MapTile someOtherTile = map.GetTile<MapTile>(position);
-                if (someOtherTile != null)
-                {
-                    // Notify the click event for things like the ToolBar or other user feedback.
-                    TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+            CheckTileClick();
+        }
 
-                    // For testing purposes:
-                    //someOtherTile.Structure = new Tower();
-                    //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
-                }
+        private void CheckTileClick()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                mouseDownPosition = Input.mousePosition;
+            }
+
+            // Check left click released.
+            if (!Input.GetMouseButtonUp(0)) return;
+
+            // Check for drag.
+            if (Input.mousePosition != mouseDownPosition) return;
+
+            // Check UI click-through.
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
+            // Check camera dragging
+            //if (cameraDrag.WasDragging) return;
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
+            Vector3Int position = map.WorldToCell(worldPoint);
+            MapTile someOtherTile = map.GetTile<MapTile>(position);
+            if (someOtherTile != null)
+            {
+                // Notify the click event for things like the ToolBar or other user feedback.
+                TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+
+                // For testing purposes:
+                someOtherTile.Structure = new Rock();
+                someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
 

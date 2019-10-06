@@ -9,9 +9,7 @@ namespace Game
     public class ToolBar : MonoBehaviour
     {
         [SerializeField] private City city;
-        // [SerializeField] private Toggle toggle ;
-        private Rock rock;
-        private bool rockBtnSelected, rmBtnSelected;
+        private bool btnSelect01A, btnSelect01B, btnSelect02A, btnSelect02B, btnSelect03A, btnSelect03B, btnRemove;
 
         public ToolBar(City city) { }
 
@@ -35,30 +33,76 @@ namespace Game
 
         void OnNotify(MapTile tile) {
             //check if one of the toggle is selected
-            if (rockBtnSelected) {
+            if (btnSelect01A) {
                 //check if the tile is free
                 if(tile.Structure == null){
-                tile.Structure = new Rock();
+                    tile.Structure = new Rock();
+                    // build the structure
+                    // BuildStructure(new HouseFactory(city), tile);
                 }
-                // build the structure
-                
-                //tile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[28]; 
-                // StructureFactory factory = new RockFactory(city);
-                // factory.BuildOnto(tile);
-            }else if(rmBtnSelected){
+            } 
+            else if (btnSelect01B) {
+                if (tile.Structure == null) {
+                    BuildStructure(new ParkFactory(city), tile);
+                }
+            }
+            else if (btnSelect02A) {
+                if (tile.Structure == null) {
+                    BuildStructure(new TowerFactory(city), tile);
+                }
+            } 
+            else if (btnSelect02B) {
+                if (tile.Structure == null) {
+                    BuildStructure(new DocksFactory(city), tile);
+                }
+            } 
+            else if (btnSelect03A) {
+                if (tile.Structure == null) {
+                    BuildStructure(new PowerPlantFactory(city), tile);
+                }
+            } 
+            else if (btnSelect03B) {
+                if (tile.Structure == null) {
+                    BuildStructure(new FactoryFactory(city), tile);
+                }
+            } 
+            else if (btnRemove){
                  tile.Structure = null;
             }
 
         }
 
-    // Called whenever something is toggled on
-     public void OnToggleValueChanged( bool isOn ) {
-         rockBtnSelected = isOn;
-     }
+        void BuildStructure(StructureFactory factory, MapTile tile) {
+            factory.BuildOnto(tile);
+        }
 
-      public void OnRmToggleValueChanged( bool isOn ) {
-         rmBtnSelected = isOn;
-     }
+        // Called whenever a toggle is toggled on
+        public void Toggle01A( bool isOn ) {
+            btnSelect01A = isOn;
+        }
+
+        public void Toggle01B( bool isOn ) {
+            btnSelect01B = isOn;
+        }
+
+        public void Toggle02A( bool isOn ) {
+            btnSelect02A = isOn;
+        }
+
+        public void Toggle02B( bool isOn ) {
+            btnSelect02B = isOn;
+        }
+
+        public void Toggle03A( bool isOn ) {
+         btnSelect03A = isOn;
+        }
+        public void Toggle03B( bool isOn ) {
+         btnSelect03B = isOn;
+        }
+
+        public void OnRmToggleValueChanged( bool isOn ) {
+            btnRemove = isOn;
+        }
 
     }
 }

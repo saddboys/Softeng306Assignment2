@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = System.Random;
@@ -19,10 +20,9 @@ namespace Game.CityMap
 
         public Tilemap map;
         public GameObject parent;
-        public GameObject startScreen; 
         public Text display;
         private int[,] terrainMap;
-        
+        private Random random = new Random();
 
         public MapTile[] Tiles
         {
@@ -33,6 +33,7 @@ namespace Game.CityMap
             }
         }
 
+        private Vector3 mouseDownPosition;
 
         // Start is called before the first frame update
         void Start()
@@ -42,21 +43,40 @@ namespace Game.CityMap
         // Update is called once per frame
         void Update()
         {
-            if (!startScreen.activeSelf && Input.GetMouseButtonDown(0))
-            {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
-                Vector3Int position = map.WorldToCell(worldPoint);
-                MapTile someOtherTile = map.GetTile<MapTile>(position);
-                if (someOtherTile != null)
-                {
-                    // Notify the click event for things like the ToolBar or other user feedback.
-                    TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+            CheckTileClick();
+        }
 
-                    // For testing purposes:
-                    someOtherTile.Structure = new Rock();
-                    someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
-                }
+        private void CheckTileClick()
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                mouseDownPosition = Input.mousePosition;
+            }
+
+            // Check left click released.
+            if (!Input.GetMouseButtonUp(0)) return;
+
+            // Check for drag.
+            if (Input.mousePosition != mouseDownPosition) return;
+
+            // Check UI click-through.
+            if (EventSystem.current.IsPointerOverGameObject()) return;
+
+            // Check camera dragging
+            //if (cameraDrag.WasDragging) return;
+
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
+            Vector3Int position = map.WorldToCell(worldPoint);
+            MapTile someOtherTile = map.GetTile<MapTile>(position);
+            if (someOtherTile != null)
+            {
+                // Notify the click event for things like the ToolBar or other user feedback.
+                TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+
+                // For testing purposes:
+                someOtherTile.Structure = new Rock();
+                someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
 
@@ -80,8 +100,6 @@ namespace Game.CityMap
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     TerrainFactory terrainFactory = new TerrainFactory();
-                    
-                    Random random = new Random();
                     int value = random.Next(0, 2);
                     // A vector used for hex position
                     Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
@@ -125,7 +143,23 @@ namespace Game.CityMap
         public Stats GetStatsContribution()
         {
             // Get stats from its tiles.
-            throw new System.NotImplementedException();
+            Stats sum = new Stats();
+            foreach (var t in Tiles) {
+                sum += t.GetStatsContribution();
+            }
+            return sum;
+        }
+
+        public void Regenerate()
+        {
+            foreach (var t in Tiles)
+            {
+                // Unrender structure.
+                t.Structure = null;
+                // Remove tile from object graph.
+                Destroy(t);
+            }
+            Generate();
         }
     }
 }

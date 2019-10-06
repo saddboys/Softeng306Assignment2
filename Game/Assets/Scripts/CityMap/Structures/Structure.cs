@@ -39,6 +39,22 @@ namespace Game.CityMap
             gameObject.GetComponent<RectTransform>().SetParent(canvas.transform);
             gameObject.SetActive(true);
         }
+        
+        protected void RenderOntoSprite(GameObject canvas, Vector3 position, Sprite sprite, Vector2 imageSize)
+        {
+            Unrender();
+            gameObject = new GameObject();
+            Image image = gameObject.AddComponent<Image>();
+            image.sprite = sprite;
+            Vector2 structureSize = imageSize;
+            // Determines the size of the structure
+            gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;
+            Vector2 xy = new Vector2(position.x + structureSize.x - 1, position.y + structureSize.y - 1);
+            // Determines where the structure will be placed
+            gameObject.GetComponent<RectTransform>().anchoredPosition = xy;
+            gameObject.GetComponent<RectTransform>().SetParent(canvas.transform);
+            gameObject.SetActive(true);
+        }
 
         /// <summary>
         /// Add the game objects to draw this structure onto the screen.

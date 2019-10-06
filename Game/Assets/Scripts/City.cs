@@ -56,13 +56,7 @@ namespace Game
         {
             endTurnButton.onClick.AddListener(EndTurn);
             TurnsLeft = 50;
-            stats.CO2 = 0;
-            stats.Temperature = 0;
-            stats.Population = 30; // TODO: Random - based on houses
-            stats.ElectricCapacity = 4; // TODO: Random
-            stats.Reputation = 50;
-            stats.Score = 0;
-            stats.Wealth = 10000;
+            Stats.Restart();
         }
 
         // Update is called once per frame
@@ -78,6 +72,12 @@ namespace Game
             Stats.AddContribution(Map.GetStatsContribution());
             TurnsLeft--;
             NextTurnEvent?.Invoke();
+        }
+
+        public void Restart()
+        {
+            Stats.Restart();
+            Map.Regenerate();
         }
     }
 }

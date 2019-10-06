@@ -1569,7 +1569,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   map: {fileID: 919822513}
   parent: {fileID: 1136636419}
-  startScreen: {fileID: 1795741451}
   display: {fileID: 970244761}
 --- !u!1 &1375968839
 GameObject:
@@ -2777,7 +2776,7 @@ RectTransform:
   m_Children:
   - {fileID: 1748414054}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}

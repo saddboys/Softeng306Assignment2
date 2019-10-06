@@ -19,7 +19,6 @@ namespace Game.CityMap
 
         public Tilemap map;
         public GameObject parent;
-        public GameObject startScreen; 
         public Text display;
         private int[,] terrainMap;
 
@@ -42,7 +41,7 @@ namespace Game.CityMap
         // Update is called once per frame
         void Update()
         {
-            if (!startScreen.activeSelf && Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
@@ -120,7 +119,11 @@ namespace Game.CityMap
         public Stats GetStatsContribution()
         {
             // Get stats from its tiles.
-            throw new System.NotImplementedException();
+            Stats sum = new Stats();
+            foreach (var t in Tiles) {
+                sum += t.GetStatsContribution();
+            }
+            return sum;
         }
     }
 }

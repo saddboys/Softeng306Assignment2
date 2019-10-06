@@ -42,9 +42,23 @@ namespace Game
         }
         [SerializeField]
         private Button endTurnButton;
+        public Button EndTurnButton
+        {
+            get => endTurnButton;
+            set => endTurnButton = value;
+        }
+
         [SerializeField]
         private Text turnLeftText;
 
+        [SerializeField]
+        private GameSceneController controller;
+
+        public GameSceneController Controller
+        {
+            get { return controller; }
+        }
+        
         /// <summary>
         /// Fires at the beginning of each new turn.
         /// Useful for spawning events and for updating structures.
@@ -92,12 +106,14 @@ namespace Game
                 
             if (TurnsLeft == 0)
             {
+                EndTurnButton.interactable = false;
                 // end game success
-                SceneManager.LoadScene("EndScene");
+                Controller.GameWon();
             } else if (wealth <= 0 || temp > 30)
             {
                 // game over
-                SceneManager.LoadScene("EndScene");
+                EndTurnButton.interactable = false;
+                Controller.GameOver();
             }
         }
     }

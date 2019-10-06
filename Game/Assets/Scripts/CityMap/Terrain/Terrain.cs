@@ -1,15 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Game.CityMap
 {
-    public abstract class Terrain
+    
+    public class Terrain
     {
+        public enum TerrainTypes {Grass, Desert}
         private const string TERRAIN_PATH = "Textures/terrain";
+        public TerrainTypes TerrainType { get; set; }
 
+        public Terrain(TerrainTypes terrainType, Sprite[] sprites)
+        {
+            TerrainType = terrainType;
+            if (terrainType.Equals(TerrainTypes.Grass))
+            {
+                
+                sprite = sprites[12];
+            }
+            else
+            {
+                sprite = sprites[23];
+            }
+        }
+        
         public Sprite Sprite
         {
             get { return sprite; }

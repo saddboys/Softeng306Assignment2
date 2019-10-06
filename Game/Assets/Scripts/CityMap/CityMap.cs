@@ -22,6 +22,7 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
+        private Random random = new Random();
 
         public MapTile[] Tiles
         {
@@ -99,7 +100,6 @@ namespace Game.CityMap
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     tile.Terrain = new TestTerrain();
-                    Random random = new Random();
                     int value = random.Next(0, 2);
                     // A vector used for hex position
                     Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);

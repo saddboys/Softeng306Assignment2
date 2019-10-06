@@ -119,7 +119,11 @@ namespace Game.CityMap
         public Stats GetStatsContribution()
         {
             // Get stats from its tiles.
-            throw new System.NotImplementedException();
+            Stats sum = new Stats();
+            foreach (var t in Tiles) {
+                sum += t.GetStatsContribution();
+            }
+            return sum;
         }
     }
 }

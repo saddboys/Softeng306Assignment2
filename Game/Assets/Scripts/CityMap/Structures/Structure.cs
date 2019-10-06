@@ -10,7 +10,10 @@ namespace Game.CityMap
         /// as CO2 generated, profits/losses, etc.
         /// </summary>
         /// <returns>The structure's stats contribution.</returns>
-        public abstract Stats GetStatsContribution();
+        public virtual Stats GetStatsContribution()
+        {
+            return new Stats();
+        }
 
         private GameObject gameObject;
 

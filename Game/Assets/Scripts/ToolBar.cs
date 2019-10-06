@@ -20,7 +20,7 @@ namespace Game
         // Start is called before the first frame update
         void Start()
         {
-        populate();
+
         }
 
         // Update is called once per frame
@@ -36,14 +36,7 @@ namespace Game
 
         //trigger button select event 
         void OnSelect(){
-        //check if the button is clickable 
-        if(CanBuild(out string reason)){
-        //only one component now for testing use
-        GameObject rockBtn = GameObject.FindWithTag("RockButton");
-        string tag = "RockButton";
-        Debug.Log("find the object with tag" + tag);
-        CreateStructure(tag);
-        }
+
         }
 
         //call method in StructureFactory create a specified strcuture component

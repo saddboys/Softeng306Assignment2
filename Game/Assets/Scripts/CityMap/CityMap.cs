@@ -78,8 +78,7 @@ namespace Game.CityMap
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                 // For testing purposes:
-                someOtherTile.Structure = new Rock();
-                someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
+                someOtherTile.Structure = new Factory();
             }
         }
 
@@ -114,7 +113,7 @@ namespace Game.CityMap
                     tile.Canvas = parent;
                     tile.ScreenPosition = mappedVector;
                     
-                    int value = random.Next(0, 1);
+                    int value = random.Next(0,3);
                     
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)

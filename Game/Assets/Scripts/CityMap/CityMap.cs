@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Random = System.Random;
@@ -41,7 +42,7 @@ namespace Game.CityMap
         // Update is called once per frame
         void Update()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
@@ -53,7 +54,7 @@ namespace Game.CityMap
                     TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                     // For testing purposes:
-                    //someOtherTile.Structure = new Rock();
+                    //someOtherTile.Structure = new Tower();
                     //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
                 }
             }

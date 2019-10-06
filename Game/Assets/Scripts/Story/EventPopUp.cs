@@ -22,7 +22,7 @@ public class EventPopUp : MonoBehaviour
     // Placeholder method to create the pop up. Used for testing purposes
     // May call this function when the turn event is fired
     // Maybe have an event fire whenever a create event is called
-    
+    private const string POP_UP_NAME = "popup-panel";
     public void OnClick()
     {
         // The pool does not work currently due to a new instance of manager being called each time
@@ -47,7 +47,7 @@ public class EventPopUp : MonoBehaviour
         cityMap.active = false;
 
         // Creating the panel 
-        GameObject panel = new GameObject("Panel");
+        GameObject panel = new GameObject(POP_UP_NAME);
         panel.AddComponent<CanvasRenderer>();
         Image i = panel.AddComponent<Image>();
         i.color = Color.white;
@@ -87,7 +87,7 @@ public class EventPopUp : MonoBehaviour
     private void CreateEventPopUp()
     {
         CreatePopUp();
-        GameObject panel = canvas.transform.Find("Panel").gameObject;
+        GameObject panel = canvas.transform.Find(POP_UP_NAME).gameObject;
         GameObject buttonObj = new GameObject();
         Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(DestroyPanel);
@@ -106,7 +106,7 @@ public class EventPopUp : MonoBehaviour
     private void CreateRequestPopUp()
     {
         CreatePopUp();
-        GameObject panel = canvas.transform.Find("Panel").gameObject;
+        GameObject panel = canvas.transform.Find(POP_UP_NAME).gameObject;
 
         StoryRequest storyRequest = (StoryRequest) storyEvent;
         // Setting the buttons
@@ -145,7 +145,7 @@ public class EventPopUp : MonoBehaviour
     private void DestroyPanel()
     {
         cityMap.active = true;
-        GameObject panel = canvas.transform.Find("Panel").gameObject;
+        GameObject panel = canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);
     }
 }

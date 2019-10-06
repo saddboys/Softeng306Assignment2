@@ -112,15 +112,15 @@ namespace Game.CityMap
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
-                        tile.Structure = new Tower();
+                        //tile.Structure = new Tower();
                         map.SetTile(vector, tile);
                     }
                     else
                     {
                         // Only random tiles have the mountain on it
-                        if (random.Next(1, 6) == 4)
+                        if (true)//random.Next(1, 6) == 4)
                         {
-                            tile.Structure = new Rock();
+                            tile.Structure = new Factory();
                         }
 
                         map.SetTile(vector, tile);

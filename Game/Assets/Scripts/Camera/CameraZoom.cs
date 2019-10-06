@@ -8,8 +8,8 @@ public class CameraZoom : MonoBehaviour
     public float zoomSpeed = 10.0f;
     public float targetZoom;
     public float smoothSpeed = 10.0f;
-    public float minZoom = 1.0f;
-    public float maxZoom = 20.0f;
+    public float minZoom = 5.0f;
+    public float maxZoom = 10.0f;
     
     // Start is called before the first frame update
     void Start()

@@ -6,6 +6,7 @@ namespace Game.CityMap
 {
     public class Factory : Structure
     {
+        private Sprite sprite = Resources.Load<Sprite>("Textures/structures/FactorySprite");
         public override Stats GetStatsContribution()
         {
             throw new System.NotImplementedException();
@@ -13,7 +14,7 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 30, new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, position, sprite, new Vector2(1, 1.5f));
         }
     }
 

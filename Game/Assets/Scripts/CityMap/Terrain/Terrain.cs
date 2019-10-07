@@ -1,15 +1,45 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 namespace Game.CityMap
 {
-    public abstract class Terrain
+    
+    public class Terrain
     {
-        private const string TERRAIN_PATH = "Textures/terrain";
+        public enum TerrainTypes
+        {
+            Grass,
+            Desert,
+            Ocean,
+            Beach,
+            GrassHill,
+            DesertHill,
+        };
+        public TerrainTypes TerrainType { get; set; }
 
+        public Terrain(TerrainTypes terrainType)
+        {            
+            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
+            TerrainType = terrainType;
+            if (terrainType.Equals(TerrainTypes.Grass))
+            {
+                
+                sprite = sprites[12];
+            }
+            else if (terrainType.Equals(TerrainTypes.Desert))
+            {
+                sprite = sprites[23];
+            }
+            else
+            {
+                sprite = Resources.Load<Sprite>("Textures/terrain/hexWater");
+            }
+        }
+        
         public Sprite Sprite
         {
             get { return sprite; }
@@ -28,15 +58,5 @@ namespace Game.CityMap
         /// Useful for updating a Tile's sprite based on its Terrain.
         /// </summary>
         public event Action SpriteChange;
-
-        /// <summary>
-        /// Get all the sprites in the terrain resources
-        /// </summary>
-        /// <returns></returns>
-        public Sprite[] GetSprites()
-        {
-            Sprite[] sprites = Resources.LoadAll<Sprite>(TERRAIN_PATH);
-            return sprites;
-        }
     }
 }

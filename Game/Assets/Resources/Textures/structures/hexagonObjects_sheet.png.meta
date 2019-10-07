@@ -168,10 +168,10 @@ TextureImporter:
       name: hexagonObjects_sheet_1
       rect:
         serializedVersion: 2
-        x: 116
-        y: 412
-        width: 100
-        height: 100
+        x: 117
+        y: 426
+        width: 98
+        height: 86
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 3, y: 12, z: 2, w: 0}

@@ -8,19 +8,19 @@ namespace Game
 {
     public class City : MonoBehaviour
     { 
-        public int TurnsLeft
+        public int Turn
         {
             get
             {
-                return turnsLeft;
+                return turn;
             }
             private set
             {
-                turnsLeft = value;
-                turnLeftText.text = turnsLeft.ToString();
+                turn = value;
+                turnText.text = turn.ToString();
             }
         }
-        private int turnsLeft;
+        private int turn;
 
         [SerializeField]
         private StatsBar stats;
@@ -42,7 +42,7 @@ namespace Game
         [SerializeField]
         private Button endTurnButton;
         [SerializeField]
-        private Text turnLeftText;
+        private Text turnText;
 
         /// <summary>
         /// Fires at the beginning of each new turn.
@@ -55,7 +55,8 @@ namespace Game
         void Start()
         {
             endTurnButton.onClick.AddListener(EndTurn);
-            TurnsLeft = 50;
+            //Restart();
+            Turn = 1;
             Stats.Restart();
         }
 
@@ -70,12 +71,13 @@ namespace Game
         /// </summary>
         public void EndTurn() {
             Stats.AddContribution(Map.GetStatsContribution());
-            TurnsLeft--;
+            Turn++;
             NextTurnEvent?.Invoke();
         }
 
         public void Restart()
         {
+            Turn = 1;
             Stats.Restart();
             Map.Regenerate();
         }

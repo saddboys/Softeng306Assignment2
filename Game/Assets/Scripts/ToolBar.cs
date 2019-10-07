@@ -29,15 +29,11 @@ namespace Game
                 new ParkFactory(city),
                 new PowerPlantFactory(city),
                 new DockFactory(city),
-                new DemolishFactory(),
+                new DemolishFactory(city),
             };
 
             city.Map.TileClickedEvent += (s, e) =>
             {
-                // TODO: handle when the tile e.Tile has been clicked.
-                Debug.Log(e.Tile);
-                // throw new System.NotImplementedException();
-
                 OnNotify(e.Tile);
             };
 

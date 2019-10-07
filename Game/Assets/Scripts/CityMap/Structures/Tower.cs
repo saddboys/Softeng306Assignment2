@@ -24,7 +24,7 @@ namespace Game.CityMap
 
     public class TowerFactory : StructureFactory
     {
-        public int Cost
+        public override int Cost
         {
             get { return 2000; }
         }

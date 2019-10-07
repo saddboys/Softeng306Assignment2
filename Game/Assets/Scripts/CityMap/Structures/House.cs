@@ -13,8 +13,16 @@ namespace Game.CityMap
                 Score = 100,
                 Reputation = -1,
                 Wealth = 0.5,
-                Population = 4,
-                CO2 = 1
+                CO2 = 1,
+            };
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats
+            {
+                ElectricCapacity = 1,
+                Population = -4,
             };
         }
 
@@ -42,7 +50,7 @@ namespace Game.CityMap
             return new House();
         }
 
-        public bool CanBuild(out string reason)
+        public override bool CanBuild(out string reason)
         {
             if (!base.CanBuild(out reason))
             {
@@ -72,14 +80,15 @@ namespace Game.CityMap
             return true;
         }
 
-        public void BuildOnto(MapTile tile)
+        public override void BuildOnto(MapTile tile)
         {
+            base.BuildOnto(tile);
+
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 1;
-                City.Stats.Wealth -= 3;
+                City.Stats.Population += 4;
             }
-            base.BuildOnto(tile);
         }
     }
 }

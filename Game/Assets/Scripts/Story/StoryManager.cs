@@ -14,7 +14,7 @@ namespace Game.Story
     /// </summary>
     public class StoryManager : MonoBehaviour
     {
-        public enum Events { Conditional_Request_House, Conditional_Request_Park, Event_Flood}
+        public enum Events { Conditional_Request_House, Conditional_Request_Park, Event_Flood, Event_Circus }
         [SerializeField] 
         private City city;
 
@@ -115,6 +115,8 @@ namespace Game.Story
             {
                 case Events.Event_Flood:
                     return new FloodEvent();
+                case Events.Event_Circus:
+                    return new CircusEvent();
 //                case Events.Request_Bridge:
 //                    return new BridgeRequest();
 //                case Events.Request_Tower:

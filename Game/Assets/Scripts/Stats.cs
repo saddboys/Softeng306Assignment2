@@ -48,7 +48,7 @@ namespace Game
             Population += stats.Population;
             ElectricCapacity += stats.ElectricCapacity;
             Reputation += stats.Reputation;
-            Score += stats.Reputation;
+            Score += stats.Score;
             Wealth += stats.Wealth;
         }
     }

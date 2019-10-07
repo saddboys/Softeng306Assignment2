@@ -27,7 +27,7 @@ namespace Game.CityMap
         public ParkFactory(City city) : base(city) { }
         public ParkFactory() : base() { }
 
-        public int Cost
+        public override int Cost
         {
             get { return 300; }
         }
@@ -48,6 +48,15 @@ namespace Game.CityMap
                 return false;
             }
             return base.CanBuildOnto(tile, out reason);
+        }
+        public override void BuildOnto(MapTile tile)
+        {
+            base.BuildOnto(tile);
+
+            if (City != null)
+            {
+                City.Stats.Reputation += 10;
+            }
         }
     }
 }

@@ -17,6 +17,14 @@ namespace Game.CityMap
             };
         }
 
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats
+            {
+                ElectricCapacity = 5,
+            };
+        }
+
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
             Vector3 positionNew = new Vector3(position.x, position.y - 0f, position.z);
@@ -26,7 +34,8 @@ namespace Game.CityMap
 
     public class FactoryFactory : StructureFactory
     {
-        public override int Cost {
+        public override int Cost
+        {
             get
             {
                 return 3000;
@@ -75,12 +84,12 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
+            base.BuildOnto(tile);
+
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 5;
-                City.Stats.Wealth -= 15;
             }
-            base.BuildOnto(tile);
         }
 
 

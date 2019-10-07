@@ -128,7 +128,7 @@ namespace Game
             Reputation += stats.Reputation;
             if (Reputation > 100) Reputation = 100;
             if (Reputation < 0) Reputation = 0;
-            Score += stats.Reputation;
+            Score += stats.Score;
             Wealth += stats.Wealth;
         }
 

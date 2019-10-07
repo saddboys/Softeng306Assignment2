@@ -12,7 +12,15 @@ namespace Game.CityMap
             {
                 CO2 = 1,
                 Wealth = 10,
-                ElectricCapacity = 10
+                ElectricCapacity = 0,
+            };
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats
+            {
+                ElectricCapacity = -20,
             };
         }
 
@@ -26,7 +34,7 @@ namespace Game.CityMap
     {
         public PowerPlantFactory(City city) : base(city) { }
         public PowerPlantFactory() : base() { }
-        public int Cost
+        public override int Cost
         {
             get { return 4000; }
         }
@@ -41,11 +49,12 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
+            base.BuildOnto(tile);
+
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 5;
+                City.Stats.ElectricCapacity += 20;
             }
-            base.BuildOnto(tile);
         }
 
         public override bool CanBuildOnto(MapTile tile, out string reason)

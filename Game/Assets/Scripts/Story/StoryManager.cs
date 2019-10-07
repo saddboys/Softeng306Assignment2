@@ -66,7 +66,7 @@ namespace Game.Story
                     popUp.StoryEvent = storyEvent;
                     popUp.Create();
                 }
-                turnsLeft = 4;
+                turnsLeft = 5;
             }
         }
 

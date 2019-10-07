@@ -70,6 +70,7 @@ namespace Game
         void Start()
         {
             endTurnButton.onClick.AddListener(EndTurn);
+            
             //Restart();
             Turn = 1;
             Stats.Restart();
@@ -78,7 +79,6 @@ namespace Game
         // Update is called once per frame
         void Update()
         {
-
         }
 
         /// <summary>
@@ -131,8 +131,12 @@ namespace Game
             }
         }
 
+        /// <summary>
+        /// Function to restart the game either when game ends or when user selects restart from the menu
+        /// </summary>
         public void Restart()
         {
+            EndTurnButton.interactable = true;
             Turn = 1;
             Stats.Restart();
             Map.Regenerate();

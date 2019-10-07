@@ -53,7 +53,7 @@ namespace Game.Story.Events
         }
         public override void OnNoClick()
         {
-            throw new System.NotImplementedException();
+            City.Stats.Reputation -= 0.5;
         }
     }
 }

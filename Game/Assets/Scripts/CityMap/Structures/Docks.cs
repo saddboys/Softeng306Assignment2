@@ -16,7 +16,7 @@ namespace Game.CityMap
     {
         public DockFactory(City city) : base(city) { }
         public DockFactory() : base() { }
-        public int Cost
+        public override int Cost
         {
             get { return 1000; }
         }

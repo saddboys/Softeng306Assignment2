@@ -34,10 +34,6 @@ namespace Game
 
             city.Map.TileClickedEvent += (s, e) =>
             {
-                // TODO: handle when the tile e.Tile has been clicked.
-                Debug.Log(e.Tile);
-                // throw new System.NotImplementedException();
-
                 OnNotify(e.Tile);
             };
 

@@ -42,7 +42,7 @@ namespace Game.CityMap
             return new House();
         }
 
-        public bool CanBuild(out string reason)
+        public override bool CanBuild(out string reason)
         {
             if (!base.CanBuild(out reason))
             {
@@ -72,14 +72,15 @@ namespace Game.CityMap
             return true;
         }
 
-        public void BuildOnto(MapTile tile)
+        public override void BuildOnto(MapTile tile)
         {
+            base.BuildOnto(tile);
+
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 1;
                 City.Stats.Wealth -= 3;
             }
-            base.BuildOnto(tile);
         }
     }
 }

@@ -1,37 +1,40 @@
-using Game;
+﻿using Game;
 using Game.CityMap;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using Random = System.Random;
 
 namespace Game.CityMap
 {
-    public class Tower : Structure
+    public class Park : Structure
     {
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                Wealth = 4,
+                Reputation = 0,
+                Score = 500,
+                Wealth = -2,
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 44, new Vector2(1, 1.5f));
+            RenderOnto(canvas, position, 32, new Vector2(1, 1.5f));
         }
     }
 
-    public class TowerFactory : StructureFactory
+    public class ParkFactory : StructureFactory
     {
+        public ParkFactory(City city) : base(city) { }
+        public ParkFactory() : base() { }
+
         public int Cost
         {
-            get { return 2000; }
+            get { return 300; }
         }
 
         protected override Structure Create()
         {
-            return new Tower();
+            return new Park();
         }
     }
 }

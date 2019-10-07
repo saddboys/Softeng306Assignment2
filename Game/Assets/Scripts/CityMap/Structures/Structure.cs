@@ -10,7 +10,10 @@ namespace Game.CityMap
         /// as CO2 generated, profits/losses, etc.
         /// </summary>
         /// <returns>The structure's stats contribution.</returns>
-        public abstract Stats GetStatsContribution();
+        public virtual Stats GetStatsContribution()
+        {
+            return new Stats();
+        }
 
         private GameObject gameObject;
 
@@ -24,9 +27,27 @@ namespace Game.CityMap
         {
             Unrender();
             gameObject = new GameObject();
+            SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
+            Sprite sprite = Resources.LoadAll<Sprite>("Textures/structures")[spriteNumber];
+            renderer.sprite = sprite;
+            renderer.sortingLayerName = "Structure";
+
+            // Sort. Higher = further behind, regardless of the order
+            // in which the Structure was added.
+            renderer.sortingOrder = -(int)position.y;
+
+            gameObject.transform.position = position;
+            gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            gameObject.transform.SetParent(canvas.transform);
+            gameObject.SetActive(true);
+        }
+        
+        protected void RenderOntoSprite(GameObject canvas, Vector3 position, Sprite sprite, Vector2 imageSize)
+        {
+            Unrender();
+            gameObject = new GameObject();
             Image image = gameObject.AddComponent<Image>();
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/structures");
-            image.sprite = sprites[spriteNumber];
+            image.sprite = sprite;
             Vector2 structureSize = imageSize;
             // Determines the size of the structure
             gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;

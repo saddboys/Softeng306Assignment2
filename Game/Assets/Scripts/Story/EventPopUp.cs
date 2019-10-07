@@ -17,7 +17,7 @@ public class EventPopUp : MonoBehaviour
     private const int POP_UP_HEIGHT = 200;
     private const int BUTTON_WIDTH = 50;
     private const int BUTTON_HEIGHT = 30;
-    private const int TITLE_FONT_SIZE = 20;
+    private const int TITLE_FONT_SIZE = 30;
     private const int DESCRIPTION_FONT_SIZE = 20;
 
     public StoryEvent StoryEvent { get; set; }
@@ -75,9 +75,9 @@ public class EventPopUp : MonoBehaviour
         descriptionText.alignment = TextAnchor.UpperCenter;
         description.transform.SetParent(panel.transform,false);
         description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/3);
         // TODO: Scale depending on size of the description
-        description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
+       // description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
     }
 
     

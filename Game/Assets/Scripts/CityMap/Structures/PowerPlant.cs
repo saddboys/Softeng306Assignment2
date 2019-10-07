@@ -38,7 +38,10 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
-            City.Stats.ElectricCapacity += 5;
+            if (City != null)
+            {
+                City.Stats.ElectricCapacity += 5;
+            }
             base.BuildOnto(tile);
         }
 

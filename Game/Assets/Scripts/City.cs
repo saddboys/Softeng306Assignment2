@@ -47,6 +47,14 @@ namespace Game
             get => endTurnButton;
             set => endTurnButton = value;
         }
+        public bool HasEnded
+        {
+            get
+            {
+                return hasEnded;
+            }
+        }
+        private bool hasEnded = false; 
 
         [SerializeField]
         private Text turnText;
@@ -103,14 +111,17 @@ namespace Game
             {
                 string reason = "Congratulations! You have sustainably developed your city!";
                 EndGame(true, reason);
+                hasEnded = true;
             } else if (wealth <= 0)
             {
                 string reason = "You've run out of assets to support your city!";
                 EndGame(false, reason);
+                hasEnded = true;
             } else if (temp > 2)
             {
                 string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
                 EndGame(false, reason);
+                hasEnded = true;
             } 
         }
 

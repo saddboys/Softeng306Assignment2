@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Game.Story.Events;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,8 +14,7 @@ namespace Game.Story
     /// </summary>
     public class StoryManager : MonoBehaviour
     {
-        public enum Events { Event_Flood, Request_Tower, Request_Bridge}
-
+        public enum Events { Request_Bridge, Conditional_Request_House, Request_Tower, Event_Flood}
         [SerializeField] 
         private City city;
 
@@ -25,34 +25,43 @@ namespace Game.Story
         private Button endTurnButton;
         [SerializeField]
         private GameObject canvas;
-        private List<Events> eventPool;
-        private int turnsLeft = 2;
+        //private List<Events> eventPool;
+        private Dictionary<Events,int> eventPool; 
+        private int turnsLeft = 1;
         private EventPopUp popUp;
         [SerializeField]
         private GameObject storyManagerGameObject;
-
+        private Random random;
         void Start()
         {
+            random = new Random();
             city.NextTurnEvent += HandleTurnEvent;
             GenerateEventPool();
         }
 
         private void HandleTurnEvent()
         {
+            DecrementCooldown();
             if (turnsLeft == 0)
             {
-                popUp = storyManagerGameObject.AddComponent<EventPopUp>();
-                canvas.SetActive(true);
-                popUp.Canvas = this.canvas;
-                popUp.CityMap = city.Map;
-                //StoryEvent storyEvent = CreateEvent();
-                StoryEvent storyEvent = new MoreHouseRequest();
-                storyEvent.City = city;
-                storyEvent.ToolBar = toolbar;
-                storyEvent.EndButton = endTurnButton;
-                popUp.StoryEvent = storyEvent;
-                popUp.Create();
-                turnsLeft = 2;
+               
+                CheckStats();
+                StoryEvent storyEvent = CreateEvent();
+                //StoryEvent storyEvent = new MoreHouseRequest();
+                if (storyEvent != null)
+                {
+                    popUp = storyManagerGameObject.AddComponent<EventPopUp>();
+                    popUp.name = "event-pop-up";
+                    popUp.Canvas = this.canvas;
+                    popUp.CityMap = city.Map;
+                    canvas.SetActive(true);
+                    storyEvent.City = city;
+                    storyEvent.ToolBar = toolbar;
+                    storyEvent.EndButton = endTurnButton;
+                    popUp.StoryEvent = storyEvent;
+                    popUp.Create();
+                }
+                turnsLeft = 1;
             }
 
             turnsLeft--;
@@ -61,9 +70,13 @@ namespace Game.Story
         private void CheckStats()
         {
             StatsBar statsBar = city.Stats;
+            Events[] keys = eventPool.Keys.ToArray();
             if (statsBar.Wealth > 10)
             {
-                
+                if (!keys.Contains(Events.Conditional_Request_House))
+                {
+                    eventPool.Add(Events.Conditional_Request_House,1);
+                }
             }
         }
         /// <summary>
@@ -74,29 +87,57 @@ namespace Game.Story
         /// <returns>StoryEvent</returns>
         public StoryEvent CreateEvent()
         {
-            Debug.Log("GOES HERE");
-            Random random = new Random();
-            if (eventPool.Count == 0)
+            if (CheckAll())
             {
+                foreach (var v in eventPool.Values.ToArray())
+                {
+                    Debug.Log("V is" + v);
+                }
                 GenerateEventPool();
             }
             int nextValue = random.Next(0, eventPool.Count);
-            Debug.Log(nextValue);
-            Events type = eventPool[nextValue];
-            switch (type)
+            //Events currentEvent = eventPool[nextValue];
+            Events[] keys = eventPool.Keys.ToArray();
+            Events currentEvent = keys[nextValue];
+            // If the pop up event is on cooldown
+            if (eventPool[currentEvent] == 0)
             {
-                case Events.Event_Flood:
-                    eventPool.Remove(Events.Event_Flood);
-                    return new FloodEvent();
-                case Events.Request_Bridge:
-                    eventPool.Remove(Events.Request_Bridge);
-                    return new BridgeRequest();
-                case Events.Request_Tower:
-                    eventPool.Remove(Events.Request_Tower);
-                    return new TowerRequest();
-                default:
-                    return null;
+                eventPool[currentEvent]--;
+                // If it is not on cooldown, we can create the event.
+                switch (currentEvent)
+                {
+                    case Events.Event_Flood:
+                        return new FloodEvent();
+                    case Events.Request_Bridge:
+                        return new BridgeRequest();
+                    case Events.Request_Tower:
+                        return new TowerRequest();
+                    case Events.Conditional_Request_House:
+                        return new MoreHouseRequest();
+                    default:
+                        return null;
+                }
             }
+            return null;
+        }
+
+        private void DecrementCooldown()
+        {
+            Events[] keys = eventPool.Keys.ToArray();
+            foreach (Events events in keys)
+            {
+                if (eventPool[events] > 0)
+                {
+                    eventPool[events]--;
+                }
+            }
+        }
+
+        private bool CheckAll()
+        {
+            
+            int[] values = eventPool.Values.ToArray();
+            return values.All(v => v < 0);
         }
 
         /// <summary>
@@ -104,8 +145,20 @@ namespace Game.Story
         /// </summary>
         private void GenerateEventPool()
         {
+            eventPool = new Dictionary<Events, int>();
+           // eventPool = new List<Events>();
             Events[] events = (Events[])Enum.GetValues(typeof(Events));
-            eventPool = new List<Events>(events);
+            foreach(var eventObj in events)
+            {
+                string eventString = eventObj.ToString();
+                if (!eventString.Contains("Conditional"))
+                {
+                    // Set all cooldowns to be 1 initially.
+                    eventPool.Add(eventObj,3);
+                   // eventPool.Add(eventObj);
+                }
+            }
+            
         }
     }
 }

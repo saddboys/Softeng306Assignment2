@@ -50,6 +50,8 @@ namespace Game.Story.Events
             EndButton.interactable = true;
             ToolBar.CurrentFactory = null;
             ToolBar.BuiltEvent -= OnBuild;
+            
+            
         }
         public override void OnNoClick()
         {

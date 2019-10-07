@@ -39,7 +39,7 @@ namespace Game.CityMap
         
         public override bool CanBuildOnto(MapTile tile, out string reason)
         {
-            if (tile.Terrain.TerrainType.Equals(Terrain.TerrainTypes.Grass))
+            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass)
             {
                 reason = "Parks can only be built on grassland";
                 return false;

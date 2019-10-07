@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ namespace Game
             {
                 co2 = value;
                 co2ValueText.text = co2.ToString() + " MT";
+                ChangeEvent?.Invoke();
             }
         }
         // C anomaly (infinite - 3)
@@ -25,6 +27,7 @@ namespace Game
             {
                 temperature = value;
                 temperatureValueText.text = temperature.ToString() + "°C Change";
+                ChangeEvent?.Invoke();
             }
         }
         // Thousands (0 - infinite)
@@ -35,6 +38,7 @@ namespace Game
             {
                 population = value;
                 populationValueText.text = population.ToString() + "k";
+                ChangeEvent?.Invoke();
             }
         }
         // "electricity tokens" (-20 to 20)
@@ -45,6 +49,7 @@ namespace Game
             {
                 electricCapacity = value;
                 electricCapacityValueText.text = electricCapacity.ToString();
+                ChangeEvent?.Invoke();
             }
         }
         // "reputation rate" (0% to 100%) 
@@ -55,6 +60,7 @@ namespace Game
             {
                 reputation = value;
                 reputationValueText.text = reputation.ToString() + "%";
+                ChangeEvent?.Invoke();
             }
         }
         // "points" (0 - infinite)
@@ -65,6 +71,7 @@ namespace Game
             {
                 score = value;
                 scoreValueText.text = score.ToString();
+                ChangeEvent?.Invoke();
             }
         }
         // k dollars ($0 - $infinite)
@@ -75,6 +82,7 @@ namespace Game
             {
                 wealth = value;
                 moneyValueText.text = "$" + wealth.ToString() + "k";
+                ChangeEvent?.Invoke();
             }
         }
 
@@ -101,6 +109,8 @@ namespace Game
         private Text co2ValueText;
         [SerializeField]
         private Text scoreValueText;
+
+        public Action ChangeEvent;
 
         /// <summary>
         /// Adds individual fields of one Stats object onto itself.

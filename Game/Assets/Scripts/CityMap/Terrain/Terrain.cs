@@ -21,22 +21,17 @@ namespace Game.CityMap
         };
         public TerrainTypes TerrainType { get; set; }
 
-        public Terrain(TerrainTypes terrainType)
-        {            
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
+        public Terrain(TerrainTypes terrainType, Sprite[] sprites)
+        {
             TerrainType = terrainType;
             if (terrainType.Equals(TerrainTypes.Grass))
             {
                 
                 sprite = sprites[12];
             }
-            else if (terrainType.Equals(TerrainTypes.Desert))
-            {
-                sprite = sprites[23];
-            }
             else
             {
-                sprite = Resources.Load<Sprite>("Textures/terrain/hexWater");
+                sprite = sprites[23];
             }
         }
         

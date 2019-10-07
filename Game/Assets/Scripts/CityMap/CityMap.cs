@@ -91,6 +91,7 @@ namespace Game.CityMap
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
             int width = 40;
             int height = 30;
+            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
@@ -115,15 +116,12 @@ namespace Game.CityMap
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
-                    }
-                    else if (value == 1)
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
+
                     }
                     else
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
                     }
                     
                     map.SetTile(vector, tile);

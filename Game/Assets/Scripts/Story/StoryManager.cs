@@ -27,7 +27,7 @@ namespace Game.Story
         private GameObject canvas;
         //private List<Events> eventPool;
         private Dictionary<Events,int> eventPool; 
-        private int turnsLeft = 1;
+        private int turnsLeft = 3;
         private EventPopUp popUp;
         [SerializeField]
         private GameObject storyManagerGameObject;
@@ -41,6 +41,7 @@ namespace Game.Story
 
         private void HandleTurnEvent()
         {
+            turnsLeft--;
             DecrementCooldown();
             if (turnsLeft == 0)
             {
@@ -61,10 +62,8 @@ namespace Game.Story
                     popUp.StoryEvent = storyEvent;
                     popUp.Create();
                 }
-                turnsLeft = 1;
+                turnsLeft = 4;
             }
-
-            turnsLeft--;
         }
 
         private void CheckStats()
@@ -75,7 +74,7 @@ namespace Game.Story
             {
                 if (!keys.Contains(Events.Conditional_Request_House))
                 {
-                    eventPool.Add(Events.Conditional_Request_House,1);
+                    eventPool.Add(Events.Conditional_Request_House,0);
                 }
             }
         }
@@ -95,30 +94,40 @@ namespace Game.Story
                 }
                 GenerateEventPool();
             }
-            int nextValue = random.Next(0, eventPool.Count);
-            //Events currentEvent = eventPool[nextValue];
-            Events[] keys = eventPool.Keys.ToArray();
+            // Guarantees that the next event will be offcooldown
+            Events[] keys = GetOffCooldownEvents();
+            int nextValue = random.Next(0, keys.Length);
             Events currentEvent = keys[nextValue];
             // If the pop up event is on cooldown
-            if (eventPool[currentEvent] == 0)
-            {
-                eventPool[currentEvent]--;
+            eventPool[currentEvent]--;
                 // If it is not on cooldown, we can create the event.
-                switch (currentEvent)
+            switch (currentEvent)
+            {
+                case Events.Event_Flood:
+                    return new FloodEvent();
+                case Events.Request_Bridge:
+                    return new BridgeRequest();
+                case Events.Request_Tower:
+                    return new TowerRequest();
+                case Events.Conditional_Request_House:
+                    return new MoreHouseRequest();
+                default:
+                    return null;
+            }
+        }
+
+        private Events[] GetOffCooldownEvents()
+        {
+            List<Events> eventsList = new List<Events>();
+            foreach (var events in eventPool)
+            {
+                if (events.Value == 0)
                 {
-                    case Events.Event_Flood:
-                        return new FloodEvent();
-                    case Events.Request_Bridge:
-                        return new BridgeRequest();
-                    case Events.Request_Tower:
-                        return new TowerRequest();
-                    case Events.Conditional_Request_House:
-                        return new MoreHouseRequest();
-                    default:
-                        return null;
+                    eventsList.Add(events.Key);
                 }
             }
-            return null;
+
+            return eventsList.ToArray();
         }
 
         private void DecrementCooldown()
@@ -153,9 +162,8 @@ namespace Game.Story
                 string eventString = eventObj.ToString();
                 if (!eventString.Contains("Conditional"))
                 {
-                    // Set all cooldowns to be 1 initially.
-                    eventPool.Add(eventObj,3);
-                   // eventPool.Add(eventObj);
+                    // Set all cooldowns to be 0 initially.
+                    eventPool.Add(eventObj,0);
                 }
             }
             

@@ -28,7 +28,7 @@ namespace Game.CityMap
             Unrender();
             gameObject = new GameObject();
             SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
-            Sprite sprite = Resources.LoadAll<Sprite>("Textures/structures")[spriteNumber];
+            Sprite sprite = Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[spriteNumber];
             renderer.sprite = sprite;
             renderer.sortingLayerName = "Structure";
 
@@ -36,8 +36,9 @@ namespace Game.CityMap
             // in which the Structure was added.
             renderer.sortingOrder = -(int)position.y;
 
+            float scale = 80 / sprite.rect.width;
             gameObject.transform.position = position;
-            gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            gameObject.transform.localScale = new Vector3(scale, scale, scale);
             gameObject.transform.SetParent(canvas.transform);
             gameObject.SetActive(true);
         }

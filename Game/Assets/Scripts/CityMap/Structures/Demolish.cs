@@ -6,6 +6,9 @@ namespace Game.CityMap
 {
     public class DemolishFactory : StructureFactory
     {
+        public override Sprite Sprite { get; } =
+            Resources.Load<Sprite>("Textures/structures/Demolish");
+
         protected override Structure Create()
         {
             return null;

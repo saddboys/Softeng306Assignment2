@@ -33,6 +33,8 @@ namespace Game.CityMap
             }
         }
 
+        public override Sprite Sprite { get; } =
+            Resources.Load<Sprite>("Textures/structures/FactorySprite");
         public FactoryFactory(City city) : base(city) { }
         public FactoryFactory() : base() { }
 

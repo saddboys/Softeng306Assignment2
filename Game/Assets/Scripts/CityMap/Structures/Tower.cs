@@ -28,6 +28,8 @@ namespace Game.CityMap
         {
             get { return 2000; }
         }
+        public override Sprite Sprite { get; } =
+            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[44];
 
         protected override Structure Create()
         {

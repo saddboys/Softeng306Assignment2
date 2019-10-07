@@ -86,7 +86,7 @@ namespace Game
         /// </summary>
         public void EndTurn() {
             Stats.AddContribution(Map.GetStatsContribution());
-            TurnsLeft--;
+            Turn++;
             CheckEndGame();
             NextTurnEvent?.Invoke();
         }
@@ -99,7 +99,7 @@ namespace Game
             double temp = stats.Temperature;
             double wealth = stats.Wealth;
                 
-            if (TurnsLeft == 0)
+            if (Turn == 20)
             {
                 string reason = "Congratulations! You have sustainably developed your city!";
                 EndGame(true, reason);

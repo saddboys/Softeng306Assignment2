@@ -1,26 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using Game.CityMap;
+using UnityEngine.UI;
+using System;
 namespace Game
 {
     public class ToolBar : MonoBehaviour
     {
-        public ToolBar(City city)
-        {
-            // E.g.
+        [SerializeField] private City city;
+        private StructureFactory currentFactory;
+
+        public ToolBar(City city) { }
+
+        // Start is called before the first frame update
+        void Start() {
             city.Map.TileClickedEvent += (s, e) =>
             {
                 // TODO: handle when the tile e.Tile has been clicked.
                 Debug.Log(e.Tile);
-                throw new System.NotImplementedException();
+                // throw new System.NotImplementedException();
+
+                OnNotify(e.Tile);
             };
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
         }
 
         // Update is called once per frame
@@ -29,26 +31,45 @@ namespace Game
         
         }
 
-        //initialise list of structures on the toolbar
-        void Populate(){
- 
+        void OnNotify(MapTile tile) {
+            currentFactory?.BuildOnto(tile);
         }
 
-        //trigger button select event 
-        void OnSelect(){
-
+        void BuildStructure(StructureFactory factory, MapTile tile) {
+            factory.BuildOnto(tile);
         }
 
-        //call method in StructureFactory create a specified strcuture component
-        void CreateStructure(string tag){
-        
+        // Called whenever a toggle is toggled on
+        public void Toggle01A( bool isOn ) {
+            if (isOn) currentFactory = new HouseFactory(city);
         }
 
-        //add the strcuture component to the grid at a specified position
-        void AddToGrid(){
-
+        public void Toggle01B( bool isOn )
+        {
+            if (isOn) currentFactory = new FactoryFactory(city);
         }
 
+        public void Toggle02A( bool isOn )
+        {
+            if (isOn) currentFactory = new ParkFactory(city);
+        }
 
+        public void Toggle02B( bool isOn ) {
+            if (isOn) currentFactory = null;
+        }
+
+        public void Toggle03A( bool isOn )
+        {
+            if (isOn) currentFactory = null;
+        }
+        public void Toggle03B( bool isOn )
+        {
+            if (isOn) currentFactory = null;
+        }
+
+        public void OnRmToggleValueChanged( bool isOn )
+        {
+            if (isOn) currentFactory = new DemolishFactory();
+        }
     }
 }

@@ -77,7 +77,8 @@ namespace Game.CityMap
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                 // For testing purposes:
-                someOtherTile.Structure = new Factory();
+                //someOtherTile.Structure = new Rock();
+                //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
 

@@ -14,6 +14,8 @@ namespace Game
         public StructureFactory CurrentFactory { get; set; }
         private StructureFactory[] factories;
 
+        public event Action BuiltEvent;
+
         public ToolBar(City city) { }
 
         // Start is called before the first frame update
@@ -68,6 +70,7 @@ namespace Game
                 return;
             }
             CurrentFactory.BuildOnto(tile);
+            BuiltEvent?.Invoke();
         }
 
         void BuildStructure(StructureFactory factory, MapTile tile) {

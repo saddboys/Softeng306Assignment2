@@ -87,8 +87,8 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            int width = 10;
-            int height = 20;
+            int width = 40;
+            int height = 30;
 
             if (terrainMap == null)
             {

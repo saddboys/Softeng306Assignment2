@@ -14,7 +14,7 @@ namespace Game.Story
     /// </summary>
     public class StoryManager : MonoBehaviour
     {
-        public enum Events { Request_Bridge, Conditional_Request_House, Request_Tower, Event_Flood}
+        public enum Events { Conditional_Request_House, Conditional_Request_Park, Event_Flood, Event_Circus }
         [SerializeField] 
         private City city;
 
@@ -84,6 +84,14 @@ namespace Game.Story
                     eventPool.Add(Events.Conditional_Request_House,0);
                 }
             }
+
+            if (statsBar.Population > 150)
+            {
+                if (!keys.Contains(Events.Conditional_Request_Park))
+                {
+                    eventPool.Add(Events.Conditional_Request_Park, 0);
+                }
+            }
         }
         /// <summary>
         /// Generates an event at random.
@@ -107,12 +115,16 @@ namespace Game.Story
             {
                 case Events.Event_Flood:
                     return new FloodEvent();
-                case Events.Request_Bridge:
-                    return new BridgeRequest();
-                case Events.Request_Tower:
-                    return new TowerRequest();
+                case Events.Event_Circus:
+                    return new CircusEvent();
+//                case Events.Request_Bridge:
+//                    return new BridgeRequest();
+//                case Events.Request_Tower:
+//                    return new TowerRequest();
                 case Events.Conditional_Request_House:
                     return new MoreHouseRequest();
+                case Events.Conditional_Request_Park:
+                    return new MoreParkRequest();
                 default:
                     return null;
             }

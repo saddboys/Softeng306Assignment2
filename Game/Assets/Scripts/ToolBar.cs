@@ -41,17 +41,8 @@ namespace Game
                 OnNotify(e.Tile);
             };
 
-            city.Stats.ChangeEvent += () =>
-            {
-                for (int i = 0; i < factories.Length; i++)
-                {
-                    toggles[i].interactable = factories[i].CanBuild(out _);
-                    if (toggles[i].isOn && !toggles[i].interactable)
-                    {
-                        toggles[i].isOn = false;
-                    }
-                }
-            };
+            city.Stats.ChangeEvent += UpdateToggleEnabled;
+            Invoke("UpdateToggleEnabled", 0.1f);
 
             foreach (var t in toggles)
             {
@@ -62,6 +53,18 @@ namespace Game
             {
                 toggles[i].interactable = true;
                 addToggleHandler(toggles[i], factories[i]);
+            }
+        }
+
+        private void UpdateToggleEnabled()
+        {
+            for (int i = 0; i < factories.Length; i++)
+            {
+                toggles[i].interactable = factories[i].CanBuild(out _);
+                if (toggles[i].isOn && !toggles[i].interactable)
+                {
+                    toggles[i].isOn = false;
+                }
             }
         }
 

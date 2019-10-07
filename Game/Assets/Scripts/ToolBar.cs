@@ -9,7 +9,7 @@ namespace Game
     public class ToolBar : MonoBehaviour
     {
         [SerializeField] private City city;
-        private StructureFactory currentFactory;
+        public StructureFactory currentFactory;
 
         public ToolBar(City city) { }
 

@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Story.Events;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = System.Random;
 
 namespace Game.Story
@@ -17,6 +18,11 @@ namespace Game.Story
         [SerializeField] 
         private City city;
 
+        [SerializeField] 
+        private ToolBar toolbar;
+
+        [SerializeField] 
+        private Button endTurnButton;
         [SerializeField]
         private GameObject canvas;
         private List<Events> eventPool;
@@ -41,6 +47,8 @@ namespace Game.Story
                 popUp.CityMap = city.Map;
                 StoryEvent storyEvent = CreateEvent();
                 storyEvent.City = city;
+                storyEvent.ToolBar = toolbar;
+                storyEvent.EndButton = endTurnButton;
                 popUp.StoryEvent = storyEvent;
                 popUp.Create();
                 turnsLeft = 2;
@@ -49,6 +57,14 @@ namespace Game.Story
             turnsLeft--;
         }
 
+        private void CheckStats()
+        {
+            StatsBar statsBar = city.Stats;
+            if (statsBar.Wealth > 10)
+            {
+                
+            }
+        }
         /// <summary>
         /// Generates an event at random.
         /// Once an event has occurred, remove it from the pool.

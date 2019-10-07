@@ -45,7 +45,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City.Stats.ElectricCapacity < 1)
+            if (City?.Stats.ElectricCapacity < 1)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -71,8 +71,11 @@ namespace Game.CityMap
 
         public void BuildOnto(MapTile tile)
         {
-            City.Stats.ElectricCapacity -= 1;
-            City.Stats.Wealth -= 3;
+            if (City != null)
+            {
+                City.Stats.ElectricCapacity -= 1;
+                City.Stats.Wealth -= 3;
+            }
             base.BuildOnto(tile);
         }
     }

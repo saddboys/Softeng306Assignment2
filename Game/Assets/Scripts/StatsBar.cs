@@ -26,7 +26,7 @@ namespace Game
             set
             {
                 temperature = value;
-                temperatureValueText.text = temperature.ToString() + "°C Change";
+                temperatureValueText.text = temperature.ToString("F2") + "°C Change";
                 ChangeEvent?.Invoke();
             }
         }
@@ -122,7 +122,7 @@ namespace Game
                 stats = new Stats();
             }
             CO2 = stats.CO2;
-            Temperature += stats.Temperature + CO2 / 10;
+            Temperature += stats.Temperature + CO2 / 1000;
             Population += stats.Population;
             ElectricCapacity += stats.ElectricCapacity;
             Reputation += stats.Reputation;

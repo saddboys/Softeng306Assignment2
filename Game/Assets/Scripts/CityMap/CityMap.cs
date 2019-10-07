@@ -111,15 +111,15 @@ namespace Game.CityMap
                     tile.Canvas = parent;
                     tile.ScreenPosition = mappedVector;
                     
-                    int value = random.Next(0,3);
+                    int value = random.Next(0,100);
                     
                     // Randomly generate the map with tiles (although the tiles are the same right now)
-                    if (value == 0)
+                    if (value < 20)
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
 
                     }
-                    else if( value ==1)
+                    else if (value < 90)
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
                     }
@@ -131,6 +131,38 @@ namespace Game.CityMap
                     map.SetTile(vector, tile);
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
+                }
+            }
+
+            // Repeat factories to tune probabilities.
+            StructureFactory[] factories =
+            {
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new FactoryFactory(),
+                new FactoryFactory(),
+                new FactoryFactory(),
+                new FactoryFactory(),
+                new ParkFactory(),
+            };
+
+            for (int i = 0; i < 50; i++)
+            {
+                // Cluster them close to the centre.
+                int x = (int)(Mathf.Clamp(NextNormalRandom() * width, -width, width) / 2.0f);
+                int y = (int)(Mathf.Clamp(NextNormalRandom() * height, -height, height) / 2.0f);
+
+                var tile = map.GetTile<MapTile>(new Vector3Int(x, y, 0));
+                if (tile == null)
+                {
+                    continue;
+                }
+
+                var randomFactory = factories[random.Next(0, factories.Length)];
+                if (randomFactory.CanBuildOnto(tile, out _))
+                {
+                    randomFactory.BuildOnto(tile);
                 }
             }
         }
@@ -160,6 +192,17 @@ namespace Game.CityMap
                 Destroy(t);
             }
             Generate();
+        }
+
+        private float NextNormalRandom()
+        {
+            const int samples = 100;
+            float sum = 0;
+            for (int i = 0; i < samples; i++)
+            {
+                sum += (float)random.NextDouble();
+            }
+            return 5 * (sum / samples - 0.5f);
         }
     }
 }

@@ -24,6 +24,9 @@ namespace Game.CityMap
 
     public class ParkFactory : StructureFactory
     {
+        public ParkFactory(City city) : base(city) { }
+        public ParkFactory() : base() { }
+
         public int Cost
         {
             get { return 300; }

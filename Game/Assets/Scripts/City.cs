@@ -70,7 +70,7 @@ namespace Game
         /// Function called at the end of the turn to do stat calculations.
         /// </summary>
         public void EndTurn() {
-            Stats.AddContribution(Map.GetStatsContribution());
+            Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             NextTurnEvent?.Invoke();
         }

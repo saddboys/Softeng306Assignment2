@@ -53,6 +53,22 @@ namespace Game.CityMap
             return true;
         }
 
+        public override bool CanBuildOnto(MapTile tile, out string reason)
+        {
+            if (!base.CanBuildOnto(tile, out reason))
+            {
+                return false;
+            }
+
+            if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean)
+            {
+                reason = "Cannot build onto water";
+                return false;
+            }
+
+            return true;
+        }
+
         public void BuildOnto(MapTile tile)
         {
             City.Stats.ElectricCapacity -= 1;

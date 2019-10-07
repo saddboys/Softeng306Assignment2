@@ -94,8 +94,8 @@ namespace Game
         /// </summary>
         public void EndTurn() {
             Stats.UpdateContribution(Map.GetStatsContribution());
-            CheckEndGame();
             Turn++;
+            CheckEndGame();
             NextTurnEvent?.Invoke();
         }
 

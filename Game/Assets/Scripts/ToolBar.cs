@@ -9,7 +9,9 @@ namespace Game
     public class ToolBar : MonoBehaviour
     {
         [SerializeField] private City city;
-        //[SerializeField] private Toggle[] toggles;
+        [SerializeField] private Toggle[] toggles;
+        [SerializeField] private GameObject popupInfo;
+        private int popupInfoCount = 0;
 
         public StructureFactory CurrentFactory { get; set; }
         private StructureFactory[] factories;
@@ -43,14 +45,39 @@ namespace Game
             {
                 for (int i = 0; i < factories.Length; i++)
                 {
-                    if (!factories[i].CanBuild(out string reason))
+                    toggles[i].interactable = factories[i].CanBuild(out _);
+                    if (toggles[i].isOn && !toggles[i].interactable)
                     {
-                        // Disable toggles[i]
+                        toggles[i].isOn = false;
                     }
                 }
             };
 
-            // foreach toggle, add listener.
+            foreach (var t in toggles)
+            {
+                t.interactable = false;
+            }
+
+            for (int i = 0; i < factories.Length; i++)
+            {
+                toggles[i].interactable = true;
+                addToggleHandler(toggles[i], factories[i]);
+            }
+        }
+
+        private void addToggleHandler(Toggle toggle, StructureFactory factory)
+        {
+            toggle.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    CurrentFactory = factory;
+                }
+                else
+                {
+                    CurrentFactory = null;
+                }
+            });
         }
 
         // Update is called once per frame
@@ -66,7 +93,7 @@ namespace Game
             }
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
             {
-                Debug.Log(reason); // TODO: show to user.
+                ShowPopupInfo(reason);
                 return;
             }
             CurrentFactory.BuildOnto(tile);
@@ -77,44 +104,22 @@ namespace Game
             factory.BuildOnto(tile);
         }
 
-        // Called whenever a toggle is toggled on
-        public void Toggle01A( bool isOn ) {
-            if (isOn) CurrentFactory = new HouseFactory(city);
-            else CurrentFactory = null;
+        void ShowPopupInfo(string text)
+        {
+            popupInfo.GetComponentInChildren<Text>().text = text;
+            popupInfo.transform.position = Input.mousePosition;
+            popupInfo.SetActive(true);
+            Invoke("HidePopupInfo", 2);
+            popupInfoCount++;
         }
 
-        public void Toggle01B( bool isOn )
+        void HidePopupInfo()
         {
-            if (isOn) CurrentFactory = new FactoryFactory(city);
-            else CurrentFactory = null;
-        }
-
-        public void Toggle02A( bool isOn )
-        {
-            if (isOn) CurrentFactory = new ParkFactory(city);
-            else CurrentFactory = null;
-        }
-
-        public void Toggle02B( bool isOn ) {
-            if (isOn) CurrentFactory = new DockFactory(city);
-            else CurrentFactory = null;
-        }
-
-        public void Toggle03A( bool isOn )
-        {
-            if (isOn) CurrentFactory = new PowerPlantFactory(city);
-            else CurrentFactory = null;
-        }
-        public void Toggle03B( bool isOn )
-        {
-            if (isOn) CurrentFactory = null;
-            else CurrentFactory = null;
-        }
-
-        public void OnRmToggleValueChanged( bool isOn )
-        {
-            if (isOn) CurrentFactory = new DemolishFactory();
-            else CurrentFactory = null;
+            popupInfoCount--;
+            if (popupInfoCount == 0)
+            {
+                popupInfo.SetActive(false);
+            }
         }
     }
 }

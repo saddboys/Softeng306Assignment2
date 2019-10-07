@@ -24,6 +24,9 @@ namespace Game.CityMap
 
     public class ParkFactory : StructureFactory
     {
+        public ParkFactory(City city) : base(city) { }
+        public ParkFactory() : base() { }
+
         public int Cost
         {
             get { return 300; }
@@ -32,6 +35,16 @@ namespace Game.CityMap
         protected override Structure Create()
         {
             return new Park();
+        }
+        
+        public override bool CanBuildOnto(MapTile tile, out string reason)
+        {
+            if (tile.Terrain.TerrainType.Equals(Terrain.TerrainTypes.Grass))
+            {
+                reason = "Parks can only be built on grassland";
+                return false;
+            }
+            return base.CanBuildOnto(tile, out reason);
         }
     }
 }

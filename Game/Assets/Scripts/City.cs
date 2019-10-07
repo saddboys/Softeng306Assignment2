@@ -8,20 +8,20 @@ using UnityEngine.UI;
 namespace Game
 {
     public class City : MonoBehaviour
-    {
-        public int TurnsLeft
+    { 
+        public int Turn
         {
             get
             {
-                return turnsLeft;
+                return turn;
             }
             private set
             {
-                turnsLeft = value;
-                turnLeftText.text = turnsLeft.ToString();
+                turn = value;
+                turnText.text = turn.ToString();
             }
         }
-        private int turnsLeft;
+        private int turn;
 
         [SerializeField]
         private StatsBar stats;
@@ -49,7 +49,7 @@ namespace Game
         }
 
         [SerializeField]
-        private Text turnLeftText;
+        private Text turnText;
 
         [SerializeField]
         private GameSceneController controller;
@@ -70,14 +70,9 @@ namespace Game
         void Start()
         {
             endTurnButton.onClick.AddListener(EndTurn);
-            TurnsLeft = 50;
-            stats.CO2 = 0;
-            stats.Temperature = 0;
-            stats.Population = 30; // TODO: Random - based on houses
-            stats.ElectricCapacity = 4; // TODO: Random
-            stats.Reputation = 50;
-            stats.Score = 0;
-            stats.Wealth = 10000;
+            //Restart();
+            Turn = 1;
+            Stats.Restart();
         }
 
         // Update is called once per frame
@@ -135,6 +130,15 @@ namespace Game
                 Controller.GameOver(reason);    
             }
             
+            Turn++;
+            NextTurnEvent?.Invoke();
+        }
+
+        public void Restart()
+        {
+            Turn = 1;
+            Stats.Restart();
+            Map.Regenerate();
         }
     }
 }

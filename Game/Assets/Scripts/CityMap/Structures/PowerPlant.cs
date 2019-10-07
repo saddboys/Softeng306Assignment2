@@ -12,7 +12,15 @@ namespace Game.CityMap
             {
                 CO2 = 1,
                 Wealth = 10,
-                ElectricCapacity = 10
+                ElectricCapacity = 0,
+            };
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats
+            {
+                ElectricCapacity = -20,
             };
         }
 
@@ -45,7 +53,7 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 5;
+                City.Stats.ElectricCapacity += 20;
             }
         }
 

@@ -30,8 +30,25 @@ namespace Game.CityMap
                 return false;
             }
 
+            if (tile.Structure == null)
+            {
+                reason = "Nothing to demolish here";
+                return false;
+            }
+
             reason = "";
             return true;
+        }
+
+        public override void BuildOnto(MapTile tile)
+        {
+            // Note: Get structure before it is demolished.
+            if (City != null)
+            {
+                City.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
+            }
+
+            base.BuildOnto(tile);
         }
     }
 }

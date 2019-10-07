@@ -13,8 +13,16 @@ namespace Game.CityMap
                 Score = 100,
                 Reputation = -1,
                 Wealth = 0.5,
-                Population = 4,
-                CO2 = 1
+                CO2 = 1,
+            };
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats
+            {
+                ElectricCapacity = 1,
+                Population = -4,
             };
         }
 
@@ -79,6 +87,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 1;
+                City.Stats.Population += 4;
             }
         }
     }

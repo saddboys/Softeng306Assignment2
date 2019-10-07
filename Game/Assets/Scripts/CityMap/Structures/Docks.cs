@@ -10,6 +10,14 @@ namespace Game.CityMap
         {
             RenderOnto(canvas, position, 10, new Vector2(1, 1.5f));
         }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats
+            {
+                ElectricCapacity = 1,
+            };
+        }
     }
 
     public class DockFactory : StructureFactory
@@ -27,6 +35,16 @@ namespace Game.CityMap
         protected override Structure Create()
         {
             return new Dock();
+        }
+        public override void BuildOnto(MapTile tile)
+        {
+            base.BuildOnto(tile);
+
+            if (City != null)
+            {
+                City.Stats.ElectricCapacity -= 1;
+                City.Stats.Reputation += 10;
+            }
         }
     }
 }

@@ -49,5 +49,14 @@ namespace Game.CityMap
             }
             return base.CanBuildOnto(tile, out reason);
         }
+        public override void BuildOnto(MapTile tile)
+        {
+            base.BuildOnto(tile);
+
+            if (City != null)
+            {
+                City.Stats.Reputation += 10;
+            }
+        }
     }
 }

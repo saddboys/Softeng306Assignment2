@@ -12,6 +12,7 @@ namespace Game.CityMap
             {
                 CO2 = 1,
                 Wealth = 10,
+                ElectricCapacity = 10
             };
         }
 
@@ -30,7 +31,7 @@ namespace Game.CityMap
 
         protected override Structure Create()
         {
-            return new Factory();
+            return new PowerPlant();
         }
 
         public void BuildOnto(MapTile tile)

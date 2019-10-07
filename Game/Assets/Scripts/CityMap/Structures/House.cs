@@ -11,7 +11,10 @@ namespace Game.CityMap
             return new Stats
             {
                 Score = 100,
+                Reputation = -1,
                 Wealth = 0.5,
+                Population = 4,
+                CO2 = 1
             };
         }
 
@@ -23,7 +26,7 @@ namespace Game.CityMap
 
     public class HouseFactory : StructureFactory
     {
-        public int Cost
+        public override int Cost
         {
             get { return 500; }
         }
@@ -50,6 +53,7 @@ namespace Game.CityMap
         public void BuildOnto(MapTile tile)
         {
             City.Stats.ElectricCapacity -= 1;
+            City.Stats.Wealth -= 3;
             base.BuildOnto(tile);
         }
     }

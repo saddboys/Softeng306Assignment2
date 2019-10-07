@@ -22,7 +22,9 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
-        private Random random = new Random();
+
+        Random random = new Random();
+
 
         public MapTile[] Tiles
         {
@@ -75,8 +77,7 @@ namespace Game.CityMap
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                 // For testing purposes:
-                someOtherTile.Structure = new Rock();
-                someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
+                someOtherTile.Structure = new Factory();
             }
         }
 
@@ -89,6 +90,7 @@ namespace Game.CityMap
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
             int width = 40;
             int height = 30;
+            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
@@ -99,8 +101,6 @@ namespace Game.CityMap
                 for (int j = 0; j < height; j++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-                    TerrainFactory terrainFactory = new TerrainFactory();
-                    int value = random.Next(0, 2);
                     // A vector used for hex position
                     Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
                     // Find the real position (the position on the screen)
@@ -109,26 +109,21 @@ namespace Game.CityMap
 
                     tile.Canvas = parent;
                     tile.ScreenPosition = mappedVector;
-
+                    
+                    int value = random.Next(0,3);
+                    
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value == 0)
                     {
-                        tile.Terrain = terrainFactory.CreateTerrain(TerrainFactory.TerrainTypes.Grass);
-                        tile.Structure = new Tower();
-                        map.SetTile(vector, tile);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
+
                     }
                     else
                     {
-                        tile.Terrain = terrainFactory.CreateTerrain(TerrainFactory.TerrainTypes.Test);
-                        // Only random tiles have the mountain on it
-                        if (random.Next(1, 6) == 4)
-                        {
-                            tile.Structure = new Rock();
-                        }
-
-                        map.SetTile(vector, tile);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
                     }
-
+                    
+                    map.SetTile(vector, tile);
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
                 }

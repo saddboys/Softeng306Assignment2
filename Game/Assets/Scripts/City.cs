@@ -55,7 +55,8 @@ namespace Game
         void Start()
         {
             endTurnButton.onClick.AddListener(EndTurn);
-            Restart();
+            //Restart();
+            Turn = 1;
             Stats.Restart();
         }
 

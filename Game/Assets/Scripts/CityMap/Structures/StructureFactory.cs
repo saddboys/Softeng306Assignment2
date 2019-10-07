@@ -117,12 +117,12 @@ namespace Game.CityMap
         {
             Assert.IsTrue(CanBuildOnto(tile, out _));
 
+            tile.Structure = Create();
+
             if (City != null)
             {
                 City.Stats.Wealth -= Cost;
             }
-
-            tile.Structure = Create();
         }
     }
 }

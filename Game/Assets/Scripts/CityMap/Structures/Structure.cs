@@ -15,6 +15,15 @@ namespace Game.CityMap
             return new Stats();
         }
 
+        /// <summary>
+        /// Calculate how much the stats will change when the structure is demolished.
+        /// </summary>
+        /// <returns></returns>
+        public virtual Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats();
+        }
+
         private GameObject gameObject;
 
         /// <summary>

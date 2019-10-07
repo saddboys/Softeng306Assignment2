@@ -94,6 +94,13 @@ namespace Game
                     buttonSprite.SetActive(true);
                 }
             }
+
+            // Fix popup info tooltip's scaling.
+            // (Don't want to modify game scene just for this)
+            popupInfo.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
+            popupInfo.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
+            popupInfo.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
         }
 
         private void UpdateToggleEnabled()

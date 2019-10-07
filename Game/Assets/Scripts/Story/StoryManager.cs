@@ -39,6 +39,10 @@ namespace Game.Story
             GenerateEventPool();
         }
 
+        /// <summary>
+        ///  This fires whenever a new turn is called.
+        ///  This will handle anything with the pop up events.
+        /// </summary>
         private void HandleTurnEvent()
         {
             turnsLeft--;
@@ -66,6 +70,9 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Method which will check the stats and add additional events to pool
+        /// </summary>
         private void CheckStats()
         {
             StatsBar statsBar = city.Stats;
@@ -86,21 +93,16 @@ namespace Game.Story
         /// <returns>StoryEvent</returns>
         public StoryEvent CreateEvent()
         {
+            // When all of the cooldowns are finished, we regenerate the pool
             if (CheckAll())
             {
-                foreach (var v in eventPool.Values.ToArray())
-                {
-                    Debug.Log("V is" + v);
-                }
                 GenerateEventPool();
             }
             // Guarantees that the next event will be offcooldown
             Events[] keys = GetOffCooldownEvents();
             int nextValue = random.Next(0, keys.Length);
             Events currentEvent = keys[nextValue];
-            // If the pop up event is on cooldown
             eventPool[currentEvent]--;
-                // If it is not on cooldown, we can create the event.
             switch (currentEvent)
             {
                 case Events.Event_Flood:
@@ -116,6 +118,11 @@ namespace Game.Story
             }
         }
 
+        
+        /// <summary>
+        /// Retrieve all of the events that have no cooldown
+        /// </summary>
+        /// <returns></returns>
         private Events[] GetOffCooldownEvents()
         {
             List<Events> eventsList = new List<Events>();
@@ -142,6 +149,10 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Checks if all of the cooldowns have finished.
+        /// </summary>
+        /// <returns></returns>
         private bool CheckAll()
         {
             

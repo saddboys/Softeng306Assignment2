@@ -147,8 +147,9 @@ namespace Game
         /// </summary>
         public void Restart()
         {
+            hasEnded = false;
             EndTurnButton.interactable = true;
-            Turn = 1;
+            Turn = 0;
             Stats.Restart();
             Map.Regenerate();
         }

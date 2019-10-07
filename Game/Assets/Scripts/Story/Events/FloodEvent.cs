@@ -19,7 +19,7 @@ namespace Game.Story.Events
             get { return SPRITE; }
         }
 
-        private const string TITLE = "Flood event";
+        private const string TITLE = "FLOOD";
         private const string DESCRIPTION = "Flooding happened bad luck :(";
         private const Sprite SPRITE = null;
         public override void OnYesClick()

@@ -10,16 +10,44 @@ namespace Game.Story
     /// <summary>
     /// A class for the handling of events.
     /// </summary>
-    public class StoryManager
+    public class StoryManager : MonoBehaviour
     {
         public enum Events { Event_Flood, Request_Tower, Request_Bridge}
-        private List<Events> eventPool;
 
-        public StoryManager()
+        [SerializeField] 
+        private City city;
+
+        [SerializeField]
+        private GameObject canvas;
+        private List<Events> eventPool;
+        private int turnsLeft = 2;
+        private EventPopUp popUp;
+        [SerializeField]
+        private GameObject storyManagerGameObject;
+
+        void Start()
         {
+            city.NextTurnEvent += HandleTurnEvent;
             GenerateEventPool();
         }
-        
+
+        private void HandleTurnEvent()
+        {
+            if (turnsLeft == 0)
+            {
+                popUp = storyManagerGameObject.AddComponent<EventPopUp>();
+                canvas.SetActive(true);
+                popUp.canvas = this.canvas;
+                popUp.cityMap = city.Map;
+                StoryEvent events = CreateEvent();
+                popUp.StoryEvent = events;
+                popUp.Create();
+                turnsLeft = 2;
+            }
+
+            turnsLeft--;
+        }
+
         /// <summary>
         /// Generates an event at random.
         /// Once an event has occurred, remove it from the pool.
@@ -28,6 +56,7 @@ namespace Game.Story
         /// <returns>StoryEvent</returns>
         public StoryEvent CreateEvent()
         {
+            Debug.Log("GOES HERE");
             Random random = new Random();
             if (eventPool.Count == 0)
             {

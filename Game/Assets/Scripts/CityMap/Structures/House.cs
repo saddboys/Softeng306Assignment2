@@ -26,6 +26,9 @@ namespace Game.CityMap
 
     public class HouseFactory : StructureFactory
     {
+        public HouseFactory(City city) : base(city) { }
+        public HouseFactory() : base() { }
+
         public override int Cost
         {
             get { return 500; }

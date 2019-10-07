@@ -16,6 +16,8 @@ namespace Game.Story
         public abstract string Title { get; }
         public abstract string Description { get; }
         public abstract Sprite EventImage { get; }
+        
+        public City City { get; set; }
         public virtual EventTypes EventType
         {
             get { return EventTypes.Event; }

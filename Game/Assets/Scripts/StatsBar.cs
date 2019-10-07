@@ -105,17 +105,19 @@ namespace Game
         /// <summary>
         /// Adds individual fields of one Stats object onto itself.
         /// </summary>
-        public void AddContribution(Stats stats)
+        public void UpdateContribution(Stats stats)
         {
             if (stats == null)
             {
-                return;
+                stats = new Stats();
             }
-            CO2 += stats.CO2;
-            Temperature += stats.Temperature;
+            CO2 = stats.CO2;
+            Temperature += stats.Temperature + CO2 / 10;
             Population += stats.Population;
             ElectricCapacity += stats.ElectricCapacity;
             Reputation += stats.Reputation;
+            if (Reputation > 100) Reputation = 100;
+            if (Reputation < 0) Reputation = 0;
             Score += stats.Reputation;
             Wealth += stats.Wealth;
         }

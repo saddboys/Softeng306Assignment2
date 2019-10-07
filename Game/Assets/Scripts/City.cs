@@ -86,8 +86,8 @@ namespace Game
         /// </summary>
         public void EndTurn() {
             Stats.UpdateContribution(Map.GetStatsContribution());
-            Turn++;
             CheckEndGame();
+            Turn++;
             NextTurnEvent?.Invoke();
         }
 
@@ -125,13 +125,10 @@ namespace Game
             {
                 Controller.GameWon(reason);   
             }
-            else
+            else 
             {
                 Controller.GameOver(reason);    
             }
-            
-            Turn++;
-            NextTurnEvent?.Invoke();
         }
 
         public void Restart()

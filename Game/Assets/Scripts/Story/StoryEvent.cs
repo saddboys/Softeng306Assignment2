@@ -19,12 +19,14 @@ namespace Game.Story
         public abstract Sprite EventImage { get; }
         
         public City City { get; set; }
-        public ToolBar ToolBar { get; set; }
+        public virtual ToolBar ToolBar { get; set; }
         public Button EndButton { get; set; }
         public virtual EventTypes EventType
         {
             get { return EventTypes.Event; }
         }
+        
+        
         
         /// <summary>
         /// Both events and requests will have an option to accept the event.

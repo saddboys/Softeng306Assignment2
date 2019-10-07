@@ -45,7 +45,8 @@ namespace Game.Story
                 canvas.SetActive(true);
                 popUp.Canvas = this.canvas;
                 popUp.CityMap = city.Map;
-                StoryEvent storyEvent = CreateEvent();
+                //StoryEvent storyEvent = CreateEvent();
+                StoryEvent storyEvent = new MoreHouseRequest();
                 storyEvent.City = city;
                 storyEvent.ToolBar = toolbar;
                 storyEvent.EndButton = endTurnButton;
@@ -92,7 +93,7 @@ namespace Game.Story
                     return new BridgeRequest();
                 case Events.Request_Tower:
                     eventPool.Remove(Events.Request_Tower);
-                    return new TowerRequest();     
+                    return new TowerRequest();
                 default:
                     return null;
             }

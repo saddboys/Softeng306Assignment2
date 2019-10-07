@@ -119,9 +119,13 @@ namespace Game.CityMap
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
 
                     }
-                    else
+                    else if( value ==1)
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
+                    }
+                    else
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
                     }
                     
                     map.SetTile(vector, tile);

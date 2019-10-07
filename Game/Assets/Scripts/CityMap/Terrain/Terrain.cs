@@ -29,9 +29,13 @@ namespace Game.CityMap
                 
                 sprite = sprites[12];
             }
-            else
+            else if (terrainType.Equals(TerrainTypes.Desert))
             {
                 sprite = sprites[23];
+            }
+            else
+            {
+                sprite = sprites[sprites.Length-1];
             }
         }
         

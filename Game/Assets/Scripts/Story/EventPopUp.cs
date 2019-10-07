@@ -10,8 +10,8 @@ using UnityEngine.UI;
 public class EventPopUp : MonoBehaviour
 {
 
-    public GameObject canvas;
-    public CityMap cityMap;
+    public GameObject Canvas { get; set; }
+    public CityMap CityMap { get; set; }
 
     private const int POP_UP_WIDTH = 400;
     private const int POP_UP_HEIGHT = 200;
@@ -51,7 +51,7 @@ public class EventPopUp : MonoBehaviour
         panel.AddComponent<CanvasRenderer>();
         Image i = panel.AddComponent<Image>();
         i.color = Color.white;
-        panel.transform.SetParent(canvas.transform, false);
+        panel.transform.SetParent(Canvas.transform, false);
         panel.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
         
         // Creating the title
@@ -87,7 +87,7 @@ public class EventPopUp : MonoBehaviour
     private void CreateEventPopUp()
     {
         CreatePopUp();
-        GameObject panel = canvas.transform.Find(POP_UP_NAME).gameObject;
+        GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         GameObject buttonObj = new GameObject();
         Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(DestroyPanel);
@@ -112,7 +112,7 @@ public class EventPopUp : MonoBehaviour
     private void CreateRequestPopUp()
     {
         CreatePopUp();
-        GameObject panel = canvas.transform.Find(POP_UP_NAME).gameObject;
+        GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
 
         StoryRequest storyRequest = (StoryRequest) StoryEvent;
         // Setting the buttons
@@ -160,8 +160,8 @@ public class EventPopUp : MonoBehaviour
     /// </summary>
     private void DestroyPanel()
     {
-        canvas.SetActive(false);
-        GameObject panel = canvas.transform.Find(POP_UP_NAME).gameObject;
+        Canvas.SetActive(false);
+        GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);
     }
 }

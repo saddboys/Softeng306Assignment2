@@ -37,10 +37,11 @@ namespace Game.Story
             {
                 popUp = storyManagerGameObject.AddComponent<EventPopUp>();
                 canvas.SetActive(true);
-                popUp.canvas = this.canvas;
-                popUp.cityMap = city.Map;
-                StoryEvent events = CreateEvent();
-                popUp.StoryEvent = events;
+                popUp.Canvas = this.canvas;
+                popUp.CityMap = city.Map;
+                StoryEvent storyEvent = CreateEvent();
+                storyEvent.City = city;
+                popUp.StoryEvent = storyEvent;
                 popUp.Create();
                 turnsLeft = 2;
             }

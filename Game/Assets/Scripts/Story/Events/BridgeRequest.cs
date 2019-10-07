@@ -29,6 +29,7 @@ namespace Game.Story.Events
 
         public override void OnYesClick()
         {
+            this.City.Stats.Wealth -= 10000;
             Debug.Log("BRIDGE REQUEST YES");
         }
     }

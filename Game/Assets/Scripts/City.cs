@@ -147,6 +147,7 @@ namespace Game
         /// </summary>
         public void Restart()
         {
+            hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
             Stats.Restart();

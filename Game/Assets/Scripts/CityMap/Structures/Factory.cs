@@ -20,6 +20,9 @@ namespace Game.CityMap
 
     public class FactoryFactory : StructureFactory
     {
+        public FactoryFactory(City city) : base(city) { }
+        public FactoryFactory() : base() { }
+
         protected override Structure Create()
         {
             return new Factory();

@@ -92,6 +92,12 @@ namespace Game.CityMap
                 return false;
             }
 
+            if (tile.Structure != null)
+            {
+                reason = "Cannot build on top of existing structure";
+                return false;
+            }
+
             reason = "";
             return true;
         }

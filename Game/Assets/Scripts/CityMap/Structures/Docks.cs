@@ -14,6 +14,8 @@ namespace Game.CityMap
 
     public class DockFactory : StructureFactory
     {
+        public DockFactory(City city) : base(city) { }
+        public DockFactory() : base() { }
         public int Cost
         {
             get { return 1000; }

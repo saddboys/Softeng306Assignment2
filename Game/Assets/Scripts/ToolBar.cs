@@ -77,34 +77,41 @@ namespace Game
         // Called whenever a toggle is toggled on
         public void Toggle01A( bool isOn ) {
             if (isOn) CurrentFactory = new HouseFactory(city);
+            else CurrentFactory = null;
         }
 
         public void Toggle01B( bool isOn )
         {
             if (isOn) CurrentFactory = new FactoryFactory(city);
+            else CurrentFactory = null;
         }
 
         public void Toggle02A( bool isOn )
         {
             if (isOn) CurrentFactory = new ParkFactory(city);
+            else CurrentFactory = null;
         }
 
         public void Toggle02B( bool isOn ) {
             if (isOn) CurrentFactory = new DockFactory(city);
+            else CurrentFactory = null;
         }
 
         public void Toggle03A( bool isOn )
         {
             if (isOn) CurrentFactory = new PowerPlantFactory(city);
+            else CurrentFactory = null;
         }
         public void Toggle03B( bool isOn )
         {
             if (isOn) CurrentFactory = null;
+            else CurrentFactory = null;
         }
 
         public void OnRmToggleValueChanged( bool isOn )
         {
             if (isOn) CurrentFactory = new DemolishFactory();
+            else CurrentFactory = null;
         }
     }
 }

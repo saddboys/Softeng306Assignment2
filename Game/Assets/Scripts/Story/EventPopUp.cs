@@ -163,6 +163,7 @@ public class EventPopUp : MonoBehaviour
         Canvas.SetActive(false);
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);
+        Destroy(GetComponent<EventPopUp>());
     }
 }
 

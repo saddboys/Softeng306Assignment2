@@ -29,7 +29,7 @@ namespace Game
                 new ParkFactory(city),
                 new PowerPlantFactory(city),
                 new DockFactory(city),
-                new DemolishFactory(),
+                new DemolishFactory(city),
             };
 
             city.Map.TileClickedEvent += (s, e) =>

@@ -27,7 +27,7 @@ namespace Game.CityMap
         public ParkFactory(City city) : base(city) { }
         public ParkFactory() : base() { }
 
-        public int Cost
+        public override int Cost
         {
             get { return 300; }
         }

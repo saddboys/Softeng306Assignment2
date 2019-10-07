@@ -13,6 +13,8 @@ namespace Game.CityMap
                 return 100;
             }
         }
+        public DemolishFactory(City city) : base(city) { }
+        public DemolishFactory() : base() { }
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/Demolish");

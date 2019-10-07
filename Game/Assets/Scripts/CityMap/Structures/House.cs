@@ -79,7 +79,6 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 1;
-                City.Stats.Wealth -= 3;
             }
         }
     }

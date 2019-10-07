@@ -26,7 +26,7 @@ namespace Game.CityMap
     {
         public PowerPlantFactory(City city) : base(city) { }
         public PowerPlantFactory() : base() { }
-        public int Cost
+        public override int Cost
         {
             get { return 4000; }
         }

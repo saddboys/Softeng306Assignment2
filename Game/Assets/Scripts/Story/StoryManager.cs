@@ -27,7 +27,7 @@ namespace Game.Story
         private GameObject canvas;
         //private List<Events> eventPool;
         private Dictionary<Events,int> eventPool; 
-        private int turnsLeft = 3;
+        private int turnsLeft = 1;
         private EventPopUp popUp;
         [SerializeField]
         private GameObject storyManagerGameObject;
@@ -53,7 +53,8 @@ namespace Game.Story
                 CheckStats();
                 StoryEvent storyEvent = CreateEvent();
                 //StoryEvent storyEvent = new MoreHouseRequest();
-                if (storyEvent != null)
+                Debug.Log(city.HasEnded);
+                if (storyEvent != null && !city.HasEnded)
                 {
                     popUp = storyManagerGameObject.AddComponent<EventPopUp>();
                     popUp.name = "event-pop-up";
@@ -66,7 +67,7 @@ namespace Game.Story
                     popUp.StoryEvent = storyEvent;
                     popUp.Create();
                 }
-                turnsLeft = 4;
+                turnsLeft = 1;
             }
         }
 
@@ -166,7 +167,6 @@ namespace Game.Story
         private void GenerateEventPool()
         {
             eventPool = new Dictionary<Events, int>();
-           // eventPool = new List<Events>();
             Events[] events = (Events[])Enum.GetValues(typeof(Events));
             foreach(var eventObj in events)
             {

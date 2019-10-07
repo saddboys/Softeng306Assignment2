@@ -2,7 +2,7 @@
 
 A Unity Game about Climate Change
 
-The [PROTOTYPE](https://github.com/saddboys/Softeng306Assignment2/releases/tag/PROTOTYPE) version is at commit [`3cf733a`](https://github.com/saddboys/Softeng306Assignment2/tree/3cf733a9a7eef99f1f49e84eb86308bb0f4e1fb2).
+The [PROTOTYPE](https://github.com/saddboys/Softeng306Assignment2/releases/tag/PROTOTYPE) version is at commit [`6540559`](https://github.com/saddboys/Softeng306Assignment2/tree/6540559ba1dfd242085a232972afadc403623bb7).
 
 ## Running the Prototype
 

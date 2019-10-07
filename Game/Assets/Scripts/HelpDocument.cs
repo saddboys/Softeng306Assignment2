@@ -29,7 +29,6 @@ public class HelpDocument : MonoBehaviour
     public void OnClick(){
     GameObject panel = new GameObject("Panel");
      panel.AddComponent<CanvasRenderer>();
-     panel.
      Image i = panel.AddComponent<Image>();
      i.color = Color.red;
      panel.transform.SetParent(newCanvas.transform, false);

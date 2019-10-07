@@ -42,12 +42,12 @@ namespace Game.CityMap
             gameObject.SetActive(true);
         }
         
-        protected void RenderOntoSprite(GameObject canvas, Vector3 position, Sprite sprite, Vector2 imageSize)
+        protected void RenderOntoSprite(GameObject canvas, Vector3 position, string spritePath, Vector2 imageSize)
         {
             Unrender();
             gameObject = new GameObject();
             Image image = gameObject.AddComponent<Image>();
-            image.sprite = sprite;
+            image.sprite = Resources.Load<Sprite>(spritePath);;
             Vector2 structureSize = imageSize;
             // Determines the size of the structure
             gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;

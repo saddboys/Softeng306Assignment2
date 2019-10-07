@@ -6,20 +6,33 @@ namespace Game.CityMap
 {
     public class Factory : Structure
     {
-        private Sprite sprite = Resources.Load<Sprite>("Textures/structures/FactorySprite");
         public override Stats GetStatsContribution()
         {
-            throw new System.NotImplementedException();
+            return new Stats()
+            {
+                CO2 = 10,
+                Score = 500,
+                Reputation = 3,
+                Wealth = 10,
+            };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOntoSprite(canvas, position, sprite, new Vector2(1, 1.5f));
+            Vector3 positionNew = new Vector3(position.x, position.y - 0f, position.z);
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactorySprite", new Vector2(1, 1.2f));
         }
     }
 
     public class FactoryFactory : StructureFactory
     {
+        public override int Cost {
+            get
+            {
+                return 3000;
+            }
+        }
+
         public FactoryFactory(City city) : base(city) { }
         public FactoryFactory() : base() { }
 
@@ -27,5 +40,28 @@ namespace Game.CityMap
         {
             return new Factory();
         }
+        
+        public override bool CanBuild(out string reason)
+        {
+            if (!base.CanBuild(out reason))
+            {
+                return false;
+            }
+            if (City.Stats.ElectricCapacity < 5)
+            {
+                reason = "Not enough electric capacity";
+                return false;
+            }
+            return true;
+        }
+        
+        public override void BuildOnto(MapTile tile)
+        {
+            City.Stats.ElectricCapacity -= 5;
+            City.Stats.Wealth -= 15;
+            base.BuildOnto(tile);
+        }
+
+
     }
 }

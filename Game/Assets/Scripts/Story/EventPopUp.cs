@@ -17,7 +17,7 @@ public class EventPopUp : MonoBehaviour
     private const int POP_UP_HEIGHT = 200;
     private const int BUTTON_WIDTH = 50;
     private const int BUTTON_HEIGHT = 30;
-    private const int TITLE_FONT_SIZE = 20;
+    private const int TITLE_FONT_SIZE = 30;
     private const int DESCRIPTION_FONT_SIZE = 20;
 
     public StoryEvent StoryEvent { get; set; }
@@ -75,9 +75,9 @@ public class EventPopUp : MonoBehaviour
         descriptionText.alignment = TextAnchor.UpperCenter;
         description.transform.SetParent(panel.transform,false);
         description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/3);
         // TODO: Scale depending on size of the description
-        description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
+       // description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
     }
 
     
@@ -96,7 +96,7 @@ public class EventPopUp : MonoBehaviour
         text.text = "OK";
         text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = Color.black;
-        text.fontSize = TITLE_FONT_SIZE;
+        text.fontSize = DESCRIPTION_FONT_SIZE;
 //        Image buttonImage = buttonObj.AddComponent<Image>();
 //        buttonImage.sprite = Resources.LoadAll<Sprite>("Textures/Structures")[0];
         buttonObj.name = "OKButton";
@@ -129,7 +129,7 @@ public class EventPopUp : MonoBehaviour
         text.text = "Yes";
         text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = Color.black;
-        text.fontSize = TITLE_FONT_SIZE;
+        text.fontSize = DESCRIPTION_FONT_SIZE;
         buttonObj.name = "YesButton";
         buttonObj.transform.SetParent(panel.transform,false);
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
@@ -148,7 +148,7 @@ public class EventPopUp : MonoBehaviour
         noText.text = "No";
         noText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         noText.color = Color.black;
-        noText.fontSize = TITLE_FONT_SIZE;
+        noText.fontSize = DESCRIPTION_FONT_SIZE;
         buttonObj2.name = "NoButton";
         buttonObj2.transform.SetParent(panel.transform,false);
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);

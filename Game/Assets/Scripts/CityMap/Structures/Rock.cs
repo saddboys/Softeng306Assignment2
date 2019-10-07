@@ -14,6 +14,9 @@ namespace Game.CityMap
 
     public class RockFactory : StructureFactory
     {
+        public override Sprite Sprite { get; } =
+            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[29];
+
         protected override Structure Create()
         {
             return new Rock();

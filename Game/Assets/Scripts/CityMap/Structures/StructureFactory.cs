@@ -17,6 +17,11 @@ namespace Game.CityMap
         public virtual int Cost { get; }
 
         /// <summary>
+        /// Sprite to use for the toolbar button.
+        /// </summary>
+        public virtual Sprite Sprite { get; }
+
+        /// <summary>
         /// Reference to the city for requirement calculations. May be null if requirements
         /// checking is not required for the factory instance (e.g. for CityMap map generation).
         /// </summary>

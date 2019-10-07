@@ -16,12 +16,11 @@ namespace Game.Story.Events
 
         public override Sprite EventImage
         {
-            get { return SPRITE; }
+            get { return Resources.LoadAll<Sprite>("EventSprites/circus2")[0]; }
         }
 
-        private const string TITLE = "Circust event";
+        private const string TITLE = "Circus event";
         private const string DESCRIPTION = "The circus is in town. :D";
-        private const Sprite SPRITE = null;
         public override void OnYesClick()
         {
             City.Stats.Reputation += 1;

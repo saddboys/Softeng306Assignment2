@@ -17,7 +17,7 @@ namespace Game.Story.Events
 
         public override Sprite EventImage
         {
-            get { return SPRITE; }
+            get { return Resources.LoadAll<Sprite>("EventSprites/park2")[0]; }
         }
 
         public override ToolBar ToolBar
@@ -34,7 +34,6 @@ namespace Game.Story.Events
 
         private const string TITLE = "More Park Request";
         private const string DESCRIPTION = "You are growing in population. Build a public park.";
-        private const Sprite SPRITE = null;
 
         public override void OnYesClick()
         {

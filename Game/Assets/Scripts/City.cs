@@ -149,7 +149,7 @@ namespace Game
         {
             hasEnded = false;
             EndTurnButton.interactable = true;
-            Turn = 0;
+            Turn = 1;
             Stats.Restart();
             Map.Regenerate();
         }

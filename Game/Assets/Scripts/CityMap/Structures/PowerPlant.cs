@@ -24,6 +24,8 @@ namespace Game.CityMap
 
     public class PowerPlantFactory : StructureFactory
     {
+        public PowerPlantFactory(City city) : base(city) { }
+        public PowerPlantFactory() : base() { }
         public int Cost
         {
             get { return 4000; }
@@ -34,10 +36,26 @@ namespace Game.CityMap
             return new PowerPlant();
         }
 
-        public void BuildOnto(MapTile tile)
+        public override void BuildOnto(MapTile tile)
         {
             City.Stats.ElectricCapacity += 5;
             base.BuildOnto(tile);
+        }
+
+        public override bool CanBuildOnto(MapTile tile, out string reason)
+        {
+            if (!base.CanBuildOnto(tile, out reason))
+            {
+                return false;
+            }
+
+            if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean)
+            {
+                reason = "Cannot build onto water";
+                return false;
+            }
+
+            return true;
         }
     }
 }

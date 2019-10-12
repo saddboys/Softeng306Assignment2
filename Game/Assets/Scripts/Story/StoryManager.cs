@@ -19,6 +19,7 @@ namespace Game.Story
             Event_Circus }
         [SerializeField] 
         private City city;
+        
 
         [SerializeField] 
         private ToolBar toolbar;
@@ -35,8 +36,10 @@ namespace Game.Story
         [SerializeField]
         private GameObject storyManagerGameObject;
         private Random random;
+        private ThanTec.ThanTec thanTec;
         void Start()
         {
+            thanTec = new ThanTec.ThanTec();
             random = new Random();
             city.NextTurnEvent += HandleTurnEvent;
             GenerateEventPool();
@@ -48,6 +51,11 @@ namespace Game.Story
         /// </summary>
         private void HandleTurnEvent()
         {
+            
+            if (city.Turn == thanTec.EventTurn)
+            {
+                StoryEvent storyEvent = new ThanTecRequest(thanTec);
+            }
             DecrementCooldown();
             if (city.Turn % turnsLeft == 0)
             {

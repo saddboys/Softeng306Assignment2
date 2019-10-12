@@ -97,19 +97,16 @@ namespace Game.CityMap
             {
                 terrainMap = new int[width, height];
             }
-            for (int i = 0; i < width; i++)
+            
+            for (int j = 0; j < height; j++)
             {
-                for (int j = 0; j < height; j++)
+                for (int i = 0; i < width; i++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
+                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, -j);
                     // Find the real position (the position on the screen)
-                    Vector3 mappedVector = map.CellToWorld(vector);
                     
-
-                    tile.Canvas = parent;
-                    tile.ScreenPosition = mappedVector;
                     
                     int value = random.Next(0,100);
                     
@@ -129,6 +126,11 @@ namespace Game.CityMap
                     }
                     
                     map.SetTile(vector, tile);
+                    Vector3 mappedVector = map.CellToWorld(vector);
+                    
+                    tile.ScreenPosition = mappedVector;
+                    tile.Canvas = parent;
+                    
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
                 }

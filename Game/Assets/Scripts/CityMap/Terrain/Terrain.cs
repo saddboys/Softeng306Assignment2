@@ -26,11 +26,11 @@ namespace Game.CityMap
             if (terrainType.Equals(TerrainTypes.Grass))
             {
                 
-                sprite = sprites[12];
+                sprite = sprites[sprites.Length-3];
             }
             else if (terrainType.Equals(TerrainTypes.Desert))
             {
-                sprite = sprites[23];
+                sprite = sprites[sprites.Length-2];
             }
             else
             {

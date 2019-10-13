@@ -23,8 +23,8 @@ namespace Game.Story.Events
         private const string DESCRIPTION = "The circus is in town. :D";
         public override void OnYesClick()
         {
-            City.Stats.Reputation += 1;
-            City.Stats.ElectricCapacity -= 2; // maybe only temporarily decrease until they leave?
+            StoryManager.city.Stats.Reputation += 1;
+            StoryManager.city.Stats.ElectricCapacity -= 2; // maybe only temporarily decrease until they leave?
             Debug.Log("CIRCUS EVENT ACTIVATED");
         }
     }

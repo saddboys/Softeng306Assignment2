@@ -20,41 +20,41 @@ namespace Game.Story.Events
             get { return Resources.LoadAll<Sprite>("EventSprites/house")[0]; }
         }
 
-        public override ToolBar ToolBar
+        private StoryManager storyManager;
+        public override StoryManager StoryManager 
         {
-            get { return toolBar; }
+            get { return storyManager; }
             set
             {
-                toolBar = value;
-                toolBar.BuiltEvent += OnBuild;
+                storyManager = value;
+                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
 
-        private ToolBar toolBar;
 
         private const string TITLE = "More House Request";
         private const string DESCRIPTION = "You are rich. Please build more houses.";
         public override void OnYesClick()
         {
-            ToolBar.gameObject.SetActive(false);
-            EndButton.interactable = false;
-            ToolBar.CurrentFactory = new HouseFactory();
+            StoryManager.toolbar.gameObject.SetActive(false);
+            StoryManager.endTurnButton.interactable = false;
+            StoryManager.toolbar.CurrentFactory = new HouseFactory();
         }
         
         
 
         private void OnBuild()
         {
-            ToolBar.gameObject.SetActive(true);
-            EndButton.interactable = true;
-            ToolBar.CurrentFactory = null;
-            ToolBar.BuiltEvent -= OnBuild;
+            StoryManager.toolbar.gameObject.SetActive(true);
+            StoryManager.endTurnButton.interactable = true;
+            StoryManager.toolbar.CurrentFactory = null;
+            StoryManager.toolbar.BuiltEvent -= OnBuild;
             
             
         }
         public override void OnNoClick()
         {
-            City.Stats.Reputation -= 0.5;
+            StoryManager.city.Stats.Reputation -= 0.5;
         }
     }
 }

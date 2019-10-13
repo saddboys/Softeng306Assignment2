@@ -9,12 +9,12 @@ namespace Game.Story.Events.VerdantLandRequests
         public override Sprite EventImage { get; }
         public override void OnYesClick()
         {
-            throw new System.NotImplementedException();
+            // ending goes here ?
         }
 
         public override void OnNoClick()
         {
-            throw new System.NotImplementedException();
+           
         }
     }
 }

@@ -4,17 +4,28 @@ namespace Game.Story.Events
 {
     public class GiantCoolerRequest : StoryRequest
     {
-        public override string Title { get; }
-        public override string Description { get; }
+        public override string Title
+        {
+            get { return TITLE; }
+        }
+
+        public override string Description
+        {
+            get { return DESCRIPTION; }
+        }
+        
+                
+        private const string TITLE = "Giant Cooler!";
+        private const string DESCRIPTION = "Choose whether to use the machine tech thing to localize coolness and solve all your climate woes in this area only.";
         public override Sprite EventImage { get; }
         public override void OnYesClick()
         {
-            throw new System.NotImplementedException();
+            // will go to ending
         }
 
         public override void OnNoClick()
         {
-            throw new System.NotImplementedException();
+            // no ending? idk
         }
     }
 }

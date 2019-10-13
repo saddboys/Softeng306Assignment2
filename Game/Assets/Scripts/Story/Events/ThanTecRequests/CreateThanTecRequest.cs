@@ -25,15 +25,15 @@ namespace Game.Story.Events
         public override void OnYesClick()
         {
             //TODO: Allow the user to build the thanTec building
-
-            NextEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;
+            
+            StoryManager.NextStoryEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;
             // Set the next story event here
         }
 
         public override void OnNoClick()
         {
           
-            NextEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
+            StoryManager.NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
             // Set the no next story event here
         }
     }

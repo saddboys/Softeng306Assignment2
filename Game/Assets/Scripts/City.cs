@@ -74,6 +74,7 @@ namespace Game
         /// </summary>
         public event Action NextTurnEvent;
 
+        public event Action EndGameEvent;
         // Start is called before the first frame update
         void Start()
         {
@@ -131,6 +132,7 @@ namespace Game
         /// <param name="reason">The reason the player has lost the game</param>
         public void EndGame(bool isWon, string reason)
         {
+            EndGameEvent?.Invoke();
             EndTurnButton.interactable = false;
             if (isWon)
             {

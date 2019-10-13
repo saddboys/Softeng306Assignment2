@@ -15,19 +15,19 @@ namespace Game.Story
     public class StoryManager : MonoBehaviour
     {
         [SerializeField] 
-        protected City city;
+        public City city;
         [SerializeField] 
-        private ToolBar toolbar;
+        public ToolBar toolbar;
         [SerializeField] 
-        private Button endTurnButton;
+        public Button endTurnButton;
         [SerializeField]
-        private GameObject canvas;
+        public GameObject canvas;
         [SerializeField]
-        private GameObject storyManagerGameObject;
-
+        public GameObject storyManagerGameObject;
+        public EventFactory.StoryEvents NextStoryEvent { get; set; }
         private EventFactory factory;
         private Queue<int> storyQueue;
-        private EventFactory.StoryEvents nextStoryEvent;
+        
         private StoryEvent storyEvent;
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
@@ -37,7 +37,7 @@ namespace Game.Story
             random = new Random();
             // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
-            nextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
+            NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
             city.NextTurnEvent += HandleTurnEvent;
             
             // Generate the event pool
@@ -49,8 +49,15 @@ namespace Game.Story
             city.Stats.TemperatureChangeEvent += HandleTemperatureChangeEvent;
             city.Stats.WealthChangeEvent += HandleWealthChangeEvent;
             city.Stats.ElectricCapacityChangeEvent += HandleElectricCapacityChangeEvent;
+
+            city.EndGameEvent += ResetStory;
         }
 
+        private void ResetStory()
+        {
+            storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
+            NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
+        }
         private void HandleCO2ChangeEvent()
         {
             
@@ -110,7 +117,7 @@ namespace Game.Story
             if (city.Turn == storyQueue.Peek())
             {
                 // Create new story event here
-                storyEvent = factory.CreateStoryEvent(nextStoryEvent);
+                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
                 // Get rid of the first thing in the queue
                 storyQueue.Dequeue();
                 CreatePopUp();
@@ -139,10 +146,10 @@ namespace Game.Story
                 popUp.Canvas = canvas;
                 popUp.CityMap = city.Map;
                 canvas.SetActive(true);
-                storyEvent.City = city;
-                storyEvent.ToolBar = toolbar;
-                storyEvent.EndButton = endTurnButton;
-                storyEvent.NextEvent = nextStoryEvent;
+                storyEvent.StoryManager = this;
+//                storyEvent.City = city;
+//                storyEvent.ToolBar = toolbar;
+//                storyEvent.EndButton = endTurnButton;
                 popUp.StoryEvent = storyEvent;
                 popUp.Create();
             }

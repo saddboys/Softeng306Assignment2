@@ -53,6 +53,7 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue(){
       animator.SetBool("isOpen", false);
+      GameObject.Find("DialogueCanvas").SetActive(false);
     }
 
 

@@ -1,5 +1,6 @@
 using Game.Story.Events;
 using Game.Story.Events.VerdantLandRequests;
+using UnityEngine;
 
 namespace Game.Story
 {
@@ -9,24 +10,25 @@ namespace Game.Story
         public enum StoryEvents {INITIAL_THANTEC, RESEARCH_FACILITY_REQUEST,GIMME_MONEY_REQUEST, GIANT_COOLER_REQUEST,
                                 PUSHING_HARDER_REQUEST, BAN_THE_CARS_REQUEST, CALLING_ON_LIFESTYLE_REQUEST}
         private StoryEvent storyEvent;
+        public GameObject ManagerObject { get; set; }
         public StoryEvent CreateStoryEvent(StoryEvents storyEvents)
         {
             switch (storyEvents)
             {
                 case StoryEvents.INITIAL_THANTEC:
-                    return new CreateThanTecRequest();
+                    return ManagerObject.AddComponent<CreateThanTecRequest>();
                 case StoryEvents.RESEARCH_FACILITY_REQUEST:
-                    return new ResearchFacilityRequest();
+                    return ManagerObject.AddComponent<ResearchFacilityRequest>();
                 case StoryEvents.GIMME_MONEY_REQUEST:
-                    return new GimmeMoneyRequest();
+                    return ManagerObject.AddComponent<GimmeMoneyRequest>();
                 case StoryEvents.GIANT_COOLER_REQUEST:
-                    return new GiantCoolerRequest();
+                    return ManagerObject.AddComponent<GiantCoolerRequest>();
                 case StoryEvents.PUSHING_HARDER_REQUEST:
-                    return new PushingHarderRequest();
+                    return ManagerObject.AddComponent<PushingHarderRequest>();
                 case StoryEvents.BAN_THE_CARS_REQUEST:
-                    return new BanTheCarsRequest();
+                    return ManagerObject.AddComponent<BanTheCarsRequest>();
                 case StoryEvents.CALLING_ON_LIFESTYLE_REQUEST:
-                    return new CallingOnLifestyleRequest();
+                    return ManagerObject.AddComponent<CallingOnLifestyleRequest>();
             }
             return null;
         }
@@ -36,9 +38,9 @@ namespace Game.Story
             switch (randomEvents)
             {
                 case RandomEvents.CONDITIONAL_REQUEST_HOUSE:
-                    return new MoreHouseRequest();
+                    return ManagerObject.AddComponent<MoreHouseRequest>();
                 case RandomEvents.CIRCUS_EVENT:
-                    return new CircusEvent();
+                    return ManagerObject.AddComponent<CircusEvent>();
             }
             return null;
         }

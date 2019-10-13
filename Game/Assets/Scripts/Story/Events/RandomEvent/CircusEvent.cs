@@ -25,7 +25,7 @@ namespace Game.Story.Events
         {
             StoryManager.city.Stats.Reputation += 1;
             StoryManager.city.Stats.ElectricCapacity -= 2; // maybe only temporarily decrease until they leave?
-            Debug.Log("CIRCUS EVENT ACTIVATED");
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<CircusEvent>());
         }
     }
 }

@@ -34,6 +34,7 @@ namespace Game.Story
         void Start()
         {
             factory = new EventFactory();
+            factory.ManagerObject = storyManagerGameObject;
             random = new Random();
             // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
@@ -145,11 +146,8 @@ namespace Game.Story
                 popUp.name = "event-pop-up";
                 popUp.Canvas = canvas;
                 popUp.CityMap = city.Map;
-                canvas.SetActive(true);
+                canvas.transform.Find("Panel").gameObject.SetActive(true);
                 storyEvent.StoryManager = this;
-//                storyEvent.City = city;
-//                storyEvent.ToolBar = toolbar;
-//                storyEvent.EndButton = endTurnButton;
                 popUp.StoryEvent = storyEvent;
                 popUp.Create();
             }

@@ -22,11 +22,13 @@ namespace Game.Story.Events.VerdantLandRequests
         {
 
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
 
         public override void OnNoClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
     }
 }

@@ -39,6 +39,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             StoryManager.toolbar.CurrentFactory = new HouseFactory();
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
         
         
@@ -49,12 +50,11 @@ namespace Game.Story.Events
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;
             StoryManager.toolbar.BuiltEvent -= OnBuild;
-            
-            
         }
         public override void OnNoClick()
         {
             StoryManager.city.Stats.Reputation -= 0.5;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
     }
 }

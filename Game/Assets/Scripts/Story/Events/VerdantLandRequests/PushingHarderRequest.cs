@@ -21,12 +21,14 @@ namespace Game.Story.Events.VerdantLandRequests
         public override void OnYesClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
             
         }
 
         public override void OnNoClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
         }
     }
 }

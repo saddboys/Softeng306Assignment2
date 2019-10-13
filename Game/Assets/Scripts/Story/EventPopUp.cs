@@ -42,10 +42,6 @@ public class EventPopUp : MonoBehaviour
     private void CreatePopUp()
     {
         
-        // Upon creating we want to disable everything else.
-        // TODO: Need some way to make the background darker probably.
-       // cityMap.active = false;
-
         // Creating the panel 
         GameObject panel = new GameObject(POP_UP_NAME);
         panel.AddComponent<CanvasRenderer>();
@@ -85,7 +81,6 @@ public class EventPopUp : MonoBehaviour
        Image sprite = imageGameObject.AddComponent<Image>();
        sprite.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH/2,POP_UP_HEIGHT/2);
        sprite.sprite = StoryEvent.EventImage;
-       Debug.Log(StoryEvent.EventImage);
        imageGameObject.transform.SetParent(panel.transform,false);
        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/6);
@@ -172,7 +167,7 @@ public class EventPopUp : MonoBehaviour
     /// </summary>
     private void DestroyPanel()
     {
-        Canvas.SetActive(false);
+        Canvas.transform.Find("Panel").gameObject.SetActive(false);
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);
         Destroy(GetComponent<EventPopUp>());

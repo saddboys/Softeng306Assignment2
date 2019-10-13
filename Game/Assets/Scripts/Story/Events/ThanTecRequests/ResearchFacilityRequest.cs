@@ -23,11 +23,13 @@ namespace Game.Story.Events
             // Prevent the tech ending somehow.
             
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<ResearchFacilityRequest>());
         }
 
         public override void OnNoClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<ResearchFacilityRequest>());
         }
     }
 }

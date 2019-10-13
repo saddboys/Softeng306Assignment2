@@ -10,7 +10,7 @@ namespace Game.Story
     /// A skeleton for an event.
     /// Events are occurrences in the story that cannot be declined.
     /// </summary>
-    public abstract class StoryEvent 
+    public abstract class StoryEvent : MonoBehaviour
     {
         public enum EventTypes  { Request, Event}
 

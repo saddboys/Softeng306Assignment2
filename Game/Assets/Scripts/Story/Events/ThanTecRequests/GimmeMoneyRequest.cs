@@ -21,11 +21,13 @@ namespace Game.Story.Events
         public override void OnYesClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIANT_COOLER_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<GimmeMoneyRequest>());
         }
 
         public override void OnNoClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<GimmeMoneyRequest>());
         }
     }
 }

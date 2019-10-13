@@ -19,7 +19,11 @@ namespace Game.Story.Events
         private const string TITLE = "Give me money";
         private const string DESCRIPTION = "Fund tech project";
         public override Sprite EventImage { get; }
-        public override Queue<string> Dialogues { get; }
+        public override Queue<string> Dialogues
+        {
+            get { return dialogMessages; }
+        }
+        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
 
         public override void OnYesClick()
         {

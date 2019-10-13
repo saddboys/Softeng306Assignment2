@@ -18,12 +18,8 @@ namespace Game.Story
         public abstract string Description { get; }
         public abstract Sprite EventImage { get; }
         
-        public abstract Queue<string> Dialogues { get; } 
-//        public EventFactory.StoryEvents NextEvent { get; set; }
-//        public City City { get; set; }
-//        public virtual ToolBar ToolBar { get; set; }
-//        public Button EndButton { get; set; }
-        
+        public abstract Queue<string> Dialogues { get; }
+
         public virtual StoryManager StoryManager { get; set; }
         public virtual EventTypes EventType
         {

@@ -1,4 +1,5 @@
 using Game.Story.Events;
+using Game.Story.Events.RandomEvent;
 using Game.Story.Events.VerdantLandRequests;
 using UnityEngine;
 
@@ -6,7 +7,7 @@ namespace Game.Story
 {
     public class EventFactory
     {
-        public enum RandomEvents {CIRCUS_EVENT,CONDITIONAL_REQUEST_HOUSE}
+        public enum RandomEvents {CONDITIONAL_REQUEST_HOUSE,FLOOD_EVENT}
         public enum StoryEvents {INITIAL_THANTEC, RESEARCH_FACILITY_REQUEST,GIMME_MONEY_REQUEST, GIANT_COOLER_REQUEST,
                                 PUSHING_HARDER_REQUEST, BAN_THE_CARS_REQUEST, CALLING_ON_LIFESTYLE_REQUEST}
         private StoryEvent storyEvent;
@@ -39,8 +40,8 @@ namespace Game.Story
             {
                 case RandomEvents.CONDITIONAL_REQUEST_HOUSE:
                     return ManagerObject.AddComponent<MoreHouseRequest>();
-                case RandomEvents.CIRCUS_EVENT:
-                    return ManagerObject.AddComponent<CircusEvent>();
+                case RandomEvents.FLOOD_EVENT:
+                    return ManagerObject.AddComponent<FloodEvent>();
             }
             return null;
         }

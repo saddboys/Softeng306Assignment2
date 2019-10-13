@@ -127,7 +127,7 @@ namespace Game.Story
             else
             {
                 // Events have a 10% chance of popping up
-                if (random.Next(0, 10) == 2)
+                if (random.Next(0, 2) == 1)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool

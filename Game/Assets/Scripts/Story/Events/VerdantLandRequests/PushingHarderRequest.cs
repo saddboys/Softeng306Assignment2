@@ -16,7 +16,11 @@ namespace Game.Story.Events.VerdantLandRequests
         }
 
         public override Sprite EventImage { get; }
-        public override Queue<string> Dialogues { get; }
+        public override Queue<string> Dialogues
+        {
+            get { return dialogMessages; }
+        }
+        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
 
         private const string TITLE = "Pushing Harder!";
         private const string DESCRIPTION = "Secretary requests that you shut down factories, since they’re big contributors to emissions.";

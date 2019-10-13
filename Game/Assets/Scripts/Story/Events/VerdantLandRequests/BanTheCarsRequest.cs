@@ -19,7 +19,11 @@ namespace Game.Story.Events.VerdantLandRequests
         private const string TITLE = "Ban the cars!";
         private const string DESCRIPTION = "Secretary requests that you get rid of cars, to reduce pollution from them.";
         public override Sprite EventImage { get; }
-        public override Queue<string> Dialogues { get; }
+        public override Queue<string> Dialogues
+        {
+            get { return dialogMessages; }
+        }
+        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
 
         public override void OnYesClick()
         {

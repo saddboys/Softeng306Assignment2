@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Story.Events.RandomEvent
@@ -18,6 +19,8 @@ namespace Game.Story.Events.RandomEvent
         {
             get { return SPRITE; }
         }
+
+        public override Queue<string> Dialogues { get; }
 
         private const string TITLE = "FLOOD";
         private const string DESCRIPTION = "Flooding happened bad luck :(";

@@ -121,14 +121,14 @@ namespace Game.Story
                 storyEvent = factory.CreateStoryEvent(NextStoryEvent);
                 // Get rid of the first thing in the queue
                 storyQueue.Dequeue();
-                CreatePopUp();
+                CreateDialog();
+                //CreatePopUp();
             }
             else
             {
                 // Events have a 10% chance of popping up
                 if (random.Next(0, 10) == 2)
                 {
-                    Debug.Log("here: " + eventPool.Count);
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool
                     storyEvent = factory.CreateRandomEvent(randomEvent);
@@ -152,6 +152,21 @@ namespace Game.Story
                 popUp.Create();
             }
         }
+
+        private void CreateDialog()
+        {
+            DialogPopUp dialogPopUp;
+            if (storyEvent != null && !city.HasEnded)
+            {
+                dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
+                dialogPopUp.Canvas = canvas;
+                dialogPopUp.StoryEvent = storyEvent;
+                canvas.transform.Find("Panel").gameObject.SetActive(true);
+                dialogPopUp.Finished += CreatePopUp;
+                dialogPopUp.Create();
+            }
+        }
+        
     }
 }
 

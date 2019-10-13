@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.CityMap;
 using UnityEngine;
 
@@ -19,6 +20,8 @@ namespace Game.Story.Events
         {
             get { return Resources.LoadAll<Sprite>("EventSprites/house")[0]; }
         }
+
+        public override Queue<string> Dialogues { get; }
 
         private StoryManager storyManager;
         public override StoryManager StoryManager 

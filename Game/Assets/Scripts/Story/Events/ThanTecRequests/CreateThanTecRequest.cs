@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Game.CityMap;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,10 +22,17 @@ namespace Game.Story.Events
         }
 
         public override Sprite EventImage { get; }
-        
+
+        public override Queue<string> Dialogues
+        {
+            get
+            {
+                return dialogMessages;
+            }
+        } 
         private const string TITLE = "Here comes the science!";
         private const string DESCRIPTION = "A new research facility wishes to build their office in XXX. \nDo you accept?";
-        
+        private Queue<string> dialogMessages = new Queue<string>(new[] { "hello","ab","cd"}); 
         
         private StoryManager storyManager;
         public override StoryManager StoryManager 
@@ -71,15 +79,20 @@ namespace Game.Story.Events
             helpPanel.AddComponent<CanvasRenderer>();
             Image i = helpPanel.AddComponent<Image>();
             i.color = Color.white;
-//            Text titleText = helpPanel.AddComponent<Text>();
-//            titleText.text = "Place the building";
-//            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-//            titleText.color = Color.black;
-//            titleText.fontSize = 10;
-//            titleText.alignment = TextAnchor.MiddleCenter;
             helpPanel.transform.SetParent(StoryManager.canvas.transform, false);
             helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
             helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+            
+            GameObject helpDescription = new GameObject("Title");
+            Text titleText = helpDescription.AddComponent<Text>();
+            titleText.text = "Place the building";
+            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            titleText.color = Color.black;
+            titleText.fontSize = 10;
+            titleText.alignment = TextAnchor.MiddleCenter;
+            helpDescription.transform.SetParent(helpPanel.transform,false);
+            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
+            helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,80);
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Story.Events
@@ -18,6 +19,8 @@ namespace Game.Story.Events
         private const string TITLE = "Research Facility";
         private const string DESCRIPTION = "Build a research facility for ThanTec to investigate climate solutions.";
         public override Sprite EventImage { get; }
+        public override Queue<string> Dialogues { get; }
+
         public override void OnYesClick()
         {
             // Prevent the tech ending somehow.

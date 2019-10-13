@@ -167,8 +167,11 @@ public class EventPopUp : MonoBehaviour
     /// </summary>
     private void DestroyPanel()
     {
+        
+        Debug.Log("goes here");
         Canvas.transform.Find("Panel").gameObject.SetActive(false);
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
+        Debug.Log(panel.name);
         Destroy(panel);
         Destroy(GetComponent<EventPopUp>());
     }

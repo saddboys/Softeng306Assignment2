@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Story.Events.VerdantLandRequests
@@ -7,6 +8,8 @@ namespace Game.Story.Events.VerdantLandRequests
         public override string Title { get; }
         public override string Description { get; }
         public override Sprite EventImage { get; }
+        public override Queue<string> Dialogues { get; }
+
         public override void OnYesClick()
         {
             // ending goes here ?

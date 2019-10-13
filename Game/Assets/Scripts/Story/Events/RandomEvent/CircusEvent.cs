@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Game.Story.Events
 {
@@ -18,6 +19,8 @@ namespace Game.Story.Events
         {
             get { return Resources.LoadAll<Sprite>("EventSprites/circus2")[0]; }
         }
+
+        public override Queue<string> Dialogues { get; }
 
         private const string TITLE = "Circus event";
         private const string DESCRIPTION = "The circus is in town. :D";

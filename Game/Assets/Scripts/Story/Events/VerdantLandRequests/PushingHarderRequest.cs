@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Story.Events.VerdantLandRequests
@@ -15,7 +16,8 @@ namespace Game.Story.Events.VerdantLandRequests
         }
 
         public override Sprite EventImage { get; }
-        
+        public override Queue<string> Dialogues { get; }
+
         private const string TITLE = "Pushing Harder!";
         private const string DESCRIPTION = "Secretary requests that you shut down factories, since they’re big contributors to emissions.";
         public override void OnYesClick()

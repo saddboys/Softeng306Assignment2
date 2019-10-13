@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Story.Events
@@ -18,6 +19,8 @@ namespace Game.Story.Events
         private const string TITLE = "Give me money";
         private const string DESCRIPTION = "Fund tech project";
         public override Sprite EventImage { get; }
+        public override Queue<string> Dialogues { get; }
+
         public override void OnYesClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIANT_COOLER_REQUEST;

@@ -54,7 +54,7 @@ namespace Game.Story
             
             if (city.Turn == thanTec.EventTurn)
             {
-                StoryEvent storyEvent = new ThanTecRequest(thanTec);
+              //  StoryEvent storyEvent = new ThanTecRequest(thanTec);
             }
             DecrementCooldown();
             if (city.Turn % turnsLeft == 0)

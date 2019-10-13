@@ -10,7 +10,7 @@ namespace Game.Story.Events
         /// The ThanTec request will need a thanTec object
         /// </summary>
         /// <param name="thanTec"></param>
-        public ThanTecRequest(ThanTec.ThanTec thanTec)
+        public ThanTecRequest()
         {
             this.thanTec = thanTec;
         }
@@ -23,12 +23,15 @@ namespace Game.Story.Events
         public override void OnYesClick()
         {
             //TODO: Allow the user to build the thanTec building
-            thanTec.HasThanTec = true;
+            
+            
+            // Set the next story event here
         }
 
         public override void OnNoClick()
         {
-            thanTec.HasThanTec = false;
+          
+            // Set the no next story event here
         }
     }
 }

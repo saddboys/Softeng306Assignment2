@@ -66,21 +66,38 @@ namespace Game.CityMap
 
             // Check camera dragging
             //if (cameraDrag.WasDragging) return;
-
+            // Vector3 test = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            //Debug.Log("World point:" + test);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
-            MapTile someOtherTile = map.GetTile<MapTile>(position);
+            MapTile someOtherTile = GetTileWithZ(position);
             if (someOtherTile != null)
             {
                 // Notify the click event for things like the ToolBar or other user feedback.
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                 // For testing purposes:
-                //someOtherTile.Structure = new Rock();
-                //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
+
+        private MapTile GetTileWithZ(Vector3Int position)
+        {
+            for (int z = 0; z < 30; z++)
+            {
+                position.z = z;
+                MapTile someTile = map.GetTile<MapTile>(position);
+                
+                if (someTile != null)
+                {
+                    return someTile;
+                }
+            }
+
+            return null;
+        }
+        
 
         /// <summary>
         /// Generates the Tilemap by randomly allocating terrains to tiles and sometimes
@@ -103,8 +120,9 @@ namespace Game.CityMap
                 for (int i = 0; i < width; i++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+                    int randomZ = random.Next(0, 30);
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, -j);
+                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, randomZ);
                     // Find the real position (the position on the screen)
                     
                     
@@ -124,9 +142,10 @@ namespace Game.CityMap
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
                     }
-                    
+                    Debug.Log("For: " + tile.name + " is: " + vector);
                     map.SetTile(vector, tile);
                     Vector3 mappedVector = map.CellToWorld(vector);
+                    // Debug.Log("Screen: " + mappedVector);
                     
                     tile.ScreenPosition = mappedVector;
                     tile.Canvas = parent;
@@ -155,7 +174,7 @@ namespace Game.CityMap
                 int x = (int)(Mathf.Clamp(NextNormalRandom() * width, -width, width) / 2.0f);
                 int y = (int)(Mathf.Clamp(NextNormalRandom() * height, -height, height) / 2.0f);
 
-                var tile = map.GetTile<MapTile>(new Vector3Int(x, y, 0));
+                var tile = GetTileWithZ(new Vector3Int(x, y, 0));
                 if (tile == null)
                 {
                     continue;

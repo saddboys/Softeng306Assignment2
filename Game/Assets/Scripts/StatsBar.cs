@@ -348,6 +348,11 @@ namespace Game
             Reputation = 50;
             Score = 0;
             Wealth = 10000;
+            foreach (var tooltip in tooltips)
+            {
+                Destroy(tooltip);
+            }
+            tooltips.Clear();
         }
     }
 }

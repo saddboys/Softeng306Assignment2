@@ -17,7 +17,7 @@ namespace Game.Story
         public abstract string Title { get; }
         public abstract string Description { get; }
         public abstract Sprite EventImage { get; }
-        public StoryManagerTemp.StoryEvents NextEvent { get; set; }
+        public StoryManager.StoryEvents NextEvent { get; set; }
         public City City { get; set; }
         public virtual ToolBar ToolBar { get; set; }
         public Button EndButton { get; set; }

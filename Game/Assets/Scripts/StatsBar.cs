@@ -17,6 +17,7 @@ namespace Game
                 co2 = value;
                 co2ValueText.text = co2.ToString() + " MT";
                 ChangeEvent?.Invoke();
+                CO2ChangeEvent?.Invoke();
             }
         }
         // C anomaly (infinite - 3)
@@ -28,6 +29,7 @@ namespace Game
                 temperature = value;
                 temperatureValueText.text = temperature.ToString("F2") + "°C Change";
                 ChangeEvent?.Invoke();
+                TemperatureChangeEvent?.Invoke();
             }
         }
         // Thousands (0 - infinite)
@@ -39,6 +41,7 @@ namespace Game
                 population = value;
                 populationValueText.text = population.ToString() + "k";
                 ChangeEvent?.Invoke();
+                PopulationChangeEvent?.Invoke();
             }
         }
         // "electricity tokens" (-20 to 20)
@@ -50,6 +53,7 @@ namespace Game
                 electricCapacity = value;
                 electricCapacityValueText.text = electricCapacity.ToString();
                 ChangeEvent?.Invoke();
+                ElectricCapacityChangeEvent?.Invoke();
             }
         }
         // "reputation rate" (0% to 100%) 
@@ -61,6 +65,7 @@ namespace Game
                 reputation = value;
                 reputationValueText.text = reputation.ToString() + "%";
                 ChangeEvent?.Invoke();
+                ReputationChangeEvent?.Invoke();
             }
         }
         // "points" (0 - infinite)
@@ -83,6 +88,7 @@ namespace Game
                 wealth = value;
                 moneyValueText.text = "$" + wealth.ToString() + "k";
                 ChangeEvent?.Invoke();
+                WealthChangeEvent?.Invoke();
             }
         }
 
@@ -111,6 +117,12 @@ namespace Game
         private Text scoreValueText;
 
         public Action ChangeEvent;
+        public Action CO2ChangeEvent;
+        public Action TemperatureChangeEvent;
+        public Action PopulationChangeEvent;
+        public Action ElectricCapacityChangeEvent;
+        public Action ReputationChangeEvent;
+        public Action WealthChangeEvent;
 
         /// <summary>
         /// Adds individual fields of one Stats object onto itself.

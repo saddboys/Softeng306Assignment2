@@ -14,8 +14,16 @@ namespace Game.Story.Events
         {
             this.thanTec = thanTec;
         }
-        public override string Title { get; }
-        public override string Description { get; }
+        public override string Title
+        {
+            get { return TITLE; }
+        }
+
+        public override string Description
+        {
+            get { return DESCRIPTION; }
+        }
+
         public override Sprite EventImage { get; }
         
         private const string TITLE = "Here comes the science!";
@@ -24,14 +32,14 @@ namespace Game.Story.Events
         {
             //TODO: Allow the user to build the thanTec building
 
-            NextEvent = StoryManagerTemp.StoryEvents.RESEARCH_FACILITY_REQUEST;
+            NextEvent = StoryManager.StoryEvents.RESEARCH_FACILITY_REQUEST;
             // Set the next story event here
         }
 
         public override void OnNoClick()
         {
           
-            NextEvent = StoryManagerTemp.StoryEvents.PUSHING_HARDER_REQUEST;
+            NextEvent = StoryManager.StoryEvents.PUSHING_HARDER_REQUEST;
             // Set the no next story event here
         }
     }

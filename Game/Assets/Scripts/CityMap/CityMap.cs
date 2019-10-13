@@ -97,6 +97,27 @@ namespace Game.CityMap
             {
                 terrainMap = new int[width, height];
             }
+
+            // random spot for sand biom
+            int sandXValue = random.Next(0, 40);
+            int sandYValue = random.Next(0, 30);
+
+            // adding sand anchor to screen
+            MapTile sandAnchorTile = ScriptableObject.CreateInstance<MapTile>();
+            Vector3Int sandAnchorVector = new Vector3Int(-sandXValue + width / 2, -sandYValue + height / 2, 0);
+            Vector3 sandMappedVector = map.CellToWorld(sandAnchorVector);
+
+            sandAnchorTile.Canvas = parent;
+            sandAnchorTile.ScreenPosition = sandMappedVector;
+
+            sandAnchorTile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
+
+            // growing sand biom
+            for (int i = 0; i < 5; i++) 
+            {
+                
+            }
+
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)

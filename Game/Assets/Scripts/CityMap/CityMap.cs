@@ -22,7 +22,8 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
-
+        private const int HEIGHT = 30;
+        private const int WIDTH = 40;
         Random random = new Random();
 
 
@@ -30,11 +31,14 @@ namespace Game.CityMap
         {
             get
             {
-                return Array.ConvertAll(map.GetTilesBlock(map.cellBounds),
+                BoundsInt cellBounds = map.cellBounds;
+                Debug.Log("Cell bounds are" + cellBounds);
+               // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
+                Debug.Log("Bounds are" + cellBounds);
+                return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }
         }
-
         private Vector3 mouseDownPosition;
 
         // Start is called before the first frame update
@@ -84,7 +88,7 @@ namespace Game.CityMap
 
         private MapTile GetTileWithZ(Vector3Int position)
         {
-            for (int z = 0; z < 30; z++)
+            for (int z = 0; z < HEIGHT; z++)
             {
                 position.z = z;
                 MapTile someTile = map.GetTile<MapTile>(position);
@@ -106,23 +110,21 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            int width = 40;
-            int height = 30;
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
-                terrainMap = new int[width, height];
+                terrainMap = new int[WIDTH, HEIGHT];
             }
             
-            for (int j = 0; j < height; j++)
+            for (int j = 0; j < HEIGHT; j++)
             {
-                for (int i = 0; i < width; i++)
+                for (int i = 0; i < WIDTH; i++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     int randomZ = random.Next(0, 30);
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, randomZ);
+                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, randomZ);
                     // Find the real position (the position on the screen)
                     
                     
@@ -142,12 +144,12 @@ namespace Game.CityMap
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
                     }
-                    Debug.Log("For: " + tile.name + " is: " + vector);
                     map.SetTile(vector, tile);
                     Vector3 mappedVector = map.CellToWorld(vector);
                     // Debug.Log("Screen: " + mappedVector);
                     
                     tile.ScreenPosition = mappedVector;
+                    tile.name = "j: " + j + " i: " + i;
                     tile.Canvas = parent;
                     
                     // Refresh the tile whenever its sprite changes.
@@ -171,8 +173,8 @@ namespace Game.CityMap
             for (int i = 0; i < 50; i++)
             {
                 // Cluster them close to the centre.
-                int x = (int)(Mathf.Clamp(NextNormalRandom() * width, -width, width) / 2.0f);
-                int y = (int)(Mathf.Clamp(NextNormalRandom() * height, -height, height) / 2.0f);
+                int x = (int)(Mathf.Clamp(NextNormalRandom() * WIDTH, -WIDTH, WIDTH) / 2.0f);
+                int y = (int)(Mathf.Clamp(NextNormalRandom() * HEIGHT, -HEIGHT, HEIGHT) / 2.0f);
 
                 var tile = GetTileWithZ(new Vector3Int(x, y, 0));
                 if (tile == null)
@@ -198,6 +200,10 @@ namespace Game.CityMap
             // Get stats from its tiles.
             Stats sum = new Stats();
             foreach (var t in Tiles) {
+                if (t == null)
+                {
+                    continue;
+                }
                 sum += t.GetStatsContribution();
             }
             return sum;
@@ -207,6 +213,10 @@ namespace Game.CityMap
         {
             foreach (var t in Tiles)
             {
+                if (t == null)
+                {
+                    continue;
+                }
                 // Unrender structure.
                 t.Structure = null;
                 // Remove tile from object graph.

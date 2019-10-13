@@ -341,13 +341,13 @@ namespace Game
 
         public void Restart()
         {
-            CO2 = 0;
-            Temperature = 0;
-            Population = 30; // TODO: Random - based on houses
-            ElectricCapacity = 4; // TODO: Random
-            Reputation = 50;
-            Score = 0;
-            Wealth = 10000;
+            co2 = 0;
+            temperature = 0;
+            population = 30; // TODO: Random - based on houses
+            electricCapacity = 4; // TODO: Random
+            reputation = 50;
+            score = 0;
+            wealth = 10000;
             foreach (var tooltip in tooltips)
             {
                 Destroy(tooltip);

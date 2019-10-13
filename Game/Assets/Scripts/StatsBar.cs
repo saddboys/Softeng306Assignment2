@@ -269,7 +269,7 @@ namespace Game
             ElectricCapacityShown += Mathf.Clamp((float)(ElectricCapacity - ElectricCapacityShown), -1, 1);
             ReputationShown += Mathf.Clamp((float)(Reputation - ReputationShown), -1, 1);
             ScoreShown += Mathf.Clamp((float)(Score - ScoreShown), -100, 100);
-            WealthShown += Mathf.Clamp((float)(Wealth - WealthShown), -100, 100);
+            WealthShown += Mathf.Clamp((float)(Wealth - WealthShown), -50, 50);
 
             // Create a new tooltip.
             if (changeTooltipQueue.Count > 0)

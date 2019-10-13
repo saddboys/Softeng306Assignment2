@@ -2,18 +2,12 @@ using UnityEngine;
 
 namespace Game.Story.Events
 {
-    public class ThanTecRequest : StoryRequest
+    public class CreateThanTecRequest : StoryRequest
     {
-        private ThanTec.ThanTec thanTec;
-        
         /// <summary>
         /// The ThanTec request will need a thanTec object
         /// </summary>
         /// <param name="thanTec"></param>
-        public ThanTecRequest()
-        {
-            this.thanTec = thanTec;
-        }
         public override string Title
         {
             get { return TITLE; }

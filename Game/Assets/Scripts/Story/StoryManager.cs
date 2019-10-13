@@ -161,7 +161,7 @@ namespace Game.Story
             switch (storyEvents)
             {
                 case StoryManager.StoryEvents.INITIAL_THANTEC:
-                    return new ThanTecRequest();
+                    return new CreateThanTecRequest();
             }
             return null;
         }

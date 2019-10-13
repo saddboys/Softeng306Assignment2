@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Story.Events
+namespace Game.Story.Events.RandomEvent
 {
     public class FloodEvent : StoryEvent
     {

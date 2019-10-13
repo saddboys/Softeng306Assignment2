@@ -9,6 +9,7 @@ namespace Game.CityMap
 {
     public class MapTile : Tile
     {
+        
         public GameObject Canvas { set; get; }
 
         public Vector3 ScreenPosition { set; get; }

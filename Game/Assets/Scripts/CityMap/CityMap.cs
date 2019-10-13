@@ -122,21 +122,21 @@ namespace Game.CityMap
                 for (int i = 0; i < WIDTH; i++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-                    int randomZ = random.Next(0, 30);
+
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, randomZ);
+                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, -j);
                     // Find the real position (the position on the screen)
                     
                     
                     int value = random.Next(0,100);
                     
                     // Randomly generate the map with tiles (although the tiles are the same right now)
-                    if (value < 20)
+                    /*if (value < 20)
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
 
                     }
-                    else if (value < 90)
+                    else*/ if (value < 90)
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
                     }
@@ -144,6 +144,8 @@ namespace Game.CityMap
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
                     }
+                    
+                    
                     map.SetTile(vector, tile);
                     Vector3 mappedVector = map.CellToWorld(vector);
                     // Debug.Log("Screen: " + mappedVector);
@@ -152,8 +154,13 @@ namespace Game.CityMap
                     tile.name = "j: " + j + " i: " + i;
                     tile.Canvas = parent;
                     
+                    //SpriteRenderer sr = tile.gameObject.GetComponent<SpriteRenderer>();
+
+                    //sr.sortingOrder = j - 30000;
+
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
+                    
                 }
             }
 
@@ -186,6 +193,7 @@ namespace Game.CityMap
                 if (randomFactory.CanBuildOnto(tile, out _))
                 {
                     randomFactory.BuildOnto(tile);
+                    Debug.Log("got here");
                 }
             }
         }

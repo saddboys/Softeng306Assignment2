@@ -9,6 +9,7 @@ namespace Game.CityMap
     
     public class Terrain
     {
+        static System.Random random = new System.Random();
         public enum TerrainTypes
         {
             Grass,
@@ -26,15 +27,39 @@ namespace Game.CityMap
             if (terrainType.Equals(TerrainTypes.Grass))
             {
                 
-                sprite = sprites[sprites.Length-3];
+                int value = random.Next(0, 2);
+                if (value == 0)
+                {
+                    sprite = Resources.Load<Sprite>("Textures/terrain/hexGrass");
+                }
+                else if (value == 1)
+                {
+                    sprite = Resources.Load<Sprite>("Textures/terrain/hexGrass1");
+                }
+                else
+                {
+                    sprite = Resources.Load<Sprite>("Textures/terrain/hexGrass2");
+                }
             }
             else if (terrainType.Equals(TerrainTypes.Desert))
             {
-                sprite = sprites[sprites.Length-2];
+                int value = random.Next(0, 2);
+                if (value == 0)
+                {
+                    sprite = Resources.Load<Sprite>("Textures/terrain/hexSand");
+                }
+                else if (value == 1)
+                {
+                    sprite = Resources.Load<Sprite>("Textures/terrain/hexSand1");
+                }
+                else
+                {
+                    sprite = Resources.Load<Sprite>("Textures/terrain/hexSand2");
+                }
             }
             else
             {
-                sprite = sprites[sprites.Length-1];
+                sprite = Resources.Load<Sprite>("Textures/terrain/hexwater 1");
             }
         }
         

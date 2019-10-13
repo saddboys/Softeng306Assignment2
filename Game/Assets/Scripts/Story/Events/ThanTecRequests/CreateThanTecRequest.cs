@@ -21,19 +21,19 @@ namespace Game.Story.Events
         public override Sprite EventImage { get; }
         
         private const string TITLE = "Here comes the science!";
-        private const string DESCRIPTION = "A new research facility wishes to build their office in XXX. Do you accept?";
+        private const string DESCRIPTION = "A new research facility wishes to build their office in XXX. \nDo you accept?";
         public override void OnYesClick()
         {
             //TODO: Allow the user to build the thanTec building
 
-            NextEvent = StoryManager.StoryEvents.RESEARCH_FACILITY_REQUEST;
+            NextEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;
             // Set the next story event here
         }
 
         public override void OnNoClick()
         {
           
-            NextEvent = StoryManager.StoryEvents.PUSHING_HARDER_REQUEST;
+            NextEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
             // Set the no next story event here
         }
     }

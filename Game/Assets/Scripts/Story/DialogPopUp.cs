@@ -48,8 +48,8 @@ namespace Game.Story
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             text.color = Color.black;
             text.fontSize = 10;
-            nextButton.GetComponent<RectTransform>().sizeDelta = new Vector2(20,50);
-            nextButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-80);
+            nextButton.GetComponent<RectTransform>().sizeDelta = new Vector2(50,20);
+            nextButton.GetComponent<RectTransform>().anchoredPosition = new Vector2(80,-80);
             nextButton.transform.SetParent(panel.transform,false);
         }
 

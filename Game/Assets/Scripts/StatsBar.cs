@@ -8,8 +8,16 @@ namespace Game
 {
     public class StatsBar : MonoBehaviour
     {
+        public double CO2 { get; set; }
+        public double Temperature { get; set; }
+        public int Population { get; set; }
+        public double ElectricCapacity { get; set; }
+        public double Reputation { get; set; }
+        public double Score { get; set; }
+        public double Wealth { get; set; }
+
         // MegaTonnes (0 - infinite)
-        public double CO2
+        public double CO2Shown
         {
             get { return co2; }
             set
@@ -20,7 +28,7 @@ namespace Game
             }
         }
         // C anomaly (infinite - 3)
-        public double Temperature
+        public double TemperatureShown
         {
             get { return temperature; }
             set
@@ -31,7 +39,7 @@ namespace Game
             }
         }
         // Thousands (0 - infinite)
-        public int Population
+        public int PopulationShown
         {
             get { return population; }
             set
@@ -42,7 +50,7 @@ namespace Game
             }
         }
         // "electricity tokens" (-20 to 20)
-        public double ElectricCapacity
+        public double ElectricCapacityShown
         {
             get { return electricCapacity; }
             set
@@ -53,7 +61,7 @@ namespace Game
             }
         }
         // "reputation rate" (0% to 100%) 
-        public double Reputation
+        public double ReputationShown
         {
             get { return reputation; }
             set
@@ -64,7 +72,7 @@ namespace Game
             }
         }
         // "points" (0 - infinite)
-        public double Score
+        public double ScoreShown
         {
             get { return score; }
             set
@@ -75,7 +83,7 @@ namespace Game
             }
         }
         // k dollars ($0 - $infinite)
-        public double Wealth
+        public double WealthShown
         {
             get { return wealth; }
             set
@@ -111,6 +119,21 @@ namespace Game
         private Text scoreValueText;
 
         public Action ChangeEvent;
+
+        private void Start()
+        {
+        }
+
+        private void Update()
+        {
+            CO2Shown += Mathf.Clamp((float)(CO2 - CO2Shown), -1, 1);
+            TemperatureShown += Mathf.Clamp((float)(Temperature - TemperatureShown), -0.01f, 0.01f);
+            PopulationShown += (int)Mathf.Clamp((float)(Population - PopulationShown), -1, 1);
+            ElectricCapacityShown += Mathf.Clamp((float)(ElectricCapacity - ElectricCapacityShown), -1, 1);
+            ReputationShown += Mathf.Clamp((float)(Reputation - ReputationShown), -1, 1);
+            ScoreShown += Mathf.Clamp((float)(Score - ScoreShown), -100, 100);
+            WealthShown += Mathf.Clamp((float)(Wealth - WealthShown), -100, 100);
+        }
 
         /// <summary>
         /// Adds individual fields of one Stats object onto itself.

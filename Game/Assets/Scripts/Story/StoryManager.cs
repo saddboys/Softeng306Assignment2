@@ -196,7 +196,6 @@ namespace Game.Story
                     eventPool.Add(eventObj,0);
                 }
             }
-            
         }
     }
 }

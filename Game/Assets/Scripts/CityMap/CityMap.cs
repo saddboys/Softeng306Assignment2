@@ -91,6 +91,7 @@ namespace Game.CityMap
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
             int width = 40;
             int height = 30;
+            List<int[]> occupiedBiomSpots = new List<int[]>();
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
@@ -99,8 +100,9 @@ namespace Game.CityMap
             }
 
             // random spot for sand biom
-            int sandAnchorXValue = random.Next(0, 40);
-            int sandAnchorYValue = random.Next(0, 30);
+            int sandAnchorXValue = random.Next(0, width);
+            int sandAnchorYValue = random.Next(0, height);
+            Debug.Log("Sand Anchor: X: " + sandAnchorXValue + ", Y: " + sandAnchorYValue);
 
             // adding sand anchor to screen
             MapTile sandAnchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -112,24 +114,26 @@ namespace Game.CityMap
 
             sandAnchorTile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
 
-            int sandBiomRadius = 5;
+            int sandBiomRadius = 20;
 
             // growing sand biom
             for (int i = 0; i < sandBiomRadius * 2; i++) 
             {
                 for (int j = 0; j < sandBiomRadius * 2; j++)
                 {
-                    int curX = sandAnchorXValue - sandBiomRadius + j;
-                    int curY = sandAnchorYValue - sandBiomRadius + i;
+                    // current position array where index 0 is X and index 1 is Y coordinate
+                    int[] curPos = new int[2];
+                    curPos[0] = sandAnchorXValue - sandBiomRadius + i;
+                    curPos[1] = sandAnchorYValue - sandBiomRadius + j;
 
                     // check if X and Y values are within the map
-                    if (curX < 40 && curX >= 0 && curY < 30 && curY >= 0)
+                    if (curPos[0] < 40 && curPos[0] >= 0 && curPos[1] < 30 && curPos[1] >= 0)
                     {
                         MapTile sandTile = ScriptableObject.CreateInstance<MapTile>();
                         // A vector used for hex position
                         MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                         // A vector used for hex position
-                        Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
+                        Vector3Int vector = new Vector3Int(-curPos[0] + width / 2, -curPos[1] + height / 2, 0);
                         // Find the real position (the position on the screen)
                         Vector3 mappedVector = map.CellToWorld(vector);
 
@@ -137,20 +141,31 @@ namespace Game.CityMap
                         sandTile.ScreenPosition = mappedVector;
 
                         // check if terrain is vacant
-                        if (sandTile.Terrain == null)
+                        if (!TileOccupied(occupiedBiomSpots, curPos))
                         {
+                            // Debug.Log("Cur: X: " + curX + ", Y: " + curY);
+
                             // weighted random terrain allocation depending on distance from anchor
                             int value = random.Next(0, 100);
-                            if (value < 100 - ((int) Mathf.Abs(sandAnchorXValue - curX) + (int) Mathf.Abs(sandAnchorYValue - curY)) * 10)
+                            if (value < 100 - ((int) Mathf.Abs(sandAnchorXValue - curPos[0]) + (int) Mathf.Abs(sandAnchorYValue - curPos[1])) * 7)
                             {
+                                occupiedBiomSpots.Add(curPos);
                                 sandTile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
+                                map.SetTile(vector, sandTile);
+                                // Refresh the tile whenever its sprite changes.
+                                sandTile.SpriteChange += () => map.RefreshTile(vector);
                             }
                         }
                     } 
                     
                 }
             }
+            foreach (int[] occupiedSpot in occupiedBiomSpots)
+            {
+                Debug.Log("Occupied X: " + occupiedSpot[0] + "Y: " + occupiedSpot[1]);
+            }   
 
+            // Populate none biom areas with sand
             for (int i = 0; i < width; i++)
             {
                 for (int j = 0; j < height; j++)
@@ -184,11 +199,15 @@ namespace Game.CityMap
                     }
 
                     map.SetTile(vector, tile);
-                        // Refresh the tile whenever its sprite changes.
-                        tile.SpriteChange += () => map.RefreshTile(vector);
+                    // Refresh the tile whenever its sprite changes.
+                    tile.SpriteChange += () => map.RefreshTile(vector);
                     */
-                    if (tile.Terrain == null)
+                    int[] pos = new int[2];
+                    pos[0] = i;
+                    pos[1] = j;
+                    if (!TileOccupied(occupiedBiomSpots, pos))
                     {
+                        Debug.Log("Changing Tile X: " + i + ", Y: " + j);
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
                         map.SetTile(vector, tile);
                         // Refresh the tile whenever its sprite changes.
@@ -228,6 +247,23 @@ namespace Game.CityMap
                     randomFactory.BuildOnto(tile);
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if the given position (int[2]) is in the given the list of int[2]
+        /// This is to check if a tile is already occupied
+        /// </summary>
+        /// <returns> Boolean if a position is occupied
+        private Boolean TileOccupied(List<int[]> occupiedPosList, int[] pos)
+        {
+            foreach(int[] occupiedPos in occupiedPosList)
+            {
+                if (occupiedPos[0].Equals(pos[0]) && occupiedPos[1].Equals(pos[1]))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>

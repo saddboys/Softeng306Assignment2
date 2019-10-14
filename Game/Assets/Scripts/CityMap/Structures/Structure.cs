@@ -56,15 +56,20 @@ namespace Game.CityMap
         {
             Unrender();
             gameObject = new GameObject();
-            Image image = gameObject.AddComponent<Image>();
-            image.sprite = Resources.Load<Sprite>(spritePath);;
-            Vector2 structureSize = imageSize;
-            // Determines the size of the structure
-            gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;
-            Vector2 xy = new Vector2(position.x + structureSize.x - 1, position.y + structureSize.y - 1);
-            // Determines where the structure will be placed
-            gameObject.GetComponent<RectTransform>().anchoredPosition = xy;
-            gameObject.GetComponent<RectTransform>().SetParent(canvas.transform);
+            
+            SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
+            Sprite sprite = Resources.Load<Sprite>(spritePath);
+            renderer.sprite = sprite;
+            renderer.sortingLayerName = "Structure";
+            
+            // Sort. Higher = further behind, regardless of the order
+            // in which the Structure was added.
+            renderer.sortingOrder = -(int)position.y;
+
+            float scale = 80 / sprite.rect.width;
+            gameObject.transform.position = position;
+            gameObject.transform.localScale = new Vector3(scale, scale, scale);
+            gameObject.transform.SetParent(canvas.transform);
             gameObject.SetActive(true);
         }
 

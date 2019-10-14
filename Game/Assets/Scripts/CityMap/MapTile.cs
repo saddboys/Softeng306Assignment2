@@ -10,6 +10,7 @@ namespace Game.CityMap
     public class MapTile : Tile
     {
         
+        
         public GameObject Canvas { set; get; }
 
         public Vector3 ScreenPosition { set; get; }
@@ -23,6 +24,7 @@ namespace Game.CityMap
             get { return structure; }
             set
             {
+                
                 Assert.IsNotNull(Canvas,
                     "The ScreenPosition and Canvas to draw the structure on should " +
                     "be set before setting the structure");

@@ -16,6 +16,7 @@ namespace Game.CityMap
             return new Stats
             {
                 ElectricCapacity = 1,
+                Reputation = -5
             };
         }
     }
@@ -43,7 +44,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 1;
-                City.Stats.Reputation += 10;
+                City.Stats.Reputation += 5;
             }
         }
     }

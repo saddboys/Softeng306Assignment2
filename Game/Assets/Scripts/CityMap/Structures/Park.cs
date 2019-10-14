@@ -10,7 +10,6 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                Reputation = 0,
                 Score = 500,
                 Wealth = -2,
             };
@@ -19,6 +18,14 @@ namespace Game.CityMap
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
             RenderOnto(canvas, position, 0, new Vector2(1, 1.5f));
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats()
+            {
+                Reputation = -10
+            };
         }
     }
 

@@ -22,8 +22,8 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
-        private const int HEIGHT = 30;
-        private const int WIDTH = 40;
+        private const int HEIGHT = 10;
+        private const int WIDTH = 10;
         Random random = new Random();
 
 
@@ -83,6 +83,7 @@ namespace Game.CityMap
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
 
                 // For testing purposes:
+                someOtherTile.Terrain.TerrainType = Terrain.TerrainTypes.Grass;
             }
         }
 
@@ -117,35 +118,36 @@ namespace Game.CityMap
                 terrainMap = new int[WIDTH, HEIGHT];
             }
             
-            for (int j = 0; j < HEIGHT; j++)
+            for (int j = HEIGHT; j >= 0; j--)
             {
-                for (int i = 0; i < WIDTH; i++)
+                for (int i = 0; i < WIDTH; i++)             
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
 
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, -j);
+                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
                     // Find the real position (the position on the screen)
                     
                     
                     int value = random.Next(0,100);
                     
                     // Randomly generate the map with tiles (although the tiles are the same right now)
-                    /*if (value < 20)
+                    if (value < 20)
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
-
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
                     }
-                    else*/ if (value < 90)
+                    else if (value < 40)
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                    }
+                    else if (value < 50)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
                     }
                     else
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                     }
-                    
-                    
                     map.SetTile(vector, tile);
                     Vector3 mappedVector = map.CellToWorld(vector);
                     // Debug.Log("Screen: " + mappedVector);
@@ -154,15 +156,13 @@ namespace Game.CityMap
                     tile.name = "j: " + j + " i: " + i;
                     tile.Canvas = parent;
                     
-                    //SpriteRenderer sr = tile.gameObject.GetComponent<SpriteRenderer>();
-
-                    //sr.sortingOrder = j - 30000;
 
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
                     
                 }
             }
+
 
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =

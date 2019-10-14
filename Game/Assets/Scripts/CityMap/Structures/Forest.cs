@@ -4,15 +4,14 @@ using UnityEngine;
 
 namespace Game.CityMap
 {
-    public class House : Structure
+    public class Forest : Structure
     {
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
                 Score = 100,
-                Wealth = 0.5,
-                CO2 = 1,
+                CO2 = -2,
             };
         }
 
@@ -20,24 +19,20 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 1,
-                Population = -4,
-                Reputation = 1
+                Reputation = -1
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.2f, position.z);
-            RenderOntoSprite(canvas, position, "Textures/structures/House", new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, position, "Textures/structures/objectForest", new Vector2(1, 1.5f));
         }
     }
 
-    public class HouseFactory : StructureFactory
+    public class ForestFactory : StructureFactory
     {
-        public HouseFactory(City city) : base(city) { }
-        public HouseFactory() : base() { }
+        public ForestFactory(City city) : base(city) { }
+        public ForestFactory() : base() { }
 
         public override int Cost
         {
@@ -45,11 +40,11 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.Load<Sprite>("Textures/structures/House");
+            Resources.Load<Sprite>("Textures/structures/objectForest");
 
         protected override Structure Create()
         {
-            return new House();
+            return new Forest();
         }
 
         public override bool CanBuild(out string reason)
@@ -73,9 +68,9 @@ namespace Game.CityMap
                 return false;
             }
 
-            if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean)
+            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass)
             {
-                reason = "Cannot build onto water";
+                reason = "Cannot build onto anything other than grass";
                 return false;
             }
 
@@ -88,9 +83,7 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
-                City.Stats.Population += 4;
-                City.Stats.Reputation -= 1;
+                City.Stats.Reputation += 1;
             }
         }
     }

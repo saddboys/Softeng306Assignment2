@@ -12,7 +12,6 @@ namespace Game.CityMap
             {
                 CO2 = 10,
                 Score = 500,
-                Reputation = 3,
                 Wealth = 10,
             };
         }
@@ -22,13 +21,14 @@ namespace Game.CityMap
             return new Stats
             {
                 ElectricCapacity = 5,
+                Reputation = -3
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            Vector3 positionNew = new Vector3(position.x, position.y - 0f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactorySprite", new Vector2(1, 1.2f));
+            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
         }
     }
 
@@ -89,6 +89,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 5;
+                City.Stats.Reputation += 3;
             }
         }
 

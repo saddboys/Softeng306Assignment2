@@ -21,45 +21,45 @@ namespace Game.CityMap
         };
         public TerrainTypes TerrainType { get; set; }
 
-        public Terrain(TerrainTypes terrainType, Sprite[] sprites)
+        public Terrain(TerrainTypes terrainType)
         {
             TerrainType = terrainType;
             if (terrainType.Equals(TerrainTypes.Grass))
             {
                 
-                int value = random.Next(0, 2);
-                if (value == 0)
+                int value = random.Next(0, 10);
+                if (value < 5)
                 {
-                    sprite = Resources.Load<Sprite>("Textures/terrain/hexGrass");
+                    sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassLine");
                 }
-                else if (value == 1)
+                else if (value < 8)
                 {
-                    sprite = Resources.Load<Sprite>("Textures/terrain/hexGrass1");
+                    sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassLineMedium");
                 }
                 else
                 {
-                    sprite = Resources.Load<Sprite>("Textures/terrain/hexGrass2");
+                    sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassLineTall");
                 }
             }
             else if (terrainType.Equals(TerrainTypes.Desert))
             {
-                int value = random.Next(0, 2);
-                if (value == 0)
+                int value = random.Next(0, 9);
+                if (value < 5)
                 {
-                    sprite = Resources.Load<Sprite>("Textures/terrain/hexSand");
-                }
-                else if (value == 1)
-                {
-                    sprite = Resources.Load<Sprite>("Textures/terrain/hexSand1");
+                    sprite = Resources.Load<Sprite>("Textures/Terrain/hexSand");
                 }
                 else
                 {
-                    sprite = Resources.Load<Sprite>("Textures/terrain/hexSand2");
+                    sprite = Resources.Load<Sprite>("Textures/Terrain/hexSandMeedium");
                 }
+            }
+            else if (terrainType.Equals(TerrainTypes.Desert))
+            {
+                sprite = Resources.Load<Sprite>("Textures/Terrain/hexSand");
             }
             else
             {
-                sprite = Resources.Load<Sprite>("Textures/terrain/hexwater 1");
+                sprite = Resources.Load<Sprite>("Textures/Terrain/hexWater");
             }
         }
         

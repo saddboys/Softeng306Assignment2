@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using Game.CityMap;
 using Game.Story;
 using UnityEngine;
+using UnityEngine.Tilemaps;
+using Random = System.Random;
 
 namespace Story.Events.RandomEvent
 {
@@ -28,9 +31,24 @@ namespace Story.Events.RandomEvent
         public override void OnYesClick()
         {
             // Destroy random buildings
-            
+            DestroyBuildings();
             // Happiness goes down
-            throw new System.NotImplementedException();
+            StoryManager.city.Stats.Reputation -= 10;
+        }
+
+        private void DestroyBuildings()
+        {
+            Random random = new Random();
+            MapTile[] tiles = StoryManager.city.Map.Tiles;
+            foreach (var tile in tiles)
+            {
+                if (tile.Structure != null && random.Next(0,5) == 1)
+                {
+                    tile.Structure.Unrender();
+                    StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
+                    tile.Structure = null;
+                }
+            }
         }
     }
 }

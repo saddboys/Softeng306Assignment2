@@ -258,6 +258,7 @@ namespace Game
             tooltipCanvas = new GameObject();
             Canvas canvas = tooltipCanvas.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.sortingOrder = 2;
         }
 
         private void Update()

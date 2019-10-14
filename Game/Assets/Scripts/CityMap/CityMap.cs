@@ -99,12 +99,12 @@ namespace Game.CityMap
             }
 
             // random spot for sand biom
-            int sandXValue = random.Next(0, 40);
-            int sandYValue = random.Next(0, 30);
+            int sandAnchorXValue = random.Next(0, 40);
+            int sandAnchorYValue = random.Next(0, 30);
 
             // adding sand anchor to screen
             MapTile sandAnchorTile = ScriptableObject.CreateInstance<MapTile>();
-            Vector3Int sandAnchorVector = new Vector3Int(-sandXValue + width / 2, -sandYValue + height / 2, 0);
+            Vector3Int sandAnchorVector = new Vector3Int(-sandAnchorXValue + width / 2, -sandAnchorYValue + height / 2, 0);
             Vector3 sandMappedVector = map.CellToWorld(sandAnchorVector);
 
             sandAnchorTile.Canvas = parent;
@@ -112,10 +112,43 @@ namespace Game.CityMap
 
             sandAnchorTile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
 
+            int sandBiomRadius = 5;
+
             // growing sand biom
-            for (int i = 0; i < 5; i++) 
+            for (int i = 0; i < sandBiomRadius * 2; i++) 
             {
-                
+                for (int j = 0; j < sandBiomRadius * 2; j++)
+                {
+                    int curX = sandAnchorXValue - sandBiomRadius + j;
+                    int curY = sandAnchorYValue - sandBiomRadius + i;
+
+                    // check if X and Y values are within the map
+                    if (curX < 40 && curX >= 0 && curY < 30 && curY >= 0)
+                    {
+                        MapTile sandTile = ScriptableObject.CreateInstance<MapTile>();
+                        // A vector used for hex position
+                        MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+                        // A vector used for hex position
+                        Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
+                        // Find the real position (the position on the screen)
+                        Vector3 mappedVector = map.CellToWorld(vector);
+
+                        sandTile.Canvas = parent;
+                        sandTile.ScreenPosition = mappedVector;
+
+                        // check if terrain is vacant
+                        if (sandTile.Terrain == null)
+                        {
+                            // weighted random terrain allocation depending on distance from anchor
+                            int value = random.Next(0, 100);
+                            if (value < 100 - ((int) Mathf.Abs(sandAnchorXValue - curX) + (int) Mathf.Abs(sandAnchorYValue - curY)) * 10)
+                            {
+                                sandTile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
+                            }
+                        }
+                    } 
+                    
+                }
             }
 
             for (int i = 0; i < width; i++)
@@ -135,6 +168,7 @@ namespace Game.CityMap
                     int value = random.Next(0,100);
                     
                     // Randomly generate the map with tiles (although the tiles are the same right now)
+                    /*
                     if (value < 20)
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
@@ -148,10 +182,18 @@ namespace Game.CityMap
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
                     }
-                    
+
                     map.SetTile(vector, tile);
-                    // Refresh the tile whenever its sprite changes.
-                    tile.SpriteChange += () => map.RefreshTile(vector);
+                        // Refresh the tile whenever its sprite changes.
+                        tile.SpriteChange += () => map.RefreshTile(vector);
+                    */
+                    if (tile.Terrain == null)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
+                        map.SetTile(vector, tile);
+                        // Refresh the tile whenever its sprite changes.
+                        tile.SpriteChange += () => map.RefreshTile(vector);
+                    } 
                 }
             }
 

@@ -37,7 +37,10 @@ namespace Game.Story.Events
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
             "FUIBGIBGUbfusfbeiubreugbrieugbiuergbeiurbgierbguierbgiuerbgiuergiureiguebruigeriugbeiurgbiuergbiuerbgiuerbgiuerbgerugiberiguberg" +
             "eifberiugbiuergbiuergbuierbguiebguiergb",
-            "ab",
+            "abeifberiugbiuergbiuergbuierbguiebguierg" +
+            "eifberiugbiuergbiuergbuierbguiebguiergb" +
+            "eifberiugbiuergbiuergbuierbguiebguiergb" +
+            "eifberiugbiuergbiuergbuierbguiebguiergbb",
             "cd"}); 
         
         private StoryManager storyManager;

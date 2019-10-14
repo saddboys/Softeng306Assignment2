@@ -18,6 +18,10 @@ namespace Game.CityMap
         /// </summary>
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
+        public event EventHandler<TileClickArgs> TileMouseEnterEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        private MapTile previousHoveredTile;
+
         public Tilemap map;
         public GameObject parent;
         public Text display;
@@ -46,6 +50,31 @@ namespace Game.CityMap
         void Update()
         {
             CheckTileClick();
+            CheckTileHover();
+        }
+
+        private void CheckTileHover()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
+            Vector3Int position = map.WorldToCell(worldPoint);
+            MapTile currentTile = map.GetTile<MapTile>(position);
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                currentTile = null;
+            }
+            if (currentTile != previousHoveredTile)
+            {
+                if (previousHoveredTile != null)
+                {
+                    TileMouseLeaveEvent?.Invoke(this, new TileClickArgs(previousHoveredTile));
+                }
+                if (currentTile != null)
+                {
+                    TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
+                }
+            }
+            previousHoveredTile = currentTile;
         }
 
         private void CheckTileClick()

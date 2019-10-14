@@ -124,5 +124,10 @@ namespace Game.CityMap
                 City.Stats.Wealth -= Cost;
             }
         }
+
+        public Structure CreateGhost()
+        {
+            return Create();
+        }
     }
 }

@@ -10,9 +10,9 @@ namespace Game.CityMap
         {
             return new Stats()
             {
-                CO2 = 10,
+                CO2 = 20,
                 Score = 500,
-                Wealth = 10,
+                Wealth = 30,
             };
         }
 
@@ -43,7 +43,7 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.Load<Sprite>("Textures/structures/FactorySprite");
+            Resources.Load<Sprite>("Textures/structures/FactoryNew");
         public FactoryFactory(City city) : base(city) { }
         public FactoryFactory() : base() { }
 

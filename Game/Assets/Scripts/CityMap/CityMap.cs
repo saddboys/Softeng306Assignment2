@@ -144,6 +144,14 @@ namespace Game.CityMap
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
                     }
+                    else if (value < 60)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.GrassHill);  
+                    } 
+                    else if (value < 70)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.DesertHill);
+                    } 
                     else
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);

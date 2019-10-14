@@ -36,7 +36,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 500; }
+            get { return 2000; }
         }
 
         public override Sprite Sprite { get; } =
@@ -53,11 +53,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 1)
-            {
-                reason = "Not enough electric capacity";
-                return false;
-            }
+            
             return true;
         }
 
@@ -68,7 +64,7 @@ namespace Game.CityMap
                 return false;
             }
 
-            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass)
+            if ((tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass) && (tile.Terrain.TerrainType != Terrain.TerrainTypes.GrassHill))
             {
                 reason = "Cannot build onto anything other than grass";
                 return false;

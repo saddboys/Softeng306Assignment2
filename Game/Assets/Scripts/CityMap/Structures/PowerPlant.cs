@@ -26,7 +26,7 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 1, new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, position, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
         }
     }
 
@@ -40,7 +40,7 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[1];
+            Resources.Load<Sprite>("Textures/structures/powerPlant");
 
         protected override Structure Create()
         {

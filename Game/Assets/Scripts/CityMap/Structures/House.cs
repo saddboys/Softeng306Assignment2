@@ -11,7 +11,7 @@ namespace Game.CityMap
             return new Stats
             {
                 Score = 100,
-                Wealth = 0.5,
+                Wealth = 3,
                 CO2 = 1,
             };
         }
@@ -73,7 +73,7 @@ namespace Game.CityMap
                 return false;
             }
 
-            if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean)
+            if (tile.Terrain.TerrainType==(Terrain.TerrainTypes.Ocean))
             {
                 reason = "Cannot build onto water";
                 return false;

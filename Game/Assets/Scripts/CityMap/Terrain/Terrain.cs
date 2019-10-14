@@ -32,14 +32,15 @@ namespace Game.CityMap
                 {
                     sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassLine");
                 }
-                else if (value < 8)
+                else 
                 {
                     sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassLineMedium");
                 }
-                else
-                {
-                    sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassLineTall");
-                }
+                
+            }
+            else if (terrainType.Equals(TerrainTypes.GrassHill))
+            {
+                sprite = Resources.Load<Sprite>("Textures/Terrain/hexGrassHill");
             }
             else if (terrainType.Equals(TerrainTypes.Desert))
             {
@@ -56,6 +57,10 @@ namespace Game.CityMap
             else if (terrainType.Equals(TerrainTypes.Desert))
             {
                 sprite = Resources.Load<Sprite>("Textures/Terrain/hexSand");
+            }
+            else if (terrainType.Equals(TerrainTypes.DesertHill))
+            {
+                sprite = Resources.Load<Sprite>("Textures/Terrain/hexSandHill");
             }
             else
             {

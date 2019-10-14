@@ -98,6 +98,7 @@ public class EventPopUp : MonoBehaviour
         GameObject buttonObj = new GameObject();
         Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(DestroyPanel);
+        button.onClick.AddListener(StoryEvent.OnYesClick);
         button.name = "HELLO";
         Text text = buttonObj.AddComponent<Text>();
         text.text = "OK";

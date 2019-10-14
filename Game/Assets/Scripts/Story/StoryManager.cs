@@ -115,30 +115,38 @@ namespace Game.Story
 
         private void HandleTurnEvent()
         {
-            if (city.Turn == storyQueue.Peek())
+            // For testing an event
+            if (city.Turn == 2)
             {
-                // Create new story event here
-                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-                // Get rid of the first thing in the queue
-                storyQueue.Dequeue();
-                CreateDialog();
-                //CreatePopUp();
+                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+                CreatePopUp();   
             }
-            else
-            {
-                // Events have a 10% chance of popping up
-                if (random.Next(0, 10) == 1)
-                {
-                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-                    // Randomly spawn events from the event pool
-                    storyEvent = factory.CreateRandomEvent(randomEvent);
-                    CreatePopUp();
-                }
-            }
+
+//            if (city.Turn == storyQueue.Peek())
+//            {
+//                // Create new story event here
+//                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+//                // Get rid of the first thing in the queue
+//                storyQueue.Dequeue();
+//                CreateDialog();
+//                //CreatePopUp();
+//            }
+//            else
+//            {
+//                // Events have a 10% chance of popping up
+//                if (random.Next(0, 10) == 1)
+//                {
+//                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+//                    // Randomly spawn events from the event pool
+//                    storyEvent = factory.CreateRandomEvent(randomEvent);
+//                    CreatePopUp();
+//                }
+//            }
         }
 
         private void CreatePopUp()
         {
+            Debug.Log("goes here");
             EventPopUp popUp;
             if (storyEvent != null && !city.HasEnded)
             {

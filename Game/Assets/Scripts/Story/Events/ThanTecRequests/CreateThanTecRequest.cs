@@ -60,7 +60,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
-            // Placeholder for now
+            // Placeholder building for now
             StoryManager.toolbar.CurrentFactory = new HouseFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;

@@ -27,6 +27,9 @@ namespace Game.Story.Events.VerdantLandRequests
         public override void OnYesClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
+            
+            // Lock the factories, decrease happiness levels
+            
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
             
         }

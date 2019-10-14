@@ -22,6 +22,8 @@ namespace Game.CityMap
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
+        public int HEIGHT =  30;
+        public int WIDTH = 40;
 
         Random random = new Random();
 
@@ -125,10 +127,11 @@ namespace Game.CityMap
                     }
                     else
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
                     }
                     
                     map.SetTile(vector, tile);
+                    Debug.Log("Vector is: " + vector);
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
                 }

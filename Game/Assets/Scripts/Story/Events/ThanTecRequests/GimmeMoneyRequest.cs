@@ -28,6 +28,9 @@ namespace Game.Story.Events
         public override void OnYesClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIANT_COOLER_REQUEST;
+            
+            // Change the money here? Increase tech investments
+            
             Destroy(StoryManager.storyManagerGameObject.GetComponent<GimmeMoneyRequest>());
         }
 

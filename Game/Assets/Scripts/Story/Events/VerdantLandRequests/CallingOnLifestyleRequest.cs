@@ -17,11 +17,14 @@ namespace Game.Story.Events.VerdantLandRequests
         public override void OnYesClick()
         {
             // ending goes here ?
+            // Decrease happiness, decrease population, reduce carbon emissions
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
 
         public override void OnNoClick()
         {
-           
+            // Increase CO2 emissions from houses
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
     }
 }

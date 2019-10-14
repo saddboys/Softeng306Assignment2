@@ -74,9 +74,13 @@ namespace Game
         /// </summary>
         public event Action NextTurnEvent;
 
+        private Weather weather;
+
         // Start is called before the first frame update
         void Start()
         {
+            weather = new Weather(Map.map.gameObject);
+
             endTurnButton.onClick.AddListener(EndTurn);
             
             //Restart();
@@ -89,6 +93,7 @@ namespace Game
         // Update is called once per frame
         void Update()
         {
+            weather.Update();
         }
 
         private void UpdateForecast()

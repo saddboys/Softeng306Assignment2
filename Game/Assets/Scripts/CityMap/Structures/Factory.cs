@@ -35,6 +35,7 @@ namespace Game.CityMap
             // Now the fun begins...
 
             ParticleSystem particles = GameObject.AddComponent<ParticleSystem>();
+            Particles.InitParticleSystem(particles);
 
             var main = particles.main;
             main.startLifetime = 10;
@@ -102,43 +103,7 @@ namespace Game.CityMap
             colorBySpeed.enabled = true;
 
             var renderer = GameObject.GetComponent<ParticleSystemRenderer>();
-            renderer.renderMode = ParticleSystemRenderMode.Billboard;
-            renderer.material = getParticleMaterial();
             renderer.sortingLayerName = "Structure";
-        }
-
-        private Material particleMaterial;
-
-        private Material getParticleMaterial()
-        {
-            if (particleMaterial != null) return particleMaterial;
-
-            Shader shader = Shader.Find("Particles/Standard Unlit");
-            particleMaterial = new Material(shader);
-
-            // Find the default texture. Who knows where it is located.
-            Texture texture = null;
-            foreach (Texture potentialTexture in Resources.FindObjectsOfTypeAll<Texture>())
-            {
-                if (potentialTexture.name == "Default-ParticleSystem")
-                {
-                    texture = potentialTexture;
-                }
-            }
-
-            particleMaterial.mainTexture = texture;
-
-            // Set fade blend mode. Unfortunately, we need to manually configure its values
-            // according to the source code.
-            particleMaterial.SetInt("_SrcBlend", (int)UnityEngine.Rendering.BlendMode.SrcAlpha);
-            particleMaterial.SetInt("_DstBlend", (int)UnityEngine.Rendering.BlendMode.OneMinusSrcAlpha);
-            particleMaterial.SetInt("_ZWrite", 0);
-            particleMaterial.DisableKeyword("_ALPHATEST_ON");
-            particleMaterial.EnableKeyword("_ALPHABLEND_ON");
-            particleMaterial.DisableKeyword("_ALPHAPREMULTIPLY_ON");
-            particleMaterial.renderQueue = 3000;
-
-            return particleMaterial;
         }
     }
 

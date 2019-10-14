@@ -89,6 +89,8 @@ namespace Game
             get { return reputation; }
             set
             {
+                if (value > 100) value = 100;
+                if (value < 0) value = 0;
                 double change = value - reputation;
                 reputation = value;
                 if (change > 0)
@@ -341,8 +343,6 @@ namespace Game
             Population += stats.Population;
             ElectricCapacity += stats.ElectricCapacity;
             Reputation += stats.Reputation;
-            if (Reputation > 100) Reputation = 100;
-            if (Reputation < 0) Reputation = 0;
             Score += stats.Score;
             Wealth += stats.Wealth;
         }

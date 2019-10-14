@@ -17,8 +17,7 @@ namespace Game
             get { return co2; }
             set
             {
-                // CO2 is always relative.
-                double change = value;
+                double change = value - co2;
                 co2 = value;
                 if (change > 0)
                 {
@@ -319,16 +318,26 @@ namespace Game
         }
 
         /// <summary>
-        /// Adds individual fields of one Stats object onto itself.
+        /// Updates the stats for one game turn.
         /// </summary>
         public void UpdateContribution(Stats stats)
+        {
+            co2 = 0;
+            AddContribution(stats);
+            Temperature += CO2 / 1000;
+        }
+
+        /// <summary>
+        /// Adds individual fields of one Stats object onto itself.
+        /// </summary>
+        public void AddContribution(Stats stats)
         {
             if (stats == null)
             {
                 stats = new Stats();
             }
-            CO2 = stats.CO2;
-            Temperature += stats.Temperature + CO2 / 1000;
+            CO2 += stats.CO2;
+            Temperature += stats.Temperature;
             Population += stats.Population;
             ElectricCapacity += stats.ElectricCapacity;
             Reputation += stats.Reputation;

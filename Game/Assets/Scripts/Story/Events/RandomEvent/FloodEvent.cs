@@ -38,22 +38,6 @@ namespace Game.Story.Events.RandomEvent
             StoryManager.city.NextTurnEvent += DecreaseWater;
             random = new Random();
             GenerateFloodPositions();
-            //Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
-            // do something with the tiles here
-            // This is currently just a placeholder
-            
-//            var tile = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
-//            tile.Structure = null;
-//            tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean,sprites);
-//
-//            var tile2 = map.GetTile<MapTile>(new Vector3Int(1, 0, 0));
-//            tile2.Structure = null;
-//            tile2.Terrain = new Terrain(Terrain.TerrainTypes.Ocean,sprites);
-            
-
-            // We want to randomly place the water in a section
-
-
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CircusEvent>());
         }
 

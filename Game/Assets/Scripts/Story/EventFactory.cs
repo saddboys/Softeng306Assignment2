@@ -1,13 +1,14 @@
 using Game.Story.Events;
 using Game.Story.Events.RandomEvent;
 using Game.Story.Events.VerdantLandRequests;
+using Story.Events.RandomEvent;
 using UnityEngine;
 
 namespace Game.Story
 {
     public class EventFactory
     {
-        public enum RandomEvents {CONDITIONAL_REQUEST_HOUSE,FLOOD_EVENT}
+        public enum RandomEvents {CONDITIONAL_REQUEST_HOUSE,FLOOD_EVENT, HEATWAVE_EVENT}
         public enum StoryEvents {INITIAL_THANTEC, RESEARCH_FACILITY_REQUEST,GIMME_MONEY_REQUEST, GIANT_COOLER_REQUEST,
                                 PUSHING_HARDER_REQUEST, BAN_THE_CARS_REQUEST, CALLING_ON_LIFESTYLE_REQUEST}
         private StoryEvent storyEvent;
@@ -42,6 +43,8 @@ namespace Game.Story
                     return ManagerObject.AddComponent<MoreHouseRequest>();
                 case RandomEvents.FLOOD_EVENT:
                     return ManagerObject.AddComponent<FloodEvent>();
+                case RandomEvents.HEATWAVE_EVENT:
+                    return ManagerObject.AddComponent<HeatwaveEvent>();
             }
             return null;
         }

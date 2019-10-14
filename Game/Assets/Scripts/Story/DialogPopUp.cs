@@ -8,6 +8,7 @@ namespace Game.Story
     {
         public GameObject Canvas { get; set; }
         public StoryEvent StoryEvent { get; set; }
+        private Animator animator;
         public Action Finished;
         public void Create()
         {
@@ -17,6 +18,10 @@ namespace Game.Story
             i.color = Color.white;
             panel.transform.SetParent(Canvas.transform, false);
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(300,300);
+
+            animator = panel.AddComponent<Animator>();
+            animator.runtimeAnimatorController = Resources.Load("Animations/Dialogue") as RuntimeAnimatorController;;
+            animator.SetBool("IsOpen", true);
             
             GameObject title = new GameObject("DialogueName");
             Text titleText = title.AddComponent<Text>();
@@ -34,7 +39,7 @@ namespace Game.Story
             descriptionText.text = StoryEvent.Dialogues.Dequeue();
             descriptionText.font =Resources.GetBuiltinResource<Font>("Arial.ttf");
             descriptionText.color = Color.black;
-           descriptionText.fontSize = 10;
+            descriptionText.fontSize = 20;
             descriptionText.alignment = TextAnchor.UpperCenter;
             descriptions.transform.SetParent(panel.transform,false);
             descriptions.GetComponent<RectTransform>().sizeDelta = new Vector2(300,300);
@@ -57,6 +62,7 @@ namespace Game.Story
         {
             if (StoryEvent.Dialogues.Count == 0)
             {
+                animator.SetBool("IsOpen", false);
                 DestroyDialogPopup();
                 Finished?.Invoke();
                 return;

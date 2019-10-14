@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    [System.Serializable]
     public class CreateThanTecRequest : StoryRequest
     {
         /// <summary>
@@ -32,7 +33,12 @@ namespace Game.Story.Events
         } 
         private const string TITLE = "Here comes the science!";
         private const string DESCRIPTION = "A new research facility wishes to build their office in XXX. \nDo you accept?";
-        private Queue<string> dialogMessages = new Queue<string>(new[] { "hello","ab","cd"}); 
+        [TextArea(3,10)]
+        private Queue<string> dialogMessages = new Queue<string>(new[] { 
+            "FUIBGIBGUbfusfbeiubreugbrieugbiuergbeiurbgierbguierbgiuerbgiuergiureiguebruigeriugbeiurgbiuergbiuerbgiuerbgiuerbgerugiberiguberg" +
+            "eifberiugbiuergbiuergbuierbguiebguiergb",
+            "ab",
+            "cd"}); 
         
         private StoryManager storyManager;
         public override StoryManager StoryManager 

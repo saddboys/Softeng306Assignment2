@@ -356,6 +356,16 @@ namespace Game
             reputation = 50;
             score = 0;
             wealth = 10000;
+
+            // Reset the shown values. Don't count back down from the previous game.
+            CO2Shown = 0;
+            TemperatureShown = 0;
+            PopulationShown = 0;
+            ElectricCapacityShown = 0;
+            ReputationShown = 0;
+            ScoreShown = 0;
+            WealthShown = 0;
+
             foreach (var tooltip in tooltips)
             {
                 Destroy(tooltip);

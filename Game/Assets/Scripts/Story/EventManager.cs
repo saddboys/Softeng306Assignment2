@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-namespace Game
+namespace Game.Story
 {
-public class DialogueManager : MonoBehaviour
+public class EventManager : MonoBehaviour
 {
     public Text nameText;
     public Text dialogueText;
     public Queue<string> sentences;
-    public GameObject stats;
     public Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -18,8 +17,6 @@ public class DialogueManager : MonoBehaviour
     }
 
     public void StartDialogue(Dialogue dialogue){
-        // GameObject.Find("ToolbarCanvas").SetActive(false);
-        // GameObject.Find("Game Stats Overlay").SetActive(false);
        animator.SetBool("isOpen", true);
         Debug.Log("start conversation!"+ dialogue.name);
         nameText.text = dialogue.name;
@@ -56,10 +53,7 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue(){
       animator.SetBool("isOpen", false);
-    //GameObject.Find("ToolbarCanvas").SetActive(true);
-    // stats =  GameObject.Find("ToolbarCanvas");
-    // stats.SetActive(true);
-      GameObject.Find("DialogueCanvas").SetActive(false);
+      //GameObject.Find("DialogueCanvas").SetActive(false);
     }
 
 

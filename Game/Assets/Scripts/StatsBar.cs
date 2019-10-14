@@ -17,7 +17,8 @@ namespace Game
             get { return co2; }
             set
             {
-                double change = value - co2;
+                // CO2 is always relative.
+                double change = value;
                 co2 = value;
                 if (change > 0)
                 {

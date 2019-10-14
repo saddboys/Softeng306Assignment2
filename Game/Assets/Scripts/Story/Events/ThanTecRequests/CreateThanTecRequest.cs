@@ -41,7 +41,8 @@ namespace Game.Story.Events
             "eifberiugbiuergbiuergbuierbguiebguiergb" +
             "eifberiugbiuergbiuergbuierbguiebguiergb" +
             "eifberiugbiuergbiuergbuierbguiebguiergbb",
-            "cd"}); 
+            "111111111111111111111111111111111111111111" +
+            "1111111111111111111111111111111111111111111"}); 
         
         private StoryManager storyManager;
         public override StoryManager StoryManager 

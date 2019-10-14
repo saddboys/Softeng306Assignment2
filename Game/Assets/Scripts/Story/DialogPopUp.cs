@@ -10,6 +10,7 @@ namespace Game.Story
         public GameObject Canvas { get; set; }
         public StoryEvent StoryEvent { get; set; }
         private Animator animator;
+        private Coroutine coroutine;
         public Action Finished;
         public void Create()
         {
@@ -42,7 +43,7 @@ namespace Game.Story
             storyText.color = Color.black;
             storyText.fontSize = 20;
             storyText.alignment = TextAnchor.UpperCenter;
-            StartCoroutine(TypeSentence(StoryEvent.Dialogues.Dequeue(),storyText));
+            coroutine = StartCoroutine(TypeSentence(StoryEvent.Dialogues.Dequeue(),storyText));
             descriptions.transform.SetParent(panel.transform,false);
             descriptions.GetComponent<RectTransform>().sizeDelta = new Vector2(300,300);
             descriptions.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-50);
@@ -62,11 +63,18 @@ namespace Game.Story
 
         IEnumerator TypeSentence(string sentence, Text storyText)
         {
+            if (coroutine != null)
+            {
+                StopCoroutine(coroutine);
+            }
             storyText.text = "";
             foreach (var character in sentence.ToCharArray())
             {
-                storyText.text += character;
-                yield return null;
+                if (storyText.text != null)
+                {
+                    storyText.text += character;
+                    yield return null;
+                }
             }
         }
 
@@ -75,12 +83,13 @@ namespace Game.Story
             if (StoryEvent.Dialogues.Count == 0)
             {
                 animator.SetBool("IsOpen", false);
+                StopCoroutine(coroutine);
                 DestroyDialogPopup();
                 Finished?.Invoke();
                 return;
             }
             Text text = Canvas.transform.Find("Dialogue").Find("DialogueText").GetComponent<Text>();
-            StartCoroutine(TypeSentence(StoryEvent.Dialogues.Dequeue(),text));
+            coroutine = StartCoroutine(TypeSentence(StoryEvent.Dialogues.Dequeue(),text));
         }
 
         private void DestroyDialogPopup()

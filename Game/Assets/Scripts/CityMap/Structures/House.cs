@@ -30,7 +30,7 @@ namespace Game.CityMap
         {
             
             Vector3 positionNew = new Vector3(position.x, position.y + 0.2f, position.z);
-            RenderOntoSprite(canvas, position, "Textures/structures/House", new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
         }
     }
 

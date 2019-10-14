@@ -82,11 +82,18 @@ namespace Game
             //Restart();
             Turn = 1;
             Stats.Restart();
+
+            InvokeRepeating("UpdateForecast", 0, 0.1f);
         }
 
         // Update is called once per frame
         void Update()
         {
+        }
+
+        private void UpdateForecast()
+        {
+            Stats.UpdateForecast(Map.GetStatsContribution());
         }
 
         /// <summary>

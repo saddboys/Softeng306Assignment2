@@ -89,6 +89,8 @@ namespace Game
             get { return reputation; }
             set
             {
+                if (value > 100) value = 100;
+                if (value < 0) value = 0;
                 double change = value - reputation;
                 reputation = value;
                 if (change > 0)
@@ -318,21 +320,29 @@ namespace Game
         }
 
         /// <summary>
-        /// Adds individual fields of one Stats object onto itself.
+        /// Updates the stats for one game turn.
         /// </summary>
         public void UpdateContribution(Stats stats)
+        {
+            co2 = 0;
+            AddContribution(stats);
+            Temperature += CO2 / 1000;
+        }
+
+        /// <summary>
+        /// Adds individual fields of one Stats object onto itself.
+        /// </summary>
+        public void AddContribution(Stats stats)
         {
             if (stats == null)
             {
                 stats = new Stats();
             }
-            CO2 = stats.CO2;
-            Temperature += stats.Temperature + CO2 / 1000;
+            CO2 += stats.CO2;
+            Temperature += stats.Temperature;
             Population += stats.Population;
             ElectricCapacity += stats.ElectricCapacity;
             Reputation += stats.Reputation;
-            if (Reputation > 100) Reputation = 100;
-            if (Reputation < 0) Reputation = 0;
             Score += stats.Score;
             Wealth += stats.Wealth;
         }
@@ -346,6 +356,16 @@ namespace Game
             reputation = 50;
             score = 0;
             wealth = 10000;
+
+            // Reset the shown values. Don't count back down from the previous game.
+            CO2Shown = 0;
+            TemperatureShown = 0;
+            PopulationShown = 0;
+            ElectricCapacityShown = 0;
+            ReputationShown = 0;
+            ScoreShown = 0;
+            WealthShown = 0;
+
             foreach (var tooltip in tooltips)
             {
                 Destroy(tooltip);

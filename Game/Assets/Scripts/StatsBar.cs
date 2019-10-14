@@ -135,7 +135,7 @@ namespace Game
         public void UpdateForecast(Stats stats)
         {
             co2Stat.Forecast.Value = stats.CO2 - CO2;
-            tempStat.Forecast.Value = stats.Temperature;
+            tempStat.Forecast.Value = stats.Temperature + CalculateTemperatureChange(stats.CO2);
             popStat.Forecast.Value = stats.Population;
             elecStat.Forecast.Value = stats.ElectricCapacity;
             repStat.Forecast.Value = stats.Reputation;
@@ -150,7 +150,7 @@ namespace Game
         {
             co2Stat.Reset(0, co2Stat.Shown);
             AddContribution(stats);
-            Temperature += CO2 / 1000;
+            Temperature += CalculateTemperatureChange(CO2);
         }
 
         /// <summary>
@@ -191,6 +191,11 @@ namespace Game
         private void OnChange()
         {
             ChangeEvent?.Invoke();
+        }
+
+        private static double CalculateTemperatureChange(double co2)
+        {
+            return co2 / 1000;
         }
     }
 

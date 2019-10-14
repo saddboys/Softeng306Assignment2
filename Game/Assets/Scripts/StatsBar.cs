@@ -129,12 +129,10 @@ namespace Game
                 wealth = value;
                 if (change > 0)
                 {
-                    Debug.Log("Wealth increase");
                     changeTooltipQueue.Add("+$" + change + "k");
                 }
                 else if (change < 0)
                 {
-                    Debug.Log("Wealth decrease");
                     change *= -1;
                     changeTooltipQueue.Add("-$" + change + "k");
                 }

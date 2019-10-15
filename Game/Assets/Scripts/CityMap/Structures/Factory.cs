@@ -12,8 +12,7 @@ namespace Game.CityMap
             return new Stats()
             {
                 CO2 = 20,
-                Score = 500,
-                Wealth = 30,
+                Wealth = 500,
             };
         }
 
@@ -118,7 +117,7 @@ namespace Game.CityMap
         {
             get
             {
-                return 3000;
+                return 2500;
             }
         }
 

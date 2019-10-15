@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.CityMap;
 using Game.Story;
 using Game.Story.Events;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +18,7 @@ public class EventPopUp : MonoBehaviour
     private int POP_UP_HEIGHT;
     private const int BUTTON_WIDTH = 50;
     private const int BUTTON_HEIGHT = 30;
-    private const int TITLE_FONT_SIZE = 30;
+    private const int TITLE_FONT_SIZE = 45;
     private const int DESCRIPTION_FONT_SIZE = 15;
 
     void Start()
@@ -72,15 +73,17 @@ public class EventPopUp : MonoBehaviour
         
         // Creating the title
         GameObject title = new GameObject("Title");
-        Text titleText = title.AddComponent<Text>();
+        TextMeshProUGUI titleText = title.AddComponent<TextMeshProUGUI>();
+        //Text titleText = title.AddComponent<Text>();
         titleText.text = StoryEvent.Title;
-        titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        titleText.color = Color.black;
+        titleText.font = Resources.Load<TMP_FontAsset>("Fonts/Bangers SDF");
+        titleText.color = Color.white;
+        titleText.outlineColor = Color.black;
         titleText.fontSize = TITLE_FONT_SIZE;
-        titleText.alignment = TextAnchor.UpperCenter;
+        titleText.alignment = TextAlignmentOptions.Center;
         title.transform.SetParent(panel.transform,false);
         title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
-        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-10);
+        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_HEIGHT/2);
         
         // Creating the description
         GameObject description = new GameObject("Description");
@@ -208,7 +211,6 @@ public class EventPopUp : MonoBehaviour
     private void DestroyPanel()
     {
         StoryEvent.GenerateScene(Canvas);
-        //animator.SetBool("IsOpen", false);
         Canvas.transform.Find("Panel").gameObject.SetActive(false);
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);

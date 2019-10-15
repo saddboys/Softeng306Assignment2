@@ -90,14 +90,27 @@ namespace Game
                 addToggleHandler(toggles[i], factories[i]);
                 if (factories[i].Sprite != null)
                 {
+                    Image[] images = toggles[i].GetComponentsInChildren<Image>();
+                    if (images.Length < 2)
+                    {
+                        // Checkmark is missing. Add our own.
+                        var checkedObject = new GameObject();
+                        images = new Image[2]
+                        {
+                            images[0],
+                            checkedObject.AddComponent<Image>(),
+                        };
+                        toggles[i].graphic = images[1];
+                        images[1].canvasRenderer.SetAlpha(0);
+                    }
+
                     // Blue background when isOn.
-                    Image checkedImage = toggles[i]
-                        .GetComponentsInChildren<Image>()[1];
+                    Image checkedImage = images[1];
                     checkedImage.color = new Color(0.6f, 0.8f, 1.0f);
-                    checkedImage.sprite = toggles[i].GetComponentsInChildren<Image>()[0].sprite;
+                    checkedImage.sprite = images[0].sprite;
                     checkedImage.type = Image.Type.Sliced;
                     RectTransform transform = checkedImage.GetComponent<RectTransform>();
-                    transform.SetParent(toggles[i].GetComponentInChildren<Image>().transform);
+                    transform.SetParent(images[0].transform);
                     transform.anchorMin = new Vector2(0, 0);
                     transform.anchorMax = new Vector2(1, 1);
                     transform.offsetMin = new Vector2(0, 0);
@@ -121,7 +134,7 @@ namespace Game
                     image.sprite = factories[i].Sprite;
                     image.color = new Color(1.0f, 1.0f, 1.0f, 0.7f);
                     transform = buttonSprite.GetComponent<RectTransform>();
-                    transform.SetParent(toggles[i].GetComponentInChildren<Image>().transform);
+                    transform.SetParent(images[0].transform);
                     transform.anchorMin = new Vector2(0, 0);
                     transform.anchorMax = new Vector2(1, 1);
                     transform.offsetMin = new Vector2(2, 2);

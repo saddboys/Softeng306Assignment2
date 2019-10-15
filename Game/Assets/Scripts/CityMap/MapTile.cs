@@ -13,7 +13,20 @@ namespace Game.CityMap
         
         public GameObject Canvas { set; get; }
 
-        public Vector3 ScreenPosition { set; get; }
+        public Vector3 ScreenPosition
+        {
+            set
+            {
+                screenPosition = value;
+                if (Canvas != null)
+                {
+                    structure?.RenderOnto(Canvas, ScreenPosition);
+                }
+            }
+            get => screenPosition;
+        }
+
+        private Vector3 screenPosition;
 
         /// <summary>
         /// Note that adding, changing or removing the structure will also update the

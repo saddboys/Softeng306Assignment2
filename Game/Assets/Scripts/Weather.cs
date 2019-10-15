@@ -31,7 +31,7 @@ namespace Game
             main.duration = mapWidth / 1.1f;
             main.prewarm = true;
             main.startSize = 3;
-            main.startColor = new Color(1, 1, 1, 7.0f / 256.0f);
+            main.startColor = new Color(1, 1, 1, 4.0f / 256.0f);
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.maxParticles = 2000;
 

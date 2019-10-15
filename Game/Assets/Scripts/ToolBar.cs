@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.CityMap;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
+
 namespace Game
 {
     public class ToolBar : MonoBehaviour
@@ -12,6 +14,8 @@ namespace Game
         [SerializeField] private Toggle[] toggles;
         [SerializeField] private GameObject popupInfo;
         private int popupInfoCount = 0;
+
+        private InfoBox infoBox;
 
         public StructureFactory CurrentFactory
         {
@@ -23,6 +27,7 @@ namespace Game
                 {
                     Ghost = currentFactory.CreateGhost();
                 }
+                infoBox.SetInfo(currentFactory);
             }
         }
         private StructureFactory currentFactory;
@@ -33,7 +38,7 @@ namespace Game
             get { return ghost; }
             set
             {
-                ghost?.Unrender();
+                HideGhostOnTile(ghostTile);
                 ghost = value;
                 if (ghostTile != null)
                 {
@@ -131,6 +136,21 @@ namespace Game
             popupInfo.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
             popupInfo.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            infoBox = new InfoBox(gameObject.transform.parent.gameObject);
+        }
+
+        private void Update()
+        {
+            // Keys 1 to n to select the nth factory.
+            if (Input.anyKeyDown && Input.inputString.Length > 0)
+            {
+                char c = Input.inputString[0];
+                int x = c - '1';
+                if (x < 0 || x >= factories.Length) return;
+                CurrentFactory = factories[x];
+                toggles[x].isOn = true;
+            }
         }
 
         private void UpdateToggleEnabled()
@@ -158,17 +178,21 @@ namespace Game
                     CurrentFactory = null;
                 }
             });
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            var trigger = toggle.gameObject.AddComponent<EventTrigger>();
+            var enterEntry = new EventTrigger.Entry();
+            enterEntry.eventID = EventTriggerType.PointerEnter;
+            enterEntry.callback.AddListener((data) => infoBox.SetInfo(factory));
+            var exitEntry = new EventTrigger.Entry();
+            exitEntry.eventID = EventTriggerType.PointerExit;
+            exitEntry.callback.AddListener((data) => infoBox.SetInfo(null));
+            trigger.triggers.Add(enterEntry);
+            trigger.triggers.Add(exitEntry);
         }
 
         void OnNotify(MapTile tile) {
             if (CurrentFactory == null)
             {
+                infoBox.SetInfo(tile.Structure);
                 return;
             }
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
@@ -205,7 +229,13 @@ namespace Game
 
         private void ShowGhostOnTile(MapTile tile)
         {
-            if (CurrentFactory == null) return;
+            ghostTile = tile;
+
+            if (CurrentFactory == null)
+            {
+                tile.HandleMouseEnter();
+                return;
+            }
             if (!CurrentFactory.CanBuildOnto(tile, out _)) return;
             tile.HandleMouseEnter();
 
@@ -221,7 +251,7 @@ namespace Game
 
         private void HideGhostOnTile(MapTile tile)
         {
-            tile.HandleMouseLeave();
+            tile?.HandleMouseLeave();
             Ghost?.Unrender();
         }
     }

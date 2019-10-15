@@ -109,6 +109,12 @@ namespace Game.CityMap
             renderer.sortingLayerName = "Structure";
             renderer.sortingOrder = 1000;
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Factory";
+        }
     }
 
     public class FactoryFactory : StructureFactory
@@ -172,6 +178,11 @@ namespace Game.CityMap
             }
         }
 
-
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a factory";
+            details = "Citizens of your town need a place to work. Click on a tile to build a factory.";
+        }
     }
 }

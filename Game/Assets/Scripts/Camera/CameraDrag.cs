@@ -26,13 +26,20 @@ public class CameraDrag : MonoBehaviour
             dragEnabled = true;
         }
 
+        Vector2 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
+        Vector2 move = -pos * dragSpeed;
+
         if (!Input.GetMouseButton(0) || !dragEnabled)
         {
-            return;
+            move *= 0;
         }
- 
-        Vector2 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
-        Vector2 move = new Vector2(-pos.x * dragSpeed, -pos.y * dragSpeed);
+
+        // Pan camera via keyboard arrow keys.
+        Vector2 screenKeyboardMove = new Vector2();
+        screenKeyboardMove.x = (Input.GetKey(KeyCode.RightArrow) ? 1 : 0) - (Input.GetKey(KeyCode.LeftArrow) ? 1 : 0);
+        screenKeyboardMove.y = (Input.GetKey(KeyCode.UpArrow) ? 1 : 0) - (Input.GetKey(KeyCode.DownArrow) ? 1 : 0);
+        move += screenKeyboardMove * 0.1f;
+
         transform.Translate(move, Space.World);
         
         Vector3 v3 = transform.position;

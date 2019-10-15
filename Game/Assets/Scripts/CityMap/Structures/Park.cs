@@ -27,6 +27,12 @@ namespace Game.CityMap
                 Reputation = -10
             };
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Park";
+        }
     }
 
     public class ParkFactory : StructureFactory
@@ -64,6 +70,13 @@ namespace Game.CityMap
             {
                 City.Stats.Reputation += 10;
             }
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a park";
+            details = "Add a park to your town. Make it a wonderful town to live in. Click on a tile to build a park.";
         }
     }
 }

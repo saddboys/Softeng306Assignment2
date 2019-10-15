@@ -157,15 +157,42 @@ namespace Game.Story.Events.RandomEvent
 
         public override void GenerateScene(GameObject canvas)
         {
-            Debug.Log("NAME: " + canvas.name);
-            ParticleSystem particle = canvas.AddComponent<ParticleSystem>();
-            particle.Stop();
-            Particles.InitParticleSystem(particle);
-            Renderer renderer = particle.GetComponent<Renderer>();
-            ParticleSystem.TextureSheetAnimationModule animation =  particle.textureSheetAnimation;
-            animation.mode = ParticleSystemAnimationMode.Sprites;
-            animation.AddSprite(Resources.Load<Sprite>("EventSprites/rainparticle"));
-            Debug.Log("GENERATE STUFF");
+            GameObject customParticleSystem = new GameObject("CustomParticleSystem");
+            
+            customParticleSystem.transform.SetParent(StoryManager.city.Map.gameObject.transform,false);
+            customParticleSystem.transform.position = new Vector3(10,14,32);
+//            Quaternion quaternion = new Quaternion();
+//            quaternion.x = 0;
+//            quaternion.y = 0;
+//            quaternion.z = 0.2f;
+//            quaternion.w = 0;
+
+            Quaternion quaternion = Quaternion.Euler(0, 0, -20);
+            customParticleSystem.transform.rotation = quaternion;
+            ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
+            Particles.InitParticleSystem(particles);
+
+            ParticleSystem.MainModule mainParticle = particles.main;
+            mainParticle.startLifetime = 2f;
+            mainParticle.startSpeed = 20;
+
+            ParticleSystem.EmissionModule emissionModule = particles.emission;
+            emissionModule.rateOverTime = 50;
+            
+            Renderer renderer =  particles.GetComponent<Renderer>();
+            renderer.sortingLayerName = "Terrain";
+            ParticleSystem.TextureSheetAnimationModule textureSheet =
+                particles.textureSheetAnimation;
+            textureSheet.enabled = true;
+            textureSheet.mode = ParticleSystemAnimationMode.Sprites;
+            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/park2"));
+
+            ParticleSystem.ShapeModule shapeModule = particles.shape;
+            shapeModule.shapeType = ParticleSystemShapeType.SingleSidedEdge;
+            shapeModule.radius = 25;
+            shapeModule.rotation = new Vector3(0,0,180);
+            
+
         }
     }
 }

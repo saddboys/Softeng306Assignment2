@@ -100,10 +100,11 @@ namespace Game.CityMap
                 terrainMap = new int[WIDTH, HEIGHT];
             }
 
+            // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
 
+            createBiome(Terrain.TerrainTypes.Desert, sprites);
             for (int i = 0; i < numBiomes; i++) {
-                createBiome(Terrain.TerrainTypes.Desert, sprites);
                 createBiome(Terrain.TerrainTypes.Ocean, sprites);
             }
             
@@ -178,7 +179,8 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain, Sprite[] sprites)
         {
             // calculate biome half length proportional to the map size
-            int biomHalfLength = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+            int biomeHalfLength = random.Next(biomeLenghtValue - 4, biomeLenghtValue + 4);
 
             // random anchor spot for biome
             // index 0 for x and 1 and y coordinate
@@ -203,12 +205,12 @@ namespace Game.CityMap
 
             anchorTile.Terrain = new Terrain(terrain, sprites);
 
-            growBoime(anchor, biomHalfLength, terrain, sprites);
+            growBoime(anchor, biomeHalfLength, terrain, sprites);
 
             // create beach biom if the biome type is Ocean
             if (terrain.Equals(Terrain.TerrainTypes.Ocean))
             {
-                addBeachBiome(anchor, biomHalfLength, sprites);
+                addBeachBiome(anchor, biomeHalfLength, sprites);
             }
             
         }
@@ -286,10 +288,8 @@ namespace Game.CityMap
         /// </summary>
         private void addBeachBiome(int[] anchor, int curBiomHalfLength, Sprite[] sprites)
         {
-            int beachBiomeHalfLength = curBiomHalfLength + 5;
-            // I don't think I have a good beach tile in this branch so I am using desert
-            // change to beach tile for final deployment
-            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Desert, sprites);
+            int beachBiomeHalfLength = curBiomHalfLength + 3;
+            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Beach, sprites);
         }
 
         /// <summary>

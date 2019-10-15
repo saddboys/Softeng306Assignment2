@@ -46,7 +46,8 @@ namespace Game
             shape.randomPositionAmount = 1;
 
             var renderer = particles.GetComponent<ParticleSystemRenderer>();
-            renderer.sortingLayerName = "UI";
+            renderer.sortingLayerName = "Structure";
+            renderer.sortingOrder = 2000;
 
             particles.Play();
         }

@@ -230,6 +230,9 @@ namespace Game.CityMap
                     Debug.Log("got here");
                 }
             }
+
+            // Start off at an angle to further enhance 2.5D effect.
+            Rotate(true);
         }
 
         /// <summary>

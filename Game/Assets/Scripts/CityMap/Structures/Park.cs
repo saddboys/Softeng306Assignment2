@@ -10,15 +10,28 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                Reputation = 0,
-                Score = 500,
-                Wealth = -2,
+                CO2 = -1,
+                Wealth = -100,
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 0, new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, position, "Textures/structures/park", new Vector2(1, 1.5f));
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats()
+            {
+                Reputation = -10
+            };
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Park";
         }
     }
 
@@ -29,11 +42,11 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 300; }
+            get { return 1000; }
         }
 
         public override Sprite Sprite { get; } =
-            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[0];
+            Resources.Load<Sprite>("Textures/structures/park");
 
         protected override Structure Create()
         {
@@ -42,7 +55,7 @@ namespace Game.CityMap
         
         public override bool CanBuildOnto(MapTile tile, out string reason)
         {
-            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass)
+            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass && tile.Terrain.TerrainType != Terrain.TerrainTypes.GrassHill)
             {
                 reason = "Parks can only be built on grassland";
                 return false;
@@ -57,6 +70,13 @@ namespace Game.CityMap
             {
                 City.Stats.Reputation += 10;
             }
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a park";
+            details = "Add a park to your town. Make it a wonderful town to live in. Click on a tile to build a park.";
         }
     }
 }

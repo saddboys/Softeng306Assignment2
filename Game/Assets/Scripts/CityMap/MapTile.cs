@@ -9,9 +9,24 @@ namespace Game.CityMap
 {
     public class MapTile : Tile
     {
+        
+        
         public GameObject Canvas { set; get; }
 
-        public Vector3 ScreenPosition { set; get; }
+        public Vector3 ScreenPosition
+        {
+            set
+            {
+                screenPosition = value;
+                if (Canvas != null)
+                {
+                    structure?.RenderOnto(Canvas, ScreenPosition);
+                }
+            }
+            get => screenPosition;
+        }
+
+        private Vector3 screenPosition;
 
         /// <summary>
         /// Note that adding, changing or removing the structure will also update the
@@ -22,6 +37,7 @@ namespace Game.CityMap
             get { return structure; }
             set
             {
+                
                 Assert.IsNotNull(Canvas,
                     "The ScreenPosition and Canvas to draw the structure on should " +
                     "be set before setting the structure");
@@ -78,6 +94,18 @@ namespace Game.CityMap
         {
             // Get stats from its terrain and structure.GetStatsContribution
             return Structure?.GetStatsContribution();
+        }
+
+        public void HandleMouseEnter()
+        {
+            color = new Color(0.8f, 0.8f, 0.8f, 1);
+            SpriteChange?.Invoke();
+        }
+
+        public void HandleMouseLeave()
+        {
+            color = Color.white;
+            SpriteChange?.Invoke();
         }
     }
 }

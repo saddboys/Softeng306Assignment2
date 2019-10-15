@@ -14,7 +14,9 @@ namespace Game.Story
     /// </summary>
     public class StoryManager : MonoBehaviour
     {
-        public enum Events { Request_Bridge, Conditional_Request_House, Request_Tower, Event_Flood}
+        public enum Events { Conditional_Request_House, Conditional_Request_Park,
+           // Event_Flood, 
+            Event_Circus }
         [SerializeField] 
         private City city;
 
@@ -28,7 +30,7 @@ namespace Game.Story
         //private List<Events> eventPool;
         private Dictionary<Events,int> eventPool; 
         // So on the 5th turn the popup will appear
-        private int turnsLeft = 4;
+        private int turnsLeft = 5;
         private EventPopUp popUp;
         [SerializeField]
         private GameObject storyManagerGameObject;
@@ -46,9 +48,8 @@ namespace Game.Story
         /// </summary>
         private void HandleTurnEvent()
         {
-            turnsLeft--;
             DecrementCooldown();
-            if (turnsLeft == 0)
+            if (city.Turn % turnsLeft == 0)
             {
                
                 CheckStats();
@@ -66,7 +67,6 @@ namespace Game.Story
                     popUp.StoryEvent = storyEvent;
                     popUp.Create();
                 }
-                turnsLeft = 5;
             }
         }
 
@@ -82,6 +82,14 @@ namespace Game.Story
                 if (!keys.Contains(Events.Conditional_Request_House))
                 {
                     eventPool.Add(Events.Conditional_Request_House,0);
+                }
+            }
+
+            if (statsBar.Population > 150)
+            {
+                if (!keys.Contains(Events.Conditional_Request_Park))
+                {
+                    eventPool.Add(Events.Conditional_Request_Park, 0);
                 }
             }
         }
@@ -105,14 +113,18 @@ namespace Game.Story
             eventPool[currentEvent]--;
             switch (currentEvent)
             {
-                case Events.Event_Flood:
-                    return new FloodEvent();
-                case Events.Request_Bridge:
-                    return new BridgeRequest();
-                case Events.Request_Tower:
-                    return new TowerRequest();
+//                case Events.Event_Flood:
+//                    return new FloodEvent();
+                case Events.Event_Circus:
+                    return new CircusEvent();
+//                case Events.Request_Bridge:
+//                    return new BridgeRequest();
+//                case Events.Request_Tower:
+//                    return new TowerRequest();
                 case Events.Conditional_Request_House:
                     return new MoreHouseRequest();
+                case Events.Conditional_Request_Park:
+                    return new MoreParkRequest();
                 default:
                     return null;
             }

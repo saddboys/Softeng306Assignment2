@@ -18,15 +18,17 @@ namespace Game.CityMap
         /// </summary>
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
+        public event EventHandler<TileClickArgs> TileMouseEnterEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        private MapTile previousHoveredTile;
+
         public Tilemap map;
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
-
         private int WIDTH = 40;
         private int HEIGHT = 30;
         private List<int[]> occupiedBiomSpots = new List<int[]>();
-
         Random random = new Random();
 
 
@@ -34,11 +36,14 @@ namespace Game.CityMap
         {
             get
             {
-                return Array.ConvertAll(map.GetTilesBlock(map.cellBounds),
+                BoundsInt cellBounds = map.cellBounds;
+                // Debug.Log("Cell bounds are" + cellBounds);
+                // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
+                // Debug.Log("Bounds are" + cellBounds);
+                return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }
         }
-
         private Vector3 mouseDownPosition;
 
         // Start is called before the first frame update
@@ -50,6 +55,35 @@ namespace Game.CityMap
         void Update()
         {
             CheckTileClick();
+            CheckTileHover();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Rotate(true);
+            }
+        }
+
+        private void CheckTileHover()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
+            Vector3Int position = map.WorldToCell(worldPoint);
+            MapTile currentTile = map.GetTile<MapTile>(position);
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                currentTile = null;
+            }
+            if (currentTile != previousHoveredTile)
+            {
+                if (previousHoveredTile != null)
+                {
+                    TileMouseLeaveEvent?.Invoke(this, new TileClickArgs(previousHoveredTile));
+                }
+                if (currentTile != null)
+                {
+                    TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
+                }
+            }
+            previousHoveredTile = currentTile;
         }
 
         private void CheckTileClick()
@@ -68,23 +102,36 @@ namespace Game.CityMap
             // Check UI click-through.
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
-            // Check camera dragging
-            //if (cameraDrag.WasDragging) return;
-
+            // Vector3 test = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // Debug.Log("World point:" + test);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
-            MapTile someOtherTile = map.GetTile<MapTile>(position);
+            MapTile someOtherTile = GetTileWithZ(position);
             if (someOtherTile != null)
             {
                 // Notify the click event for things like the ToolBar or other user feedback.
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
-
-                // For testing purposes:
-                //someOtherTile.Structure = new Rock();
-                //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
+
+        private MapTile GetTileWithZ(Vector3Int position)
+        {
+            for (int z = 0; z < HEIGHT; z++)
+            {
+                position.z = z;
+                MapTile someTile = map.GetTile<MapTile>(position);
+                
+                if (someTile != null)
+                {
+                    return someTile;
+                }
+            }
+
+            return null;
+        }
+        
 
         /// <summary>
         /// Generates the Tilemap by randomly allocating terrains to tiles and sometimes
@@ -93,7 +140,6 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
@@ -103,9 +149,9 @@ namespace Game.CityMap
             // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
 
-            createBiome(Terrain.TerrainTypes.Desert, sprites);
+            createBiome(Terrain.TerrainTypes.Desert);
             for (int i = 0; i < numBiomes; i++) {
-                createBiome(Terrain.TerrainTypes.Ocean, sprites);
+                createBiome(Terrain.TerrainTypes.Ocean);
             }
             
 
@@ -116,29 +162,26 @@ namespace Game.CityMap
                 for (int j = 0; j < HEIGHT; j++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+
                     // A vector used for hex position
                     Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
                     // Find the real position (the position on the screen)
-                    Vector3 mappedVector = map.CellToWorld(vector);
                     
-
-                    tile.Canvas = parent;
-                    tile.ScreenPosition = mappedVector;
                     
                     int value = random.Next(0,100);
-
                     int[] pos = new int[2];
                     pos[0] = i;
                     pos[1] = j;
                     if (!TileOccupied(occupiedBiomSpots, pos))
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
-                        map.SetTile(vector, tile);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                        SetTileTo(vector, tile);
                         // Refresh the tile whenever its sprite changes.
                         tile.SpriteChange += () => map.RefreshTile(vector);
-                    } 
+                    }
                 }
             }
+
 
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
@@ -146,11 +189,17 @@ namespace Game.CityMap
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
-                new FactoryFactory(),
-                new FactoryFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
                 new FactoryFactory(),
                 new FactoryFactory(),
                 new ParkFactory(),
+                new ParkFactory(),
+                new PowerPlantFactory(),
             };
 
             for (int i = 0; i < 50; i++)
@@ -159,7 +208,7 @@ namespace Game.CityMap
                 int x = (int)(Mathf.Clamp(NextNormalRandom() * WIDTH, -WIDTH, WIDTH) / 2.0f);
                 int y = (int)(Mathf.Clamp(NextNormalRandom() * HEIGHT, -HEIGHT, HEIGHT) / 2.0f);
 
-                var tile = map.GetTile<MapTile>(new Vector3Int(x, y, 0));
+                var tile = GetTileWithZ(new Vector3Int(x, y, 0));
                 if (tile == null)
                 {
                     continue;
@@ -169,6 +218,7 @@ namespace Game.CityMap
                 if (randomFactory.CanBuildOnto(tile, out _))
                 {
                     randomFactory.BuildOnto(tile);
+                    Debug.Log("got here");
                 }
             }
         }
@@ -176,7 +226,7 @@ namespace Game.CityMap
         /// <summary>
         /// creates a biome for a given type of terrain
         /// </summary>
-        private void createBiome(Terrain.TerrainTypes terrain, Sprite[] sprites)
+        private void createBiome(Terrain.TerrainTypes terrain)
         {
             // calculate biome half length proportional to the map size
             int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
@@ -203,14 +253,14 @@ namespace Game.CityMap
             anchorTile.Canvas = parent;
             anchorTile.ScreenPosition = anchorMappedVector;
 
-            anchorTile.Terrain = new Terrain(terrain, sprites);
+            anchorTile.Terrain = new Terrain(terrain);
 
-            growBoime(anchor, biomeHalfLength, terrain, sprites);
+            growBoime(anchor, biomeHalfLength, terrain);
 
             // create beach biom if the biome type is Ocean
             if (terrain.Equals(Terrain.TerrainTypes.Ocean))
             {
-                addBeachBiome(anchor, biomeHalfLength, sprites);
+                addBeachBiome(anchor, biomeHalfLength);
             }
             
         }
@@ -218,7 +268,7 @@ namespace Game.CityMap
         /// <summary>
         /// grows a biome
         /// </summary>
-        private void growBoime(int[] anchor, int biomHalfLength, Terrain.TerrainTypes terrain, Sprite[] sprites)
+        private void growBoime(int[] anchor, int biomHalfLength, Terrain.TerrainTypes terrain)
         {
             // constants that will be used further down the line
             float k = Mathf.Sqrt(Mathf.Pow(biomHalfLength, 2) * 2);
@@ -272,8 +322,8 @@ namespace Game.CityMap
                             if (value < prob)
                             {
                                 occupiedBiomSpots.Add(curPos);
-                                tile.Terrain = new Terrain(terrain, sprites);
-                                map.SetTile(vector, tile);
+                                tile.Terrain = new Terrain(terrain);
+                                SetTileTo(vector, tile);
                                 // Refresh the tile whenever its sprite changes.
                                 tile.SpriteChange += () => map.RefreshTile(vector);
                             }
@@ -286,10 +336,10 @@ namespace Game.CityMap
         /// <summary>
         /// updates the beach biome by growing the biome further beach tiles
         /// </summary>
-        private void addBeachBiome(int[] anchor, int curBiomHalfLength, Sprite[] sprites)
+        private void addBeachBiome(int[] anchor, int curBiomHalfLength)
         {
             int beachBiomeHalfLength = curBiomHalfLength + 3;
-            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Beach, sprites);
+            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Beach);
         }
 
         /// <summary>
@@ -319,6 +369,10 @@ namespace Game.CityMap
             // Get stats from its tiles.
             Stats sum = new Stats();
             foreach (var t in Tiles) {
+                if (t == null)
+                {
+                    continue;
+                }
                 sum += t.GetStatsContribution();
             }
             return sum;
@@ -328,12 +382,85 @@ namespace Game.CityMap
         {
             foreach (var t in Tiles)
             {
+                if (t == null)
+                {
+                    continue;
+                }
                 // Unrender structure.
                 t.Structure = null;
                 // Remove tile from object graph.
                 Destroy(t);
             }
             Generate();
+        }
+
+        public void Rotate(bool clockwise)
+        {
+            var centre = map.cellBounds.min + map.cellBounds.max;
+            centre.x /= 2;
+            centre.y /= 2;
+            centre.z = 0;
+            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+            List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
+            foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
+            {
+                tiles.Add((pos, map.GetTile<MapTile>(pos)));
+
+                // Remove the tile at the old position.
+                map.SetTile(pos, null);
+            }
+            foreach (var (pos, tile) in tiles)
+            {
+                // Transform into hexagonal coordinate system.
+                var hexCoords = new Vector3Int
+                {
+                    x = pos.x - (pos.y - (pos.y & 1)) / 2,
+                    y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
+                    z = pos.y,
+                };
+
+                // Rotate in the hexagonal coordinate system.
+                if (clockwise)
+                {
+                    hexCoords = new Vector3Int
+                    {
+                        x = -hexCoords.z,
+                        y = -hexCoords.x,
+                        z = -hexCoords.y,
+                    };
+                }
+                else
+                {
+                    hexCoords = new Vector3Int
+                    {
+                        x = -hexCoords.y,
+                        y = -hexCoords.z,
+                        z = -hexCoords.x,
+                    };
+                }
+
+                // Transform back to grid's rectangular coordinate system and apply.
+                var rectCoords = new Vector3Int
+                {
+                    x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
+                    y = hexCoords.z,
+                    z = 0,
+                };
+                SetTileTo(rectCoords, tile);
+            }
+        }
+
+        private void SetTileTo(Vector3Int position, MapTile tile)
+        {
+            map.SetTile(position, tile);
+            if (tile != null)
+            {
+                tile.ScreenPosition = map.CellToWorld(position);
+                tile.Canvas = parent;
+
+                // Refresh the tile whenever its sprite changes.
+                tile.SpriteChange += () => map.RefreshTile(position);
+            }
         }
 
         private float NextNormalRandom()

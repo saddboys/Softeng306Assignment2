@@ -57,6 +57,7 @@ namespace Game
                 new PowerPlantFactory(city),
                 new DockFactory(city),
                 new DemolishFactory(city),
+                new ForestFactory(city), 
             };
 
             city.Map.TileClickedEvent += (s, e) =>

@@ -10,7 +10,6 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                Reputation = 0,
                 Score = 500,
                 Wealth = -2,
             };
@@ -18,7 +17,15 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 0, new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, position, "Textures/structures/park", new Vector2(1, 1.5f));
+        }
+
+        public override Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats()
+            {
+                Reputation = -10
+            };
         }
     }
 
@@ -33,7 +40,7 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[0];
+            Resources.Load<Sprite>("Textures/structures/park");
 
         protected override Structure Create()
         {
@@ -42,7 +49,7 @@ namespace Game.CityMap
         
         public override bool CanBuildOnto(MapTile tile, out string reason)
         {
-            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass)
+            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.Grass && tile.Terrain.TerrainType != Terrain.TerrainTypes.GrassHill)
             {
                 reason = "Parks can only be built on grassland";
                 return false;

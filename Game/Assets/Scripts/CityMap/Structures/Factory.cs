@@ -11,10 +11,9 @@ namespace Game.CityMap
         {
             return new Stats()
             {
-                CO2 = 10,
+                CO2 = 20,
                 Score = 500,
-                Reputation = 3,
-                Wealth = 10,
+                Wealth = 30,
             };
         }
 
@@ -23,13 +22,14 @@ namespace Game.CityMap
             return new Stats
             {
                 ElectricCapacity = 5,
+                Reputation = -3
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            Vector3 positionNew = new Vector3(position.x, position.y - 0f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactorySprite", new Vector2(1, 1.2f));
+            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
 
             // Render smoke.
             // Now the fun begins...
@@ -118,7 +118,7 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.Load<Sprite>("Textures/structures/FactorySprite");
+            Resources.Load<Sprite>("Textures/structures/FactoryNew");
         public FactoryFactory(City city) : base(city) { }
         public FactoryFactory() : base() { }
 
@@ -164,6 +164,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity -= 5;
+                City.Stats.Reputation += 3;
             }
         }
 

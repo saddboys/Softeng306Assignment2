@@ -55,6 +55,10 @@ namespace Game.CityMap
         {
             CheckTileClick();
             CheckTileHover();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Rotate(true);
+            }
         }
 
         private void CheckTileHover()
@@ -180,17 +184,9 @@ namespace Game.CityMap
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                     }
-                    map.SetTile(vector, tile);
-                    Vector3 mappedVector = map.CellToWorld(vector);
-                    // Debug.Log("Screen: " + mappedVector);
-                    
-                    tile.ScreenPosition = mappedVector;
+                    SetTileTo(vector, tile);
                     tile.name = "j: " + j + " i: " + i;
                     tile.Canvas = parent;
-                    
-
-                    // Refresh the tile whenever its sprite changes.
-                    tile.SpriteChange += () => map.RefreshTile(vector);
                     
                 }
             }
@@ -273,6 +269,74 @@ namespace Game.CityMap
                 Destroy(t);
             }
             Generate();
+        }
+
+        public void Rotate(bool clockwise)
+        {
+            var centre = map.cellBounds.min + map.cellBounds.max;
+            centre.x /= 2;
+            centre.y /= 2;
+            centre.z = 0;
+            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+            List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
+            foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
+            {
+                tiles.Add((pos, map.GetTile<MapTile>(pos)));
+
+                // Remove the tile at the old position.
+                map.SetTile(pos, null);
+            }
+            foreach (var (pos, tile) in tiles)
+            {
+                // Transform into hexagonal coordinate system.
+                var hexCoords = new Vector3Int
+                {
+                    x = pos.x - (pos.y - (pos.y & 1)) / 2,
+                    y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
+                    z = pos.y,
+                };
+
+                // Rotate in the hexagonal coordinate system.
+                if (clockwise)
+                {
+                    hexCoords = new Vector3Int
+                    {
+                        x = -hexCoords.z,
+                        y = -hexCoords.x,
+                        z = -hexCoords.y,
+                    };
+                }
+                else
+                {
+                    hexCoords = new Vector3Int
+                    {
+                        x = -hexCoords.y,
+                        y = -hexCoords.z,
+                        z = -hexCoords.x,
+                    };
+                }
+
+                // Transform back to grid's rectangular coordinate system and apply.
+                var rectCoords = new Vector3Int
+                {
+                    x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
+                    y = hexCoords.z,
+                    z = 0,
+                };
+                SetTileTo(rectCoords, tile);
+            }
+        }
+
+        private void SetTileTo(Vector3Int position, MapTile tile)
+        {
+            map.SetTile(position, tile);
+            if (tile != null)
+            {
+                tile.ScreenPosition = map.CellToWorld(position);
+
+                // Refresh the tile whenever its sprite changes.
+                tile.SpriteChange += () => map.RefreshTile(position);
+            }
         }
 
         private float NextNormalRandom()

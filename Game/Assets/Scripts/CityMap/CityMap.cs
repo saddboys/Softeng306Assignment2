@@ -186,19 +186,23 @@ namespace Game.CityMap
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
             {
+                new MountainFactory(),
+                new MountainFactory(), 
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
                 new FactoryFactory(),
                 new FactoryFactory(),
-                new ParkFactory(),
-                new ParkFactory(),
                 new PowerPlantFactory(),
             };
 

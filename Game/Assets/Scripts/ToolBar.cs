@@ -13,6 +13,8 @@ namespace Game
         [SerializeField] private GameObject popupInfo;
         private int popupInfoCount = 0;
 
+        private InfoBox infoBox;
+
         public StructureFactory CurrentFactory
         {
             get { return currentFactory; }
@@ -23,6 +25,7 @@ namespace Game
                 {
                     Ghost = currentFactory.CreateGhost();
                 }
+                infoBox.SetInfo(currentFactory);
             }
         }
         private StructureFactory currentFactory;
@@ -131,6 +134,8 @@ namespace Game
             popupInfo.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
             popupInfo.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            infoBox = new InfoBox(gameObject.transform.parent.gameObject);
         }
 
         private void UpdateToggleEnabled()
@@ -169,6 +174,7 @@ namespace Game
         void OnNotify(MapTile tile) {
             if (CurrentFactory == null)
             {
+                infoBox.SetInfo(tile.Structure);
                 return;
             }
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
@@ -205,7 +211,11 @@ namespace Game
 
         private void ShowGhostOnTile(MapTile tile)
         {
-            if (CurrentFactory == null) return;
+            if (CurrentFactory == null)
+            {
+                tile.HandleMouseEnter();
+                return;
+            }
             if (!CurrentFactory.CanBuildOnto(tile, out _)) return;
             tile.HandleMouseEnter();
 

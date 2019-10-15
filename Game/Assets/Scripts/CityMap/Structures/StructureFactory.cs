@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 
 namespace Game.CityMap
 {
-    public abstract class StructureFactory
+    public abstract class StructureFactory : InfoBoxSource
     {
         // TODO: Could store the picture associated with the structure (for the toolbar) in here.
 
@@ -128,6 +128,14 @@ namespace Game.CityMap
         public Structure CreateGhost()
         {
             return Create();
+        }
+
+        public void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            title = "Build a structure";
+            meta = "Costs " + Cost.ToString("C");
+            sprite = Sprite;
+            details = "This structure does not appear to do anything special. Click on a tile to build it.";
         }
     }
 }

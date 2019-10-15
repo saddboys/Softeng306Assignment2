@@ -29,6 +29,11 @@ namespace Game.CityMap
             {
                 return false;
             }
+            if (tile.Structure.Equals(new Mountain()))
+            {
+                reason = "Cannot demolish a mountain";
+                return false;
+            }
 
             if (tile.Structure == null)
             {

@@ -38,7 +38,7 @@ namespace Game
             get { return ghost; }
             set
             {
-                ghost?.Unrender();
+                HideGhostOnTile(ghostTile);
                 ghost = value;
                 if (ghostTile != null)
                 {
@@ -140,6 +140,19 @@ namespace Game
             infoBox = new InfoBox(gameObject.transform.parent.gameObject);
         }
 
+        private void Update()
+        {
+            // Keys 1 to n to select the nth factory.
+            if (Input.anyKeyDown && Input.inputString.Length > 0)
+            {
+                char c = Input.inputString[0];
+                int x = c - '1';
+                if (x < 0 || x >= factories.Length) return;
+                CurrentFactory = factories[x];
+                toggles[x].isOn = true;
+            }
+        }
+
         private void UpdateToggleEnabled()
         {
             for (int i = 0; i < factories.Length; i++)
@@ -216,6 +229,8 @@ namespace Game
 
         private void ShowGhostOnTile(MapTile tile)
         {
+            ghostTile = tile;
+
             if (CurrentFactory == null)
             {
                 tile.HandleMouseEnter();
@@ -236,7 +251,7 @@ namespace Game
 
         private void HideGhostOnTile(MapTile tile)
         {
-            tile.HandleMouseLeave();
+            tile?.HandleMouseLeave();
             Ghost?.Unrender();
         }
     }

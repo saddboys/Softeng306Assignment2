@@ -56,8 +56,11 @@ namespace Game
                 new ParkFactory(city),
                 new PowerPlantFactory(city),
                 new DockFactory(city),
-                new DemolishFactory(city),
                 new ForestFactory(city), 
+                new WindFarmFactory(city), 
+                
+                //Always Last
+                new DemolishFactory(city),
             };
 
             city.Map.TileClickedEvent += (s, e) =>
@@ -66,7 +69,7 @@ namespace Game
             };
 
             city.Map.TileMouseEnterEvent += (s, e) => ShowGhostOnTile(e.Tile);
-            city.Map.TileMouseLeaveEvent += (s, e) => Ghost?.Unrender();
+            city.Map.TileMouseLeaveEvent += (s, e) => HideGhostOnTile(e.Tile);
 
             city.Stats.ChangeEvent += UpdateToggleEnabled;
             Invoke("UpdateToggleEnabled", 0.1f);
@@ -174,11 +177,12 @@ namespace Game
                 return;
             }
             CurrentFactory.BuildOnto(tile);
-            BuiltEvent?.Invoke();
-        }
 
-        void BuildStructure(StructureFactory factory, MapTile tile) {
-            factory.BuildOnto(tile);
+            // Update Ghosts
+            HideGhostOnTile(tile);
+            ShowGhostOnTile(tile);
+
+            BuiltEvent?.Invoke();
         }
 
         void ShowPopupInfo(string text)
@@ -201,9 +205,11 @@ namespace Game
 
         private void ShowGhostOnTile(MapTile tile)
         {
-            if (Ghost == null) return;
             if (CurrentFactory == null) return;
             if (!CurrentFactory.CanBuildOnto(tile, out _)) return;
+            tile.HandleMouseEnter();
+
+            if (Ghost == null) return;
             Ghost.RenderOnto(tile.Canvas, tile.ScreenPosition);
             foreach (var renderer in Ghost.GameObject.GetComponentsInChildren<SpriteRenderer>())
             {
@@ -211,6 +217,12 @@ namespace Game
                 color.a = 0.5f;
                 renderer.color = color;
             }
+        }
+
+        private void HideGhostOnTile(MapTile tile)
+        {
+            tile.HandleMouseLeave();
+            Ghost?.Unrender();
         }
     }
 }

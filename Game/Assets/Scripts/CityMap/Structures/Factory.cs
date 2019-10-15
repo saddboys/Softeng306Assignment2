@@ -12,8 +12,7 @@ namespace Game.CityMap
             return new Stats()
             {
                 CO2 = 20,
-                Score = 500,
-                Wealth = 30,
+                Wealth = 500,
             };
         }
 
@@ -34,7 +33,12 @@ namespace Game.CityMap
             // Render smoke.
             // Now the fun begins...
 
-            ParticleSystem particles = GameObject.AddComponent<ParticleSystem>();
+            GameObject smoke = new GameObject();
+            smoke.transform.SetParent(GameObject.transform);
+            smoke.transform.localPosition = new Vector3(-2.7f, 6.6f);
+            smoke.transform.localScale = new Vector3(1, 1, 1);
+
+            ParticleSystem particles = smoke.AddComponent<ParticleSystem>();
             Particles.InitParticleSystem(particles);
 
             var main = particles.main;
@@ -48,7 +52,6 @@ namespace Game.CityMap
             emission.enabled = true;
 
             var shape = particles.shape;
-            shape.position = new Vector3(-0.2f, 0.6f);
             shape.angle = 10;
             shape.radius = 0.5f;
             shape.rotation = new Vector3(-90, 90, 0);
@@ -102,8 +105,9 @@ namespace Game.CityMap
             colorBySpeed.range = new Vector2(0, 0.3f);
             colorBySpeed.enabled = true;
 
-            var renderer = GameObject.GetComponent<ParticleSystemRenderer>();
+            var renderer = smoke.GetComponent<ParticleSystemRenderer>();
             renderer.sortingLayerName = "Structure";
+            renderer.sortingOrder = 1000;
         }
     }
 
@@ -113,7 +117,7 @@ namespace Game.CityMap
         {
             get
             {
-                return 3000;
+                return 2500;
             }
         }
 

@@ -11,7 +11,7 @@ namespace Game.CityMap
             return new Stats
             {
                 CO2 = 0,
-                Wealth = 0,
+                Wealth = -50,
                 ElectricCapacity = 0,
             };
         }
@@ -38,7 +38,7 @@ namespace Game.CityMap
         public WindFarmFactory() : base() { }
         public override int Cost
         {
-            get { return 3000; }
+            get { return 2000; }
         }
 
         public override Sprite Sprite { get; } =

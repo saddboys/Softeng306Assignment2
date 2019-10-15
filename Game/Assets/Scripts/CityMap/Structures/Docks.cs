@@ -6,6 +6,15 @@ namespace Game.CityMap
 {
     public class Dock : Structure
     {
+        public override Stats GetStatsContribution()
+        {
+            return new Stats
+            {
+                CO2 = 10,
+                Wealth = 250,
+            };
+        }
+        
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
             
@@ -29,7 +38,7 @@ namespace Game.CityMap
         public DockFactory() : base() { }
         public override int Cost
         {
-            get { return 1000; }
+            get { return 2000; }
         }
 
         public override Sprite Sprite { get; } =

@@ -16,14 +16,17 @@ namespace Game.Story.Events
         }
         
                 
-        private const string TITLE = "Giant Cooler!";
-        private const string DESCRIPTION = "Choose whether to use the machine tech thing to localize coolness and solve all your climate woes in this area only.";
+        private const string TITLE = "Hi-Tech Cooler!";
+        private const string DESCRIPTION = "Build ThanTec's new cooling technology?";
         public override Sprite EventImage { get; }
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }
         }
-        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
+        private Queue<string> dialogMessages = new Queue<string>(new[] { 
+            "“Excellent news! ThanTec has informed me that all our investments has yielded " +
+            "a new technology to bring temperatures down in an area. Kind of like an " +
+            "‘outdoors air conditioner’, they said. We just need to spend money to install them in the area.”"}); 
 
         public override void OnYesClick()
         {

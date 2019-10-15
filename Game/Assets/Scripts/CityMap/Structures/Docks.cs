@@ -30,6 +30,12 @@ namespace Game.CityMap
                 Reputation = -5
             };
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Dock";
+        }
     }
 
     public class DockFactory : StructureFactory
@@ -88,6 +94,13 @@ namespace Game.CityMap
                 City.Stats.ElectricCapacity -= 1;
                 City.Stats.Reputation += 5;
             }
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a dock";
+            details = "Click on a tile to build a dock.";
         }
     }
 }

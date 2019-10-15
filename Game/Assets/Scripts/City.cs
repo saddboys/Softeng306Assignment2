@@ -74,19 +74,31 @@ namespace Game
         /// </summary>
         public event Action NextTurnEvent;
 
+        private Weather weather;
+
         // Start is called before the first frame update
         void Start()
         {
+            weather = new Weather(Map.map.gameObject);
+
             endTurnButton.onClick.AddListener(EndTurn);
             
             //Restart();
             Turn = 1;
             Stats.Restart();
+
+            InvokeRepeating("UpdateForecast", 0, 0.1f);
         }
 
         // Update is called once per frame
         void Update()
         {
+            weather.Update();
+        }
+
+        private void UpdateForecast()
+        {
+            Stats.UpdateForecast(Map.GetStatsContribution());
         }
 
         /// <summary>

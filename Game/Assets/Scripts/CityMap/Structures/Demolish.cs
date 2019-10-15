@@ -45,7 +45,7 @@ namespace Game.CityMap
             // Note: Get structure before it is demolished.
             if (City != null)
             {
-                City.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
+                City.Stats.AddContribution(tile.Structure.GetStatsChangeOnDemolish());
             }
 
             base.BuildOnto(tile);

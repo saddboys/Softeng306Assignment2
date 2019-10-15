@@ -24,6 +24,7 @@ namespace Game.CityMap
             return new Stats();
         }
 
+        public GameObject GameObject { get { return gameObject; } }
         private GameObject gameObject;
 
         /// <summary>

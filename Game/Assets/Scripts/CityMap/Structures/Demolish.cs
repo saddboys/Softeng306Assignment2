@@ -29,10 +29,15 @@ namespace Game.CityMap
             {
                 return false;
             }
-
             if (tile.Structure == null)
             {
                 reason = "Nothing to demolish here";
+                return false;
+            } 
+            
+            if (tile.Structure.GetType() == typeof(Mountain))
+            {
+                reason = "Cannot demolish mountains";
                 return false;
             }
 
@@ -46,7 +51,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.AddContribution(tile.Structure.GetStatsChangeOnDemolish());
-            }
+            } 
 
             base.BuildOnto(tile);
         }

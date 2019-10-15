@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.CityMap;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 using Random = System.Random;
 using Terrain = Game.CityMap.Terrain;
 
@@ -22,23 +23,32 @@ namespace Game.Story.Events.RandomEvent
 
         public override Sprite EventImage
         {
-            get { return SPRITE; }
+            get { return Resources.LoadAll<Sprite>("EventSprites/rain")[0]; }
         }
 
         public override Queue<string> Dialogues { get; }
 
         private const string TITLE = "FLOOD";
         private const string DESCRIPTION = "Flooding happened bad luck :(";
-        private const Sprite SPRITE = null;
         private List<Stack<Vector3Int>> tempFloodTiles;
        // private Stack<Vector3Int> tempFloodTilePositions;
         private Random random;
         public override void OnYesClick()
         {
+            // Create the rain effect
+            //CreateRainEffect();
+            
+
             StoryManager.city.NextTurnEvent += DecreaseWater;
             random = new Random();
             GenerateFloodPositions();
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CircusEvent>());
+        }
+
+        private void CreateRainEffect()
+        {
+            GameObject rainObject = new GameObject("rainParticle");
+            ParticleSystem particleSystem = new ParticleSystem();
         }
 
         private void GenerateFloodPositions()
@@ -74,8 +84,6 @@ namespace Game.Story.Events.RandomEvent
                 
                 
             }
-            
-            // For each of the initial patches, increase the surrounding water
         }
 
         private void GenerateSurroundingWater(int probabilityToIncrease, int listPosition)
@@ -148,7 +156,10 @@ namespace Game.Story.Events.RandomEvent
                 }
             }
         }
-        
-        
+
+        public override void GenerateScene(GameObject canvas)
+        {
+            Debug.Log("GENERATE STUFF");
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace Story.Events.RandomEvent
 
         public override Sprite EventImage
         {
-            get { return Resources.LoadAll<Sprite>("EventSprites/circus2")[0]; }
+            get { return Resources.LoadAll<Sprite>("EventSprites/hurricane")[0]; }
         }
 
         public override Queue<string> Dialogues { get; }

@@ -25,6 +25,11 @@ namespace Game.Story
         {
             get { return EventTypes.Event; }
         }
+
+        public virtual void GenerateScene(GameObject canvas)
+        {
+            return;
+        }
         
         
         

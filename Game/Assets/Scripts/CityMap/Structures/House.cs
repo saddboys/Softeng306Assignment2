@@ -11,8 +11,7 @@ namespace Game.CityMap
             return new Stats
             {
                 Score = 100,
-                Reputation = -1,
-                Wealth = 0.5,
+                Wealth = 3,
                 CO2 = 1,
             };
         }
@@ -23,12 +22,15 @@ namespace Game.CityMap
             {
                 ElectricCapacity = 1,
                 Population = -4,
+                Reputation = 1
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 21, new Vector2(1, 1.5f));
+            
+            Vector3 positionNew = new Vector3(position.x, position.y + 0.2f, position.z);
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
         }
     }
 
@@ -43,7 +45,7 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[21];
+            Resources.Load<Sprite>("Textures/structures/House");
 
         protected override Structure Create()
         {
@@ -71,7 +73,7 @@ namespace Game.CityMap
                 return false;
             }
 
-            if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean)
+            if (tile.Terrain.TerrainType==(Terrain.TerrainTypes.Ocean))
             {
                 reason = "Cannot build onto water";
                 return false;
@@ -88,6 +90,7 @@ namespace Game.CityMap
             {
                 City.Stats.ElectricCapacity -= 1;
                 City.Stats.Population += 4;
+                City.Stats.Reputation -= 1;
             }
         }
     }

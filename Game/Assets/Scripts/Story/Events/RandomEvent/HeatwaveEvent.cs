@@ -47,7 +47,7 @@ namespace Story.Events.RandomEvent
                 // Randomly dry up patches of water
                 if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean && random.Next(0,5) == 2)
                 {
-                    tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert,sprites);
+                    tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
                 }
             }
         }

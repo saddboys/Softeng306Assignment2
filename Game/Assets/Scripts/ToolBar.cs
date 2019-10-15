@@ -13,8 +13,35 @@ namespace Game
         [SerializeField] private GameObject popupInfo;
         private int popupInfoCount = 0;
 
-        public StructureFactory CurrentFactory { get; set; }
+        public StructureFactory CurrentFactory
+        {
+            get { return currentFactory; }
+            set
+            {
+                currentFactory = value;
+                if (currentFactory != null)
+                {
+                    Ghost = currentFactory.CreateGhost();
+                }
+            }
+        }
+        private StructureFactory currentFactory;
         private StructureFactory[] factories;
+        private Structure ghost;
+        private Structure Ghost
+        {
+            get { return ghost; }
+            set
+            {
+                ghost?.Unrender();
+                ghost = value;
+                if (ghostTile != null)
+                {
+                    ShowGhostOnTile(ghostTile);
+                }
+            }
+        }
+        private MapTile ghostTile;
 
         public event Action BuiltEvent;
 
@@ -30,12 +57,16 @@ namespace Game
                 new PowerPlantFactory(city),
                 new DockFactory(city),
                 new DemolishFactory(city),
+                new ForestFactory(city), 
             };
 
             city.Map.TileClickedEvent += (s, e) =>
             {
                 OnNotify(e.Tile);
             };
+
+            city.Map.TileMouseEnterEvent += (s, e) => ShowGhostOnTile(e.Tile);
+            city.Map.TileMouseLeaveEvent += (s, e) => Ghost?.Unrender();
 
             city.Stats.ChangeEvent += UpdateToggleEnabled;
             Invoke("UpdateToggleEnabled", 0.1f);
@@ -165,6 +196,20 @@ namespace Game
             if (popupInfoCount == 0)
             {
                 popupInfo.SetActive(false);
+            }
+        }
+
+        private void ShowGhostOnTile(MapTile tile)
+        {
+            if (Ghost == null) return;
+            if (CurrentFactory == null) return;
+            if (!CurrentFactory.CanBuildOnto(tile, out _)) return;
+            Ghost.RenderOnto(tile.Canvas, tile.ScreenPosition);
+            foreach (var renderer in Ghost.GameObject.GetComponentsInChildren<SpriteRenderer>())
+            {
+                Color color = renderer.color;
+                color.a = 0.5f;
+                renderer.color = color;
             }
         }
     }

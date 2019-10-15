@@ -74,7 +74,7 @@ namespace Game.Story.Events.RandomEvent
                 Vector3Int position = new Vector3Int(x, y, 0);
                 
                 var tile = map.GetTile<MapTile>(position);
-                tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean,sprites);
+                tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                 tile.Structure = null;
                 Stack<Vector3Int> newStack = new Stack<Vector3Int>();
                 newStack.Push(position);
@@ -124,7 +124,7 @@ namespace Game.Story.Events.RandomEvent
                 Vector3Int position = new Vector3Int(nextX,nextY , 0);
                 
                 var tile = map.GetTile<MapTile>(position);
-                tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean,sprites);
+                tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                 tile.Structure = null;
                 current.Push(position);
                 GenerateSurroundingWater(probabilityToIncrease, listPosition);
@@ -150,7 +150,7 @@ namespace Game.Story.Events.RandomEvent
                     if (tempFloodTilePositions.Count != 0)
                     {
                         var tile = map.GetTile<MapTile>(tempFloodTilePositions.Pop());
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass,sprites);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
                     }
                     
                 }

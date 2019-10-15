@@ -36,9 +36,9 @@ namespace Game.CityMap
             get
             {
                 BoundsInt cellBounds = map.cellBounds;
-                Debug.Log("Cell bounds are" + cellBounds);
-               // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
-                Debug.Log("Bounds are" + cellBounds);
+                // Debug.Log("Cell bounds are" + cellBounds);
+                // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
+                // Debug.Log("Bounds are" + cellBounds);
                 return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }
@@ -97,10 +97,8 @@ namespace Game.CityMap
             // Check UI click-through.
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
-            // Check camera dragging
-            //if (cameraDrag.WasDragging) return;
             // Vector3 test = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            //Debug.Log("World point:" + test);
+            // Debug.Log("World point:" + test);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
@@ -110,9 +108,6 @@ namespace Game.CityMap
             {
                 // Notify the click event for things like the ToolBar or other user feedback.
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
-
-                // For testing purposes:
-                someOtherTile.Terrain.TerrainType = Terrain.TerrainTypes.Grass;
             }
         }
 

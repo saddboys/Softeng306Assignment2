@@ -23,6 +23,10 @@ namespace Game.CityMap
         public Text display;
         private int[,] terrainMap;
 
+        private int WIDTH = 40;
+        private int HEIGHT = 30;
+        private List<int[]> occupiedBiomSpots = new List<int[]>();
+
         Random random = new Random();
 
 
@@ -89,32 +93,30 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            int width = 40;
-            int height = 30;
-            List<int[]> occupiedBiomSpots = new List<int[]>();
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
-                terrainMap = new int[width, height];
+                terrainMap = new int[WIDTH, HEIGHT];
             }
 
-            for (int i = 0; i < 2; i++) {
-                createBiome(Terrain.TerrainTypes.GrassHill, occupiedBiomSpots, sprites, width, height);
-                createBiome(Terrain.TerrainTypes.Desert, occupiedBiomSpots, sprites, width, height);
-                createBiome(Terrain.TerrainTypes.Ocean, occupiedBiomSpots, sprites, width, height);
+            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
+
+            for (int i = 0; i < numBiomes; i++) {
+                createBiome(Terrain.TerrainTypes.Desert, sprites);
+                createBiome(Terrain.TerrainTypes.Ocean, sprites);
             }
             
 
 
             // Populate none biom areas with grass
-            for (int i = 0; i < width; i++)
+            for (int i = 0; i < WIDTH; i++)
             {
-                for (int j = 0; j < height; j++)
+                for (int j = 0; j < HEIGHT; j++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                     // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
+                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
                     // Find the real position (the position on the screen)
                     Vector3 mappedVector = map.CellToWorld(vector);
                     
@@ -153,8 +155,8 @@ namespace Game.CityMap
             for (int i = 0; i < 50; i++)
             {
                 // Cluster them close to the centre.
-                int x = (int)(Mathf.Clamp(NextNormalRandom() * width, -width, width) / 2.0f);
-                int y = (int)(Mathf.Clamp(NextNormalRandom() * height, -height, height) / 2.0f);
+                int x = (int)(Mathf.Clamp(NextNormalRandom() * WIDTH, -WIDTH, WIDTH) / 2.0f);
+                int y = (int)(Mathf.Clamp(NextNormalRandom() * HEIGHT, -HEIGHT, HEIGHT) / 2.0f);
 
                 var tile = map.GetTile<MapTile>(new Vector3Int(x, y, 0));
                 if (tile == null)
@@ -173,27 +175,27 @@ namespace Game.CityMap
         /// <summary>
         /// creates a biome for a given type of terrain
         /// </summary>
-        private void createBiome(Terrain.TerrainTypes terrain, List<int[]> occupiedBiomSpots, Sprite[] sprites, int width, int height)
+        private void createBiome(Terrain.TerrainTypes terrain, Sprite[] sprites)
         {
             // calculate biome half length proportional to the map size
-            int biomHalfLength = (int) (Mathf.Max(width, height) / 5);
-            
+            int biomHalfLength = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+
             // random anchor spot for biome
             // index 0 for x and 1 and y coordinate
             int[] anchor = new int[2];
-            anchor[0] = random.Next(0, width);
-            anchor[1] = random.Next(0, height);
+            anchor[0] = random.Next(0, WIDTH);
+            anchor[1] = random.Next(0, HEIGHT);
             
             while (TileOccupied(occupiedBiomSpots, anchor))
             {
-                anchor[0] = random.Next(0, width);
-                anchor[1] = random.Next(0, height);
+                anchor[0] = random.Next(0, WIDTH);
+                anchor[1] = random.Next(0, HEIGHT);
             }
             Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
-            Vector3Int anchorVector = new Vector3Int(-anchor[0] + width / 2, -anchor[1] + height / 2, 0);
+            Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
             Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
 
             anchorTile.Canvas = parent;
@@ -201,6 +203,21 @@ namespace Game.CityMap
 
             anchorTile.Terrain = new Terrain(terrain, sprites);
 
+            growBoime(anchor, biomHalfLength, terrain, sprites);
+
+            // create beach biom if the biome type is Ocean
+            if (terrain.Equals(Terrain.TerrainTypes.Ocean))
+            {
+                addBeachBiome(anchor, biomHalfLength, sprites);
+            }
+            
+        }
+
+        /// <summary>
+        /// grows a biome
+        /// </summary>
+        private void growBoime(int[] anchor, int biomHalfLength, Terrain.TerrainTypes terrain, Sprite[] sprites)
+        {
             // constants that will be used further down the line
             float k = Mathf.Sqrt(Mathf.Pow(biomHalfLength, 2) * 2);
             float a = (float) 2.0f / Mathf.Log10(Mathf.Pow(k, 2) - 2.0f);
@@ -216,11 +233,11 @@ namespace Game.CityMap
                     curPos[1] = anchor[1] - biomHalfLength + j;
 
                     // check if X and Y values are within the map
-                    if (curPos[0] < 40 && curPos[0] >= 0 && curPos[1] < 30 && curPos[1] >= 0)
+                    if (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
                     {
                         MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                         // A vector used for hex position
-                        Vector3Int vector = new Vector3Int(-curPos[0] + width / 2, -curPos[1] + height / 2, 0);
+                        Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
                         // Find the real position (the position on the screen)
                         Vector3 mappedVector = map.CellToWorld(vector);
 
@@ -234,16 +251,6 @@ namespace Game.CityMap
 
                             // weighted random terrain allocation depending on distance from anchor
                             int value = random.Next(0, 100);
-
-                            // negative linear weighting
-                            // if (value < 100 - ((int) Mathf.Abs(sandAnchorXValue - curPos[0]) + (int) Mathf.Abs(sandAnchorYValue - curPos[1])) * 7)
-                            // {
-                            //     occupiedBiomSpots.Add(curPos);
-                            //     sandTile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
-                            //     map.SetTile(vector, sandTile);
-                            //     // Refresh the tile whenever its sprite changes.
-                            //     sandTile.SpriteChange += () => map.RefreshTile(vector);
-                            // }
 
                             // weighting is done in such a that:
                             // P = (k^2 - d^2)^a,
@@ -272,13 +279,17 @@ namespace Game.CityMap
                     } 
                 }
             }
-            
-            // // create beach biom if the biome type is Ocean
-            // if (terrain.Equals(Terrain.TerrainTypes.Ocean))
-            // {
-            //     createBiome(Terrain.TerrainTypes.Beach, occupiedBiomSpots, sprites, width, height);
-            // }
-            
+        }
+
+        /// <summary>
+        /// updates the beach biome by growing the biome further beach tiles
+        /// </summary>
+        private void addBeachBiome(int[] anchor, int curBiomHalfLength, Sprite[] sprites)
+        {
+            int beachBiomeHalfLength = curBiomHalfLength + 5;
+            // I don't think I have a good beach tile in this branch so I am using desert
+            // change to beach tile for final deployment
+            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Desert, sprites);
         }
 
         /// <summary>

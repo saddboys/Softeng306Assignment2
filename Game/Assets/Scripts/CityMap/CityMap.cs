@@ -36,9 +36,6 @@ namespace Game.CityMap
             get
             {
                 BoundsInt cellBounds = map.cellBounds;
-                Debug.Log("Cell bounds are" + cellBounds);
-               // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
-                Debug.Log("Bounds are" + cellBounds);
                 return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }

@@ -97,8 +97,6 @@ namespace Game.Story.Events.RandomEvent
                 
                 // Generate next position
                 probabilityToIncrease -= 1;
-                Debug.Log("listPosition: "+ listPosition);
-                Debug.Log("Size of list: " + tempFloodTiles.Count);
                 Stack<Vector3Int> current = tempFloodTiles[listPosition];
                 Vector3Int topPosition = current.Peek();
                 // Get the next position for the surroundings
@@ -159,6 +157,14 @@ namespace Game.Story.Events.RandomEvent
 
         public override void GenerateScene(GameObject canvas)
         {
+            Debug.Log("NAME: " + canvas.name);
+            ParticleSystem particle = canvas.AddComponent<ParticleSystem>();
+            particle.Stop();
+            Particles.InitParticleSystem(particle);
+            Renderer renderer = particle.GetComponent<Renderer>();
+            ParticleSystem.TextureSheetAnimationModule animation =  particle.textureSheetAnimation;
+            animation.mode = ParticleSystemAnimationMode.Sprites;
+            animation.AddSprite(Resources.Load<Sprite>("EventSprites/rainparticle"));
             Debug.Log("GENERATE STUFF");
         }
     }

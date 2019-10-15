@@ -23,17 +23,7 @@ namespace Game
             Shader shader = Shader.Find("Particles/Standard Unlit");
             particleMaterial = new Material(shader);
 
-            // Find the default texture. Who knows where it is located.
-            Texture texture = null;
-            foreach (Texture potentialTexture in Resources.FindObjectsOfTypeAll<Texture>())
-            {
-                if (potentialTexture.name == "Default-ParticleSystem")
-                {
-                    texture = potentialTexture;
-                }
-            }
-
-            particleMaterial.mainTexture = texture;
+            particleMaterial.mainTexture = Resources.Load<Texture>("Textures/Particle");
 
             // Set fade blend mode. Unfortunately, we need to manually configure its values
             // according to the source code.

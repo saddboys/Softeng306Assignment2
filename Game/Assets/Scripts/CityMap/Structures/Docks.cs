@@ -8,7 +8,9 @@ namespace Game.CityMap
     {
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOntoSprite(canvas, position, "Textures/structures/dock", new Vector2(1, 1.5f));
+            
+            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/dock", new Vector2(1, 1.5f));
         }
 
         public override Stats GetStatsChangeOnDemolish()

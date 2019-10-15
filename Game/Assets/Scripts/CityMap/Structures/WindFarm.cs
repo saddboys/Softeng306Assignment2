@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Game.CityMap
 {
-    public class PowerPlant : Structure
+    public class WindFarm : Structure
     {
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 30,
-                Wealth = 10,
+                CO2 = 0,
+                Wealth = 0,
                 ElectricCapacity = 0,
             };
         }
@@ -20,7 +20,7 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = -20,
+                ElectricCapacity = -10,
             };
         }
 
@@ -28,25 +28,25 @@ namespace Game.CityMap
         {
             
             Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, positionNew, "Textures/structures/windmill", new Vector2(1, 1.5f));
         }
     }
 
-    public class PowerPlantFactory : StructureFactory
+    public class WindFarmFactory : StructureFactory
     {
-        public PowerPlantFactory(City city) : base(city) { }
-        public PowerPlantFactory() : base() { }
+        public WindFarmFactory(City city) : base(city) { }
+        public WindFarmFactory() : base() { }
         public override int Cost
         {
-            get { return 4000; }
+            get { return 3000; }
         }
 
         public override Sprite Sprite { get; } =
-            Resources.Load<Sprite>("Textures/structures/powerPlant");
+            Resources.Load<Sprite>("Textures/structures/windmill");
 
         protected override Structure Create()
         {
-            return new PowerPlant();
+            return new WindFarm();
         }
 
         public override void BuildOnto(MapTile tile)
@@ -55,7 +55,7 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 20;
+                City.Stats.ElectricCapacity += 10;
             }
         }
 
@@ -66,9 +66,9 @@ namespace Game.CityMap
                 return false;
             }
 
-            if (tile.Terrain.TerrainType == Terrain.TerrainTypes.Ocean)
+            if (tile.Terrain.TerrainType != Terrain.TerrainTypes.DesertHill && tile.Terrain.TerrainType != Terrain.TerrainTypes.GrassHill )
             {
-                reason = "Cannot build onto water";
+                reason = "Can only build on hills";
                 return false;
             }
 

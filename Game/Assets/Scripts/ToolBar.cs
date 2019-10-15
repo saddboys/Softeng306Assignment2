@@ -174,11 +174,12 @@ namespace Game
                 return;
             }
             CurrentFactory.BuildOnto(tile);
-            BuiltEvent?.Invoke();
-        }
 
-        void BuildStructure(StructureFactory factory, MapTile tile) {
-            factory.BuildOnto(tile);
+            // Update Ghosts
+            HideGhostOnTile(tile);
+            ShowGhostOnTile(tile);
+
+            BuiltEvent?.Invoke();
         }
 
         void ShowPopupInfo(string text)

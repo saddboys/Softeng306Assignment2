@@ -21,8 +21,9 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Mayor, I have an idea. Most of the carbon emissions in the area come from factories. " +
-            "If we shut down all the factories, we can dramatically reduce emissions. What do you think?”"}); 
+            "“Mayor, I have an idea. Most of the carbon emissions in the area come from factories. ",
+            "If we shut down all the factories, we can dramatically reduce emissions.", 
+            "What do you think?”"}); 
 
         private const string TITLE = "Pushing Harder!";
         private const string DESCRIPTION = "Shut down all factories to reduce emissions?";

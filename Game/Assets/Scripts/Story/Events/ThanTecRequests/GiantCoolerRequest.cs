@@ -24,9 +24,10 @@ namespace Game.Story.Events
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Excellent news! ThanTec has informed me that all our investments has yielded " +
-            "a new technology to bring temperatures down in an area. Kind of like an " +
-            "‘outdoors air conditioner’, they said. We just need to spend money to install them in the area.”"}); 
+            "“Excellent news!”", 
+            "“ThanTec has informed me that all our investments has yielded a new technology to bring temperatures down in the area." +
+            "Kind of like an ‘outdoors air conditioner’, they said.”", 
+            "We just need to spend money to install them in the area.”"}); 
 
         public override void OnYesClick()
         {

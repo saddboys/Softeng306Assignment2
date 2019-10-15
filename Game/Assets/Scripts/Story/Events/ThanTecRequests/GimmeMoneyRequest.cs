@@ -24,8 +24,9 @@ namespace Game.Story.Events
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“ThanTec wants money for their climate research. Personally, " +
-            "I’m not so sure if it’s a good investment. Thoughts?”"}); 
+            "“ThanTec wants money for their climate research.”",
+            "“Personally, I’m not so sure if it’s a good investment.”",
+            "“Your thoughts?”"}); 
 
         public override void OnYesClick()
         {

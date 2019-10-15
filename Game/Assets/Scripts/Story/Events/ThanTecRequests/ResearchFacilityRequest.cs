@@ -36,9 +36,9 @@ namespace Game.Story.Events
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Mayor, you have another request from ThanTec. They want us to build them a power plant " +
-            "to power their new research facility. They say it’s for their climate solution project. " +
-            "What do you think?”"}); 
+            "“Mayor, you have another request from ThanTec.”", 
+            "“They want us to build them a power plant to power their new research facility. They say it’s for their climate solution project.”",
+            "“What do you think?”"}); 
 
         private void OnBuild()
         {

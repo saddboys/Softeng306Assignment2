@@ -24,9 +24,8 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“If we limit the energy consumption of our residents, " +
-            "that should help keep temperatures down. They might not be very happy " +
-            "about this, but the environment comes first, right?”"});
+            "“If we limit the energy consumption of our residents, that should help keep temperatures down.”",
+            "“They might not be very happy about this, but the environment comes first, right?”"});
 
         public override void OnYesClick()
         {

@@ -24,8 +24,8 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Cars are big emitters of carbon dioxide, right? " +
-            "What if we get rid of cars? The town is fairly small. People can walk or bike.”"}); 
+            "“Cars are big emitters of carbon dioxide, right? What if we get rid of cars?”",
+            "“The town is fairly small. People can walk or bike.”"}); 
 
         public override void OnYesClick()
         {

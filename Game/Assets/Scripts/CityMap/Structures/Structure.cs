@@ -94,7 +94,7 @@ namespace Game.CityMap
             }
         }
 
-        public void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        public virtual void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             title = "Structure";
             meta = "";

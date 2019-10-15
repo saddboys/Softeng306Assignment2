@@ -26,6 +26,12 @@ namespace Game.CityMap
         {
             RenderOntoSprite(canvas, position, "Textures/structures/objectForest", new Vector2(1, 1.5f));
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Forrest";
+        }
     }
 
     public class ForestFactory : StructureFactory
@@ -80,6 +86,13 @@ namespace Game.CityMap
             {
                 City.Stats.Reputation += 1;
             }
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Grow a forrest";
+            details = "Although it may seem expensive, you should grow some forrests to help keep the pollution down.";
         }
     }
 }

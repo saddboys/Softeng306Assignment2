@@ -50,5 +50,12 @@ namespace Game.CityMap
 
             base.BuildOnto(tile);
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Demolish a structure";
+            details = "Be careful with what you destroy, as your actions cannot be undone. Click on a tile if you are sure.";
+        }
     }
 }

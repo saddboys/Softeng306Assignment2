@@ -31,12 +31,12 @@ namespace Game.Story.Events
 
         public override void OnYesClick()
         {
-            // will go to ending
+            // Go to tech ending
         }
 
         public override void OnNoClick()
         {
-            // no ending? idk
+            // Go to non-tech ending
         }
     }
 }

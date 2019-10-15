@@ -99,8 +99,11 @@ namespace Game.CityMap
                 terrainMap = new int[width, height];
             }
 
-            createBiome(Terrain.TerrainTypes.Desert, occupiedBiomSpots, sprites, width, height);
-            createBiome(Terrain.TerrainTypes.Ocean, occupiedBiomSpots, sprites, width, height);
+            for (int i = 0; i < 2; i++) {
+                createBiome(Terrain.TerrainTypes.GrassHill, occupiedBiomSpots, sprites, width, height);
+                createBiome(Terrain.TerrainTypes.Desert, occupiedBiomSpots, sprites, width, height);
+                createBiome(Terrain.TerrainTypes.Ocean, occupiedBiomSpots, sprites, width, height);
+            }
             
 
 
@@ -173,13 +176,21 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain, List<int[]> occupiedBiomSpots, Sprite[] sprites, int width, int height)
         {
             // random anchor spot for biome
-            int anchorXValue = random.Next(0, width);
-            int anchorYValue = random.Next(0, height);
-            Debug.Log("Anchor: X: " + anchorXValue + ", Y: " + anchorYValue);
+            // index 0 for x and 1 and y coordinate
+            int[] anchor = new int[2];
+            anchor[0] = random.Next(0, width);
+            anchor[1] = random.Next(0, height);
+            
+            while (TileOccupied(occupiedBiomSpots, anchor))
+            {
+                anchor[0] = random.Next(0, width);
+                anchor[1] = random.Next(0, height);
+            }
+            Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
-            Vector3Int anchorVector = new Vector3Int(-anchorXValue + width / 2, -anchorYValue + height / 2, 0);
+            Vector3Int anchorVector = new Vector3Int(-anchor[0] + width / 2, -anchor[1] + height / 2, 0);
             Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
 
             anchorTile.Canvas = parent;
@@ -190,9 +201,7 @@ namespace Game.CityMap
             int biomHalfLength = 7;
             // constants that will be used further down the line
             float k = Mathf.Sqrt(Mathf.Pow(biomHalfLength, 2) * 2);
-            Debug.Log("k: " + k);
             float a = (float) 2.0f / Mathf.Log10(Mathf.Pow(k, 2) - 2.0f);
-            Debug.Log("a: " + a);
 
             // growing sand biom
             for (int i = 0; i < biomHalfLength * 2; i++) 
@@ -201,8 +210,8 @@ namespace Game.CityMap
                 {
                     // current position array where index 0 is X and index 1 is Y coordinate
                     int[] curPos = new int[2];
-                    curPos[0] = anchorXValue - biomHalfLength + i;
-                    curPos[1] = anchorYValue - biomHalfLength + j;
+                    curPos[0] = anchor[0] - biomHalfLength + i;
+                    curPos[1] = anchor[1] - biomHalfLength + j;
 
                     // check if X and Y values are within the map
                     if (curPos[0] < 40 && curPos[0] >= 0 && curPos[1] < 30 && curPos[1] >= 0)
@@ -247,10 +256,8 @@ namespace Game.CityMap
                             //    0 = (k^2 - d^2)^a, where d is a distance for an arbitrary square just outside the biome half length
                             //
                             // so if biome half length is 7 then k = 11.3 and a = 0.484
-                            float dist = Mathf.Sqrt(Mathf.Pow(anchorXValue - curPos[0], 2) + Mathf.Pow(anchorYValue - curPos[1], 2));
-                            Debug.Log("dist: " + dist);
+                            float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - curPos[0], 2) + Mathf.Pow(anchor[1] - curPos[1], 2));
                             double prob = Mathf.Pow(Mathf.Pow(k, 2) - Mathf.Pow(dist, 2), a);
-                            Debug.Log("Prob: " + prob);
                             if (value < prob)
                             {
                                 occupiedBiomSpots.Add(curPos);

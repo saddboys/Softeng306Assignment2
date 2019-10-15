@@ -82,5 +82,17 @@ namespace Game.CityMap
             // Get stats from its terrain and structure.GetStatsContribution
             return Structure?.GetStatsContribution();
         }
+
+        public void HandleMouseEnter()
+        {
+            color = new Color(0.8f, 0.8f, 0.8f, 1);
+            SpriteChange?.Invoke();
+        }
+
+        public void HandleMouseLeave()
+        {
+            color = Color.white;
+            SpriteChange?.Invoke();
+        }
     }
 }

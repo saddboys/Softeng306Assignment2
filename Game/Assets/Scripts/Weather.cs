@@ -31,7 +31,7 @@ namespace Game
             main.duration = mapWidth / 1.1f;
             main.prewarm = true;
             main.startSize = 3;
-            main.startColor = new Color(1, 1, 1, 7.0f / 256.0f);
+            main.startColor = new Color(1, 1, 1, 4.0f / 256.0f);
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.maxParticles = 2000;
 
@@ -46,7 +46,8 @@ namespace Game
             shape.randomPositionAmount = 1;
 
             var renderer = particles.GetComponent<ParticleSystemRenderer>();
-            renderer.sortingLayerName = "UI";
+            renderer.sortingLayerName = "Structure";
+            renderer.sortingOrder = 2000;
 
             particles.Play();
         }
@@ -59,15 +60,15 @@ namespace Game
                 if (isGenerating)
                 {
                     emission.rateOverTime = 0;
-                    var shape = particles.shape;
-                    shape.position = new Vector3(shape.position.x, (float)random.NextDouble() * mapHeight - mapHeight / 2.0f);
-                    triggerSecondsLeft = random.Next(2, 4);
+                    triggerSecondsLeft = random.Next(1, 6);
                     isGenerating = false;
                 }
                 else if (!isGenerating)
                 {
+                    var shape = particles.shape;
+                    shape.position = new Vector3(shape.position.x, (float)random.NextDouble() * mapHeight - mapHeight / 2.0f);
                     emission.rateOverTime = 100;
-                    triggerSecondsLeft = random.Next(3, 5);
+                    triggerSecondsLeft = random.Next(2, 5);
                     isGenerating = true;
                 }
             }

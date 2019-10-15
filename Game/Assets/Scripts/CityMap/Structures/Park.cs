@@ -10,8 +10,8 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                Score = 500,
-                Wealth = -2,
+                CO2 = -1,
+                Wealth = -100,
             };
         }
 
@@ -36,7 +36,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 300; }
+            get { return 1000; }
         }
 
         public override Sprite Sprite { get; } =

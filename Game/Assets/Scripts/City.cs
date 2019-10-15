@@ -47,6 +47,14 @@ namespace Game
             get => endTurnButton;
             set => endTurnButton = value;
         }
+        public bool HasEnded
+        {
+            get
+            {
+                return hasEnded;
+            }
+        }
+        private bool hasEnded = false; 
 
         [SerializeField]
         private Text turnText;
@@ -66,19 +74,31 @@ namespace Game
         /// </summary>
         public event Action NextTurnEvent;
 
+        private Weather weather;
+
         // Start is called before the first frame update
         void Start()
         {
+            weather = new Weather(Map.map.gameObject);
+
             endTurnButton.onClick.AddListener(EndTurn);
+            
             //Restart();
             Turn = 1;
             Stats.Restart();
+
+            InvokeRepeating("UpdateForecast", 0, 0.1f);
         }
 
         // Update is called once per frame
         void Update()
         {
+            weather.Update();
+        }
 
+        private void UpdateForecast()
+        {
+            Stats.UpdateForecast(Map.GetStatsContribution());
         }
 
         /// <summary>
@@ -86,8 +106,8 @@ namespace Game
         /// </summary>
         public void EndTurn() {
             Stats.UpdateContribution(Map.GetStatsContribution());
-            CheckEndGame();
             Turn++;
+            CheckEndGame();
             NextTurnEvent?.Invoke();
         }
 
@@ -103,14 +123,17 @@ namespace Game
             {
                 string reason = "Congratulations! You have sustainably developed your city!";
                 EndGame(true, reason);
+                hasEnded = true;
             } else if (wealth <= 0)
             {
                 string reason = "You've run out of assets to support your city!";
                 EndGame(false, reason);
+                hasEnded = true;
             } else if (temp > 2)
             {
                 string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
                 EndGame(false, reason);
+                hasEnded = true;
             } 
         }
 
@@ -131,8 +154,13 @@ namespace Game
             }
         }
 
+        /// <summary>
+        /// Function to restart the game either when game ends or when user selects restart from the menu
+        /// </summary>
         public void Restart()
         {
+            hasEnded = false;
+            EndTurnButton.interactable = true;
             Turn = 1;
             Stats.Restart();
             Map.Regenerate();

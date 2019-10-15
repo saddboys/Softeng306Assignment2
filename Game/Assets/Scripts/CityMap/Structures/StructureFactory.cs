@@ -6,7 +6,7 @@ using UnityEngine.Assertions;
 
 namespace Game.CityMap
 {
-    public abstract class StructureFactory
+    public abstract class StructureFactory : InfoBoxSource
     {
         // TODO: Could store the picture associated with the structure (for the toolbar) in here.
 
@@ -15,6 +15,11 @@ namespace Game.CityMap
         /// This is to be set by each concrete StructureFactory implementation.
         /// </summary>
         public virtual int Cost { get; }
+
+        /// <summary>
+        /// Sprite to use for the toolbar button.
+        /// </summary>
+        public virtual Sprite Sprite { get; }
 
         /// <summary>
         /// Reference to the city for requirement calculations. May be null if requirements
@@ -112,12 +117,25 @@ namespace Game.CityMap
         {
             Assert.IsTrue(CanBuildOnto(tile, out _));
 
+            tile.Structure = Create();
+
             if (City != null)
             {
                 City.Stats.Wealth -= Cost;
             }
+        }
 
-            tile.Structure = Create();
+        public Structure CreateGhost()
+        {
+            return Create();
+        }
+
+        public virtual void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            title = "Build a structure";
+            meta = "Costs " + Cost.ToString("C");
+            sprite = Sprite;
+            details = "This structure does not appear to do anything special. Click on a tile to build it.";
         }
     }
 }

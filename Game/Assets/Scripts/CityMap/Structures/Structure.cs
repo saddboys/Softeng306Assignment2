@@ -3,8 +3,10 @@ using UnityEngine.UI;
 
 namespace Game.CityMap
 {
-    public abstract class Structure
+    public abstract class Structure : InfoBoxSource
     {
+        private Sprite sprite;
+
         /// <summary>
         /// Calculate how much this structure will contribute to the stats, such
         /// as CO2 generated, profits/losses, etc.
@@ -15,6 +17,16 @@ namespace Game.CityMap
             return new Stats();
         }
 
+        /// <summary>
+        /// Calculate how much the stats will change when the structure is demolished.
+        /// </summary>
+        /// <returns></returns>
+        public virtual Stats GetStatsChangeOnDemolish()
+        {
+            return new Stats();
+        }
+
+        public GameObject GameObject { get { return gameObject; } }
         private GameObject gameObject;
 
         /// <summary>
@@ -28,7 +40,7 @@ namespace Game.CityMap
             Unrender();
             gameObject = new GameObject();
             SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
-            Sprite sprite = Resources.LoadAll<Sprite>("Textures/structures")[spriteNumber];
+            sprite = Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[spriteNumber];
             renderer.sprite = sprite;
             renderer.sortingLayerName = "Structure";
 
@@ -36,8 +48,9 @@ namespace Game.CityMap
             // in which the Structure was added.
             renderer.sortingOrder = -(int)position.y;
 
+            float scale = 80 / sprite.rect.width;
             gameObject.transform.position = position;
-            gameObject.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+            gameObject.transform.localScale = new Vector3(scale, scale, scale);
             gameObject.transform.SetParent(canvas.transform);
             gameObject.SetActive(true);
         }
@@ -46,15 +59,20 @@ namespace Game.CityMap
         {
             Unrender();
             gameObject = new GameObject();
-            Image image = gameObject.AddComponent<Image>();
-            image.sprite = Resources.Load<Sprite>(spritePath);;
-            Vector2 structureSize = imageSize;
-            // Determines the size of the structure
-            gameObject.GetComponent<RectTransform>().sizeDelta = structureSize;
-            Vector2 xy = new Vector2(position.x + structureSize.x - 1, position.y + structureSize.y - 1);
-            // Determines where the structure will be placed
-            gameObject.GetComponent<RectTransform>().anchoredPosition = xy;
-            gameObject.GetComponent<RectTransform>().SetParent(canvas.transform);
+            
+            SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
+            sprite = Resources.Load<Sprite>(spritePath);
+            renderer.sprite = sprite;
+            renderer.sortingLayerName = "Structure";
+            
+            // Sort. Higher = further behind, regardless of the order
+            // in which the Structure was added.
+            renderer.sortingOrder = -(int)position.y;
+
+            float scale = 80 / sprite.rect.width;
+            gameObject.transform.position = position;
+            gameObject.transform.localScale = new Vector3(scale, scale, scale);
+            gameObject.transform.SetParent(canvas.transform);
             gameObject.SetActive(true);
         }
 
@@ -74,6 +92,14 @@ namespace Game.CityMap
             {
                 Object.Destroy(gameObject);
             }
+        }
+
+        public virtual void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            title = "Structure";
+            meta = "";
+            sprite = this.sprite;
+            details = "This structure does not appear to do anything special.";
         }
     }
 }

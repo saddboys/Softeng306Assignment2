@@ -3,16 +3,50 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.CityMap;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
+
 namespace Game
 {
     public class ToolBar : MonoBehaviour
     {
         [SerializeField] private City city;
-        //[SerializeField] private Toggle[] toggles;
+        [SerializeField] private Toggle[] toggles;
+        [SerializeField] private GameObject popupInfo;
+        private int popupInfoCount = 0;
 
-        public StructureFactory CurrentFactory { get; set; }
+        private InfoBox infoBox;
+
+        public StructureFactory CurrentFactory
+        {
+            get { return currentFactory; }
+            set
+            {
+                currentFactory = value;
+                if (currentFactory != null)
+                {
+                    Ghost = currentFactory.CreateGhost();
+                }
+                infoBox.SetInfo(currentFactory);
+            }
+        }
+        private StructureFactory currentFactory;
         private StructureFactory[] factories;
+        private Structure ghost;
+        private Structure Ghost
+        {
+            get { return ghost; }
+            set
+            {
+                HideGhostOnTile(ghostTile);
+                ghost = value;
+                if (ghostTile != null)
+                {
+                    ShowGhostOnTile(ghostTile);
+                }
+            }
+        }
+        private MapTile ghostTile;
 
         public event Action BuiltEvent;
 
@@ -27,94 +61,198 @@ namespace Game
                 new ParkFactory(city),
                 new PowerPlantFactory(city),
                 new DockFactory(city),
-                new DemolishFactory(),
+                new ForestFactory(city), 
+                new WindFarmFactory(city), 
+                new SolarFarmFactory(city), 
+                //Always Last
+                new DemolishFactory(city),
             };
 
             city.Map.TileClickedEvent += (s, e) =>
             {
-                // TODO: handle when the tile e.Tile has been clicked.
-                Debug.Log(e.Tile);
-                // throw new System.NotImplementedException();
-
                 OnNotify(e.Tile);
             };
 
-            city.Stats.ChangeEvent += () =>
-            {
-                for (int i = 0; i < factories.Length; i++)
-                {
-                    if (!factories[i].CanBuild(out string reason))
-                    {
-                        // Disable toggles[i]
-                    }
-                }
-            };
+            city.Map.TileMouseEnterEvent += (s, e) => ShowGhostOnTile(e.Tile);
+            city.Map.TileMouseLeaveEvent += (s, e) => HideGhostOnTile(e.Tile);
 
-            // foreach toggle, add listener.
+            city.Stats.ChangeEvent += UpdateToggleEnabled;
+            Invoke("UpdateToggleEnabled", 0.1f);
+
+            foreach (var t in toggles)
+            {
+                t.interactable = false;
+            }
+
+            for (int i = 0; i < factories.Length; i++)
+            {
+                toggles[i].interactable = true;
+                addToggleHandler(toggles[i], factories[i]);
+                if (factories[i].Sprite != null)
+                {
+                    // Blue background when isOn.
+                    Image checkedImage = toggles[i]
+                        .GetComponentsInChildren<Image>()[1];
+                    checkedImage.color = new Color(0.6f, 0.8f, 1.0f);
+                    checkedImage.sprite = toggles[i].GetComponentsInChildren<Image>()[0].sprite;
+                    checkedImage.type = Image.Type.Sliced;
+                    RectTransform transform = checkedImage.GetComponent<RectTransform>();
+                    transform.SetParent(toggles[i].GetComponentInChildren<Image>().transform);
+                    transform.anchorMin = new Vector2(0, 0);
+                    transform.anchorMax = new Vector2(1, 1);
+                    transform.offsetMin = new Vector2(0, 0);
+                    transform.offsetMax = new Vector2(0, 0);
+
+                    // Fully opaque structure image when isOn.
+                    GameObject background = new GameObject();
+                    Image checkedSprite = background.AddComponent<Image>();
+                    checkedSprite.sprite = factories[i].Sprite;
+                    transform = background.GetComponent<RectTransform>();
+                    transform.SetParent(checkedImage.transform);
+                    transform.anchorMin = new Vector2(0, 0);
+                    transform.anchorMax = new Vector2(1, 1);
+                    transform.offsetMin = new Vector2(2, 2);
+                    transform.offsetMax = new Vector2(-2, -2);
+                    background.SetActive(true);
+
+                    // Show semi-transparent image when not isOn.
+                    GameObject buttonSprite = new GameObject();
+                    Image image = buttonSprite.AddComponent<Image>();
+                    image.sprite = factories[i].Sprite;
+                    image.color = new Color(1.0f, 1.0f, 1.0f, 0.7f);
+                    transform = buttonSprite.GetComponent<RectTransform>();
+                    transform.SetParent(toggles[i].GetComponentInChildren<Image>().transform);
+                    transform.anchorMin = new Vector2(0, 0);
+                    transform.anchorMax = new Vector2(1, 1);
+                    transform.offsetMin = new Vector2(2, 2);
+                    transform.offsetMax = new Vector2(-2, -2);
+                    buttonSprite.SetActive(true);
+                }
+            }
+
+            // Fix popup info tooltip's scaling.
+            // (Don't want to modify game scene just for this)
+            popupInfo.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
+            popupInfo.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
+            popupInfo.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            infoBox = new InfoBox(gameObject.transform.parent.gameObject);
         }
 
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
-        
+            // Keys 1 to n to select the nth factory.
+            if (Input.anyKeyDown && Input.inputString.Length > 0)
+            {
+                char c = Input.inputString[0];
+                int x = c - '1';
+                if (x < 0 || x >= factories.Length) return;
+                CurrentFactory = factories[x];
+                toggles[x].isOn = true;
+            }
+        }
+
+        private void UpdateToggleEnabled()
+        {
+            for (int i = 0; i < factories.Length; i++)
+            {
+                toggles[i].interactable = factories[i].CanBuild(out _);
+                if (toggles[i].isOn && !toggles[i].interactable)
+                {
+                    toggles[i].isOn = false;
+                }
+            }
+        }
+
+        private void addToggleHandler(Toggle toggle, StructureFactory factory)
+        {
+            toggle.onValueChanged.AddListener((isOn) =>
+            {
+                if (isOn)
+                {
+                    CurrentFactory = factory;
+                }
+                else
+                {
+                    CurrentFactory = null;
+                }
+            });
+            var trigger = toggle.gameObject.AddComponent<EventTrigger>();
+            var enterEntry = new EventTrigger.Entry();
+            enterEntry.eventID = EventTriggerType.PointerEnter;
+            enterEntry.callback.AddListener((data) => infoBox.SetInfo(factory));
+            var exitEntry = new EventTrigger.Entry();
+            exitEntry.eventID = EventTriggerType.PointerExit;
+            exitEntry.callback.AddListener((data) => infoBox.SetInfo(null));
+            trigger.triggers.Add(enterEntry);
+            trigger.triggers.Add(exitEntry);
         }
 
         void OnNotify(MapTile tile) {
             if (CurrentFactory == null)
             {
+                infoBox.SetInfo(tile.Structure);
                 return;
             }
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
             {
-                Debug.Log(reason); // TODO: show to user.
+                ShowPopupInfo(reason);
                 return;
             }
             CurrentFactory.BuildOnto(tile);
+
+            // Update Ghosts
+            HideGhostOnTile(tile);
+            ShowGhostOnTile(tile);
+
             BuiltEvent?.Invoke();
         }
 
-        void BuildStructure(StructureFactory factory, MapTile tile) {
-            factory.BuildOnto(tile);
-        }
-
-        // Called whenever a toggle is toggled on
-        public void Toggle01A( bool isOn ) {
-            if (isOn) CurrentFactory = new HouseFactory(city);
-            else CurrentFactory = null;
-        }
-
-        public void Toggle01B( bool isOn )
+        void ShowPopupInfo(string text)
         {
-            if (isOn) CurrentFactory = new FactoryFactory(city);
-            else CurrentFactory = null;
+            popupInfo.GetComponentInChildren<Text>().text = text;
+            popupInfo.transform.position = Input.mousePosition;
+            popupInfo.SetActive(true);
+            Invoke("HidePopupInfo", 2);
+            popupInfoCount++;
         }
 
-        public void Toggle02A( bool isOn )
+        void HidePopupInfo()
         {
-            if (isOn) CurrentFactory = new ParkFactory(city);
-            else CurrentFactory = null;
+            popupInfoCount--;
+            if (popupInfoCount == 0)
+            {
+                popupInfo.SetActive(false);
+            }
         }
 
-        public void Toggle02B( bool isOn ) {
-            if (isOn) CurrentFactory = new DockFactory(city);
-            else CurrentFactory = null;
+        private void ShowGhostOnTile(MapTile tile)
+        {
+            ghostTile = tile;
+
+            if (CurrentFactory == null)
+            {
+                tile.HandleMouseEnter();
+                return;
+            }
+            if (!CurrentFactory.CanBuildOnto(tile, out _)) return;
+            tile.HandleMouseEnter();
+
+            if (Ghost == null) return;
+            Ghost.RenderOnto(tile.Canvas, tile.ScreenPosition);
+            foreach (var renderer in Ghost.GameObject.GetComponentsInChildren<SpriteRenderer>())
+            {
+                Color color = renderer.color;
+                color.a = 0.5f;
+                renderer.color = color;
+            }
         }
 
-        public void Toggle03A( bool isOn )
+        private void HideGhostOnTile(MapTile tile)
         {
-            if (isOn) CurrentFactory = new PowerPlantFactory(city);
-            else CurrentFactory = null;
-        }
-        public void Toggle03B( bool isOn )
-        {
-            if (isOn) CurrentFactory = null;
-            else CurrentFactory = null;
-        }
-
-        public void OnRmToggleValueChanged( bool isOn )
-        {
-            if (isOn) CurrentFactory = new DemolishFactory();
-            else CurrentFactory = null;
+            tile?.HandleMouseLeave();
+            Ghost?.Unrender();
         }
     }
 }

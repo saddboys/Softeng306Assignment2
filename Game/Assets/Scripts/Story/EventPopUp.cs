@@ -14,11 +14,11 @@ public class EventPopUp : MonoBehaviour
     public CityMap CityMap { get; set; }
 
     private const int POP_UP_WIDTH = 400;
-    private const int POP_UP_HEIGHT = 200;
+    private const int POP_UP_HEIGHT = 250;
     private const int BUTTON_WIDTH = 50;
     private const int BUTTON_HEIGHT = 30;
     private const int TITLE_FONT_SIZE = 30;
-    private const int DESCRIPTION_FONT_SIZE = 20;
+    private const int DESCRIPTION_FONT_SIZE = 15;
 
     public StoryEvent StoryEvent { get; set; }
 
@@ -64,6 +64,7 @@ public class EventPopUp : MonoBehaviour
         titleText.alignment = TextAnchor.UpperCenter;
         title.transform.SetParent(panel.transform,false);
         title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-10);
         
         // Creating the description
         GameObject description = new GameObject("Description");
@@ -75,9 +76,20 @@ public class EventPopUp : MonoBehaviour
         descriptionText.alignment = TextAnchor.UpperCenter;
         description.transform.SetParent(panel.transform,false);
         description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/3);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/4-10);
         // TODO: Scale depending on size of the description
        // description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
+       
+       // Setting the image 
+       GameObject imageGameObject = new GameObject("Image");
+       Image sprite = imageGameObject.AddComponent<Image>();
+       sprite.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH/2,POP_UP_HEIGHT/2);
+       sprite.sprite = StoryEvent.EventImage;
+       Debug.Log(StoryEvent.EventImage);
+       imageGameObject.transform.SetParent(panel.transform,false);
+       description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+       description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/6);
+
     }
 
     
@@ -102,7 +114,7 @@ public class EventPopUp : MonoBehaviour
         buttonObj.name = "OKButton";
         buttonObj.transform.SetParent(panel.transform,false);
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
-        buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/4);
+        buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0 + BUTTON_WIDTH/2,-POP_UP_HEIGHT/2.4f);
     }
     
     
@@ -133,7 +145,7 @@ public class EventPopUp : MonoBehaviour
         buttonObj.name = "YesButton";
         buttonObj.transform.SetParent(panel.transform,false);
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
-        buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-POP_UP_WIDTH/4,-POP_UP_HEIGHT/4);
+        buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-POP_UP_WIDTH/4,-POP_UP_HEIGHT/2.4f);
         
         // The no button or whatever it is going to be called
         GameObject buttonObj2 = new GameObject();
@@ -152,7 +164,7 @@ public class EventPopUp : MonoBehaviour
         buttonObj2.name = "NoButton";
         buttonObj2.transform.SetParent(panel.transform,false);
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
-        buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_WIDTH/4,-POP_UP_HEIGHT/4);
+        buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_WIDTH/4,-POP_UP_HEIGHT/2.4f);
     }
     
     /// <summary>
@@ -163,6 +175,7 @@ public class EventPopUp : MonoBehaviour
         Canvas.SetActive(false);
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);
+        Destroy(GetComponent<EventPopUp>());
     }
 }
 

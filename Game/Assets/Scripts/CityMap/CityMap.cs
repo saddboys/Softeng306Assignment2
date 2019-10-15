@@ -18,11 +18,16 @@ namespace Game.CityMap
         /// </summary>
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
+        public event EventHandler<TileClickArgs> TileMouseEnterEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        private MapTile previousHoveredTile;
+
         public Tilemap map;
         public GameObject parent;
         public Text display;
         private int[,] terrainMap;
-
+        private const int HEIGHT = 10;
+        private const int WIDTH = 10;
         Random random = new Random();
 
 
@@ -30,11 +35,14 @@ namespace Game.CityMap
         {
             get
             {
-                return Array.ConvertAll(map.GetTilesBlock(map.cellBounds),
+                BoundsInt cellBounds = map.cellBounds;
+                // Debug.Log("Cell bounds are" + cellBounds);
+                // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
+                // Debug.Log("Bounds are" + cellBounds);
+                return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }
         }
-
         private Vector3 mouseDownPosition;
 
         // Start is called before the first frame update
@@ -46,6 +54,31 @@ namespace Game.CityMap
         void Update()
         {
             CheckTileClick();
+            CheckTileHover();
+        }
+
+        private void CheckTileHover()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
+            Vector3Int position = map.WorldToCell(worldPoint);
+            MapTile currentTile = map.GetTile<MapTile>(position);
+            if (EventSystem.current.IsPointerOverGameObject())
+            {
+                currentTile = null;
+            }
+            if (currentTile != previousHoveredTile)
+            {
+                if (previousHoveredTile != null)
+                {
+                    TileMouseLeaveEvent?.Invoke(this, new TileClickArgs(previousHoveredTile));
+                }
+                if (currentTile != null)
+                {
+                    TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
+                }
+            }
+            previousHoveredTile = currentTile;
         }
 
         private void CheckTileClick()
@@ -64,23 +97,36 @@ namespace Game.CityMap
             // Check UI click-through.
             if (EventSystem.current.IsPointerOverGameObject()) return;
 
-            // Check camera dragging
-            //if (cameraDrag.WasDragging) return;
-
+            // Vector3 test = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            // Debug.Log("World point:" + test);
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
-            MapTile someOtherTile = map.GetTile<MapTile>(position);
+            MapTile someOtherTile = GetTileWithZ(position);
             if (someOtherTile != null)
             {
                 // Notify the click event for things like the ToolBar or other user feedback.
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
-
-                // For testing purposes:
-                //someOtherTile.Structure = new Rock();
-                //someOtherTile.Terrain.Sprite = Resources.LoadAll<Sprite>("Textures/terrain")[0];
             }
         }
+
+        private MapTile GetTileWithZ(Vector3Int position)
+        {
+            for (int z = 0; z < HEIGHT; z++)
+            {
+                position.z = z;
+                MapTile someTile = map.GetTile<MapTile>(position);
+                
+                if (someTile != null)
+                {
+                    return someTile;
+                }
+            }
+
+            return null;
+        }
+        
 
         /// <summary>
         /// Generates the Tilemap by randomly allocating terrains to tiles and sometimes
@@ -89,50 +135,66 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            int width = 40;
-            int height = 30;
             Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
-                terrainMap = new int[width, height];
+                terrainMap = new int[WIDTH, HEIGHT];
             }
-            for (int i = 0; i < width; i++)
+            
+            for (int j = HEIGHT; j >= 0; j--)
             {
-                for (int j = 0; j < height; j++)
+                for (int i = 0; i < WIDTH; i++)             
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-                    // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + width / 2, -j + height / 2, 0);
-                    // Find the real position (the position on the screen)
-                    Vector3 mappedVector = map.CellToWorld(vector);
-                    
 
-                    tile.Canvas = parent;
-                    tile.ScreenPosition = mappedVector;
+                    // A vector used for hex position
+                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
+                    // Find the real position (the position on the screen)
+                    
                     
                     int value = random.Next(0,100);
                     
                     // Randomly generate the map with tiles (although the tiles are the same right now)
                     if (value < 20)
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert, sprites);
-
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
                     }
-                    else if (value < 90)
+                    else if (value < 40)
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass, sprites);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
                     }
+                    else if (value < 50)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
+                    }
+                    else if (value < 60)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.GrassHill);  
+                    } 
+                    else if (value < 70)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.DesertHill);
+                    } 
                     else
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean, sprites);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                     }
-                    
                     map.SetTile(vector, tile);
+                    Vector3 mappedVector = map.CellToWorld(vector);
+                    // Debug.Log("Screen: " + mappedVector);
+                    
+                    tile.ScreenPosition = mappedVector;
+                    tile.name = "j: " + j + " i: " + i;
+                    tile.Canvas = parent;
+                    
+
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
+                    
                 }
             }
+
 
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
@@ -140,20 +202,26 @@ namespace Game.CityMap
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
-                new FactoryFactory(),
-                new FactoryFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
                 new FactoryFactory(),
                 new FactoryFactory(),
                 new ParkFactory(),
+                new ParkFactory(),
+                new PowerPlantFactory(),
             };
 
             for (int i = 0; i < 50; i++)
             {
                 // Cluster them close to the centre.
-                int x = (int)(Mathf.Clamp(NextNormalRandom() * width, -width, width) / 2.0f);
-                int y = (int)(Mathf.Clamp(NextNormalRandom() * height, -height, height) / 2.0f);
+                int x = (int)(Mathf.Clamp(NextNormalRandom() * WIDTH, -WIDTH, WIDTH) / 2.0f);
+                int y = (int)(Mathf.Clamp(NextNormalRandom() * HEIGHT, -HEIGHT, HEIGHT) / 2.0f);
 
-                var tile = map.GetTile<MapTile>(new Vector3Int(x, y, 0));
+                var tile = GetTileWithZ(new Vector3Int(x, y, 0));
                 if (tile == null)
                 {
                     continue;
@@ -163,6 +231,7 @@ namespace Game.CityMap
                 if (randomFactory.CanBuildOnto(tile, out _))
                 {
                     randomFactory.BuildOnto(tile);
+                    Debug.Log("got here");
                 }
             }
         }
@@ -177,6 +246,10 @@ namespace Game.CityMap
             // Get stats from its tiles.
             Stats sum = new Stats();
             foreach (var t in Tiles) {
+                if (t == null)
+                {
+                    continue;
+                }
                 sum += t.GetStatsContribution();
             }
             return sum;
@@ -186,6 +259,10 @@ namespace Game.CityMap
         {
             foreach (var t in Tiles)
             {
+                if (t == null)
+                {
+                    continue;
+                }
                 // Unrender structure.
                 t.Structure = null;
                 // Remove tile from object graph.

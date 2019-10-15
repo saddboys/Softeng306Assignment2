@@ -34,9 +34,4 @@ public class GameSceneController : MonoBehaviour
         endReasonText.text = endReason;
     }
 
-    public void RestartGame()
-    {
-        SceneManager.LoadScene("StartScene");
-    }
-    
 }

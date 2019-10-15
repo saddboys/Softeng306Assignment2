@@ -253,6 +253,11 @@ namespace Game.CityMap
 
         public void Regenerate()
         {
+            foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
+            {
+                // Clear tile from the tilemap.
+                map.SetTile(pos, null);
+            }
             foreach (var t in Tiles)
             {
                 if (t == null)

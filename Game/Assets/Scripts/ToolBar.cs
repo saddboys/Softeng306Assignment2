@@ -63,7 +63,7 @@ namespace Game
                 new DockFactory(city),
                 new ForestFactory(city), 
                 new WindFarmFactory(city), 
-                
+                new SolarFarmFactory(city), 
                 //Always Last
                 new DemolishFactory(city),
             };

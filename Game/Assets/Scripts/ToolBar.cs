@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.CityMap;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
+
 namespace Game
 {
     public class ToolBar : MonoBehaviour
@@ -163,12 +165,15 @@ namespace Game
                     CurrentFactory = null;
                 }
             });
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            var trigger = toggle.gameObject.AddComponent<EventTrigger>();
+            var enterEntry = new EventTrigger.Entry();
+            enterEntry.eventID = EventTriggerType.PointerEnter;
+            enterEntry.callback.AddListener((data) => infoBox.SetInfo(factory));
+            var exitEntry = new EventTrigger.Entry();
+            exitEntry.eventID = EventTriggerType.PointerExit;
+            exitEntry.callback.AddListener((data) => infoBox.SetInfo(null));
+            trigger.triggers.Add(enterEntry);
+            trigger.triggers.Add(exitEntry);
         }
 
         void OnNotify(MapTile tile) {

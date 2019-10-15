@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Game.Story;
+using Game.CityMap;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
@@ -31,7 +33,9 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             
-            // Lock the factories, decrease happiness levels
+            DestroyFactories();
+
+            // TODO disable factory on toolbar
             
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
             
@@ -41,6 +45,20 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
+        }
+
+        private void DestroyFactories()
+        {
+            MapTile[] tiles = StoryManager.city.Map.Tiles;
+            foreach (var tile in tiles)
+            {
+                if (tile.Structure != null && tile.Structure.GetType() == typeof(Factory))
+                {
+                    tile.Structure.Unrender();
+                    StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
+                    tile.Structure = null;
+                }
+            }
         }
     }
 }

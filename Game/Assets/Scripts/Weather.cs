@@ -60,15 +60,15 @@ namespace Game
                 if (isGenerating)
                 {
                     emission.rateOverTime = 0;
-                    var shape = particles.shape;
-                    shape.position = new Vector3(shape.position.x, (float)random.NextDouble() * mapHeight - mapHeight / 2.0f);
-                    triggerSecondsLeft = random.Next(2, 4);
+                    triggerSecondsLeft = random.Next(1, 6);
                     isGenerating = false;
                 }
                 else if (!isGenerating)
                 {
+                    var shape = particles.shape;
+                    shape.position = new Vector3(shape.position.x, (float)random.NextDouble() * mapHeight - mapHeight / 2.0f);
                     emission.rateOverTime = 100;
-                    triggerSecondsLeft = random.Next(3, 5);
+                    triggerSecondsLeft = random.Next(2, 5);
                     isGenerating = true;
                 }
             }

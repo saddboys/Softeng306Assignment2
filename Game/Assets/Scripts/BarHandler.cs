@@ -8,7 +8,6 @@ public class BarHandler : MonoBehaviour
 {   [SerializeField]
     public Slider slider;
     private double currentValue = 0.0;
-    public GameObject bar;
     [SerializeField]
     private StatsBar stats;
     public double CurrentValue {
@@ -17,7 +16,6 @@ public class BarHandler : MonoBehaviour
     }
     set {
         currentValue = (float)stats.Temperature;
-        bar = GameObject.Find("TemperatureBar");
         slider.value =(float)currentValue;
        
     }

@@ -56,7 +56,7 @@ namespace Game.Story.Events
             StoryManager.endTurnButton.interactable = false;
             
             // Placeholder building for now
-            StoryManager.toolbar.CurrentFactory = new FactoryFactory();
+            StoryManager.toolbar.CurrentFactory = new PowerPlantFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
             

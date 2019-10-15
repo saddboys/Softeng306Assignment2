@@ -175,6 +175,9 @@ namespace Game.CityMap
         /// </summary>
         private void createBiome(Terrain.TerrainTypes terrain, List<int[]> occupiedBiomSpots, Sprite[] sprites, int width, int height)
         {
+            // calculate biome half length proportional to the map size
+            int biomHalfLength = (int) (Mathf.Max(width, height) / 5);
+            
             // random anchor spot for biome
             // index 0 for x and 1 and y coordinate
             int[] anchor = new int[2];
@@ -198,12 +201,11 @@ namespace Game.CityMap
 
             anchorTile.Terrain = new Terrain(terrain, sprites);
 
-            int biomHalfLength = 7;
             // constants that will be used further down the line
             float k = Mathf.Sqrt(Mathf.Pow(biomHalfLength, 2) * 2);
             float a = (float) 2.0f / Mathf.Log10(Mathf.Pow(k, 2) - 2.0f);
 
-            // growing sand biom
+            // growing biom
             for (int i = 0; i < biomHalfLength * 2; i++) 
             {
                 for (int j = 0; j < biomHalfLength * 2; j++)
@@ -270,6 +272,13 @@ namespace Game.CityMap
                     } 
                 }
             }
+            
+            // // create beach biom if the biome type is Ocean
+            // if (terrain.Equals(Terrain.TerrainTypes.Ocean))
+            // {
+            //     createBiome(Terrain.TerrainTypes.Beach, occupiedBiomSpots, sprites, width, height);
+            // }
+            
         }
 
         /// <summary>

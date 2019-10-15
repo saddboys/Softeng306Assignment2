@@ -178,11 +178,17 @@ namespace Game.CityMap
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
-                new FactoryFactory(),
-                new FactoryFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
+                new HouseFactory(),
                 new FactoryFactory(),
                 new FactoryFactory(),
                 new ParkFactory(),
+                new ParkFactory(),
+                new PowerPlantFactory(),
             };
 
             for (int i = 0; i < 50; i++)

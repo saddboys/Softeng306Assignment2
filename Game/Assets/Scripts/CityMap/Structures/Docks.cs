@@ -8,7 +8,7 @@ namespace Game.CityMap
     {
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOnto(canvas, position, 10, new Vector2(1, 1.5f));
+            RenderOntoSprite(canvas, position, "Textures/structures/dock", new Vector2(1, 1.5f));
         }
 
         public override Stats GetStatsChangeOnDemolish()
@@ -31,7 +31,7 @@ namespace Game.CityMap
         }
 
         public override Sprite Sprite { get; } =
-            Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[10];
+            Resources.Load<Sprite>("Textures/structures/dock");
 
         
         public override bool CanBuild(out string reason)

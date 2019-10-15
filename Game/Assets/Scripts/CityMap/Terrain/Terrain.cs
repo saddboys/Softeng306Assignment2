@@ -54,7 +54,7 @@ namespace Game.CityMap
                     sprite = Resources.Load<Sprite>("Textures/Terrain/hexSandMeedium");
                 }
             }
-            else if (terrainType.Equals(TerrainTypes.Desert))
+            else if (terrainType.Equals(TerrainTypes.Beach))
             {
                 sprite = Resources.Load<Sprite>("Textures/Terrain/hexSand");
             }

@@ -77,15 +77,10 @@ namespace Game.Story.Events.RandomEvent
                 int x = random.Next(-width/2+1, width/2 + 1);
                 int y = random.Next(-height/2+1, height/2+ 1);
                 Vector3Int position = new Vector3Int(x, y, 0);
+                Vector3Int rotateCellPosition = StoryManager.city.Map.RotateCellPosition(position, true);
               //  Vector3Int position = new Vector3Int(-18, -14, 0);
                 //PrintStuff(position);
-                var tile = map.GetTile<MapTile>(position);
-                
-//                if (tile == null)
-//                {
-//                    Test(map.GetTilesBlock(map.cellBounds),position,map);
-//                    Debug.Log("mother fucker is null");
-//                }
+                var tile = map.GetTile<MapTile>(rotateCellPosition);
                 tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                 tile.Structure = null;
                 Stack<Vector3Int> newStack = new Stack<Vector3Int>();

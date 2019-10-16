@@ -477,7 +477,7 @@ namespace Game.CityMap
             camera.transform.position = newPos;
         }
 
-        private Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
+        public Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
         {
             // Transform into hexagonal coordinate system.
             var hexCoords = new Vector3Int

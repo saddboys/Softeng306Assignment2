@@ -79,6 +79,7 @@ public class EventPopUp : MonoBehaviour
         titleText.font = Resources.Load<TMP_FontAsset>("Fonts/Bangers SDF");
         titleText.color = Color.white;
         titleText.outlineColor = Color.black;
+        titleText.outlineWidth = 0.3f;
         titleText.fontSize = TITLE_FONT_SIZE;
         titleText.alignment = TextAlignmentOptions.Center;
         title.transform.SetParent(panel.transform,false);

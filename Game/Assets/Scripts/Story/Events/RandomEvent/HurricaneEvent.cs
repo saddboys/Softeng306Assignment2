@@ -73,7 +73,7 @@ namespace Story.Events.RandomEvent
             StoryManager.city.NextTurnEvent += StopWind;
             GameObject customParticleSystem = new GameObject("HurricaneParticle");
             customParticleSystem.transform.SetParent(StoryManager.city.Map.gameObject.transform,false);
-            customParticleSystem.transform.position = new Vector3(-25,0,32);
+            customParticleSystem.transform.position = new Vector3(0,0,32);
 
             Quaternion quaternion = Quaternion.Euler(0, 0, 0);
             customParticleSystem.transform.rotation = quaternion;
@@ -83,7 +83,7 @@ namespace Story.Events.RandomEvent
             ParticleSystem.MainModule mainParticle = particles.main;
             mainParticle.startLifetime = 2f;
             mainParticle.startSpeed = 0;
-            mainParticle.maxParticles = 5;
+            mainParticle.maxParticles = 10;
             
             
             ParticleSystem.TrailModule trailMode = particles.trails;
@@ -97,7 +97,7 @@ namespace Story.Events.RandomEvent
             
 
             ParticleSystem.EmissionModule emissionModule = particles.emission;
-            emissionModule.rateOverTime = 50;
+            emissionModule.rateOverTime = 3;
             ParticleSystemRenderer particleRenderer =  particles.GetComponent<ParticleSystemRenderer>();
             particleRenderer.sortingLayerName = "Terrain";
             var material = Resources.Load<Material>("wind_head");
@@ -114,7 +114,7 @@ namespace Story.Events.RandomEvent
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
             shapeModule.shapeType = ParticleSystemShapeType.Cone;
-            shapeModule.radius = 25;
+            shapeModule.radius = 20;
             shapeModule.rotation = new Vector3(0,0,180);
 
             ParticleSystem.VelocityOverLifetimeModule velocityOverLifetimeModule = particles.velocityOverLifetime;

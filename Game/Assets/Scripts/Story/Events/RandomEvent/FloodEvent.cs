@@ -84,10 +84,10 @@ namespace Game.Story.Events.RandomEvent
                 tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                 tile.Structure = null;
                 Stack<Vector3Int> newStack = new Stack<Vector3Int>();
-                newStack.Push(position);
+                newStack.Push(rotateCellPosition);
                 tempFloodTiles.Add(newStack);
                 
-              //  GenerateSurroundingWater(100,i);
+                GenerateSurroundingWater(100,i);
             }
         }
 
@@ -136,23 +136,16 @@ namespace Game.Story.Events.RandomEvent
 
                 int height = StoryManager.city.Map.HEIGHT;
                 int width = StoryManager.city.Map.WIDTH;
-
-
-                if (nextX < 0 || nextX >= width)
-                {
-                    return;
-                }
-
-                if (nextY < 0|| nextY >= height)
-                {
-                    return;
-                }
                 
                 Vector3Int position = new Vector3Int(nextX,nextY , 0);
+                
                 var tile = map.GetTile<MapTile>(position);
-                tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
-                tile.Structure = null;
-                current.Push(position);
+                if (tile != null)
+                {
+                    tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+                    tile.Structure = null;
+                    current.Push(position);
+                }
                 GenerateSurroundingWater(probabilityToIncrease, listPosition);
             }
         }

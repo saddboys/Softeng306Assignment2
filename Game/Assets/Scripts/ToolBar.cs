@@ -253,6 +253,7 @@ namespace Game
             tile.HandleMouseEnter();
 
             if (Ghost == null) return;
+            Ghost.Tile = tile;
             Ghost.RenderOnto(tile.Canvas, tile.ScreenPosition);
             foreach (var renderer in Ghost.GameObject.GetComponentsInChildren<SpriteRenderer>())
             {

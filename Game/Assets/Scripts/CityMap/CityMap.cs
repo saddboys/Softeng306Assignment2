@@ -222,7 +222,6 @@ namespace Game.CityMap
                 if (randomFactory.CanBuildOnto(tile, out _))
                 {
                     randomFactory.BuildOnto(tile);
-                    Debug.Log("got here");
                 }
             }
 

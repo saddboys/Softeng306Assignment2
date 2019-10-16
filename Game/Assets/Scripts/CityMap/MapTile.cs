@@ -42,7 +42,14 @@ namespace Game.CityMap
                     "be set before setting the structure");
                 structure?.Unrender();
                 structure = value;
+                
+                if (structure != null)
+                {
+                    structure.Tile = this;
+                }
+                
                 structure?.RenderOnto(Canvas, ScreenPosition);
+
             }
         }
 

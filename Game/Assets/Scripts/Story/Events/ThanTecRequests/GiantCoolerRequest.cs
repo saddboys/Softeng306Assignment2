@@ -31,6 +31,7 @@ namespace Game.Story.Events
 
         public override void OnYesClick()
         {
+            StoryManager.city.Stats.Temperature -= 0.5;
             // Go to tech ending
         }
 

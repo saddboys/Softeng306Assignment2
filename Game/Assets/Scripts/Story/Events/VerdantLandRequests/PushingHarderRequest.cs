@@ -37,14 +37,14 @@ namespace Game.Story.Events.VerdantLandRequests
 
             // TODO disable factory on toolbar
             
-            Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<PushingHarderRequest>());
             
         }
 
         public override void OnNoClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
-            Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<PushingHarderRequest>());
         }
 
         private void DestroyFactories()

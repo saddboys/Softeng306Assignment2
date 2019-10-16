@@ -116,11 +116,11 @@ namespace Game.Story
         private void HandleTurnEvent()
         {
             // For testing an event
-            if (city.Turn == 2)
-            {
-                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-                CreatePopUp();   
-            }
+//            if (city.Turn == 2)
+//            {
+//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
+//                CreatePopUp();   
+//            }
 
            if (city.Turn == storyQueue.Peek())
            {

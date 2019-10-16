@@ -37,13 +37,22 @@ namespace Game.CityMap
             get { return structure; }
             set
             {
-                
+
+                Debug.Log("built something");
+
                 Assert.IsNotNull(Canvas,
                     "The ScreenPosition and Canvas to draw the structure on should " +
                     "be set before setting the structure");
                 structure?.Unrender();
                 structure = value;
+                
+                if (structure != null)
+                {
+                    structure.Tile = this;
+                }
+                
                 structure?.RenderOnto(Canvas, ScreenPosition);
+
             }
         }
 

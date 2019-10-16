@@ -24,7 +24,19 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            RenderOntoSprite(canvas, position, "Textures/structures/objectForest", new Vector2(1, 1.5f));
+            
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/objectForest", new Vector2(1, 1.5f));
+            }
+            else
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.1f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/objectForest", new Vector2(1, 1.5f));
+            }
         }
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)

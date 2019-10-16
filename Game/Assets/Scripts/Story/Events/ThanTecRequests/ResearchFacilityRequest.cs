@@ -36,9 +36,10 @@ namespace Game.Story.Events
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Mayor, you have another request from ThanTec.”", 
-            "“They want us to build them a power plant to power their new research facility. They say it’s for their climate solution project.”",
-            "“What do you think?”"}); 
+            "Mayor, we have another request from ThanTec.", 
+            "They want us to build them a power plant to power their new research facility.",
+            "They say it’s for their climate solution project.",
+            "What do you think we should do?"}); 
 
         private void OnBuild()
         {
@@ -58,9 +59,6 @@ namespace Game.Story.Events
             StoryManager.toolbar.CurrentFactory = new PowerPlantFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
-            
-            // Maybe change stats somewhere (stats, CO2 etc.)
-            
             
             Destroy(StoryManager.storyManagerGameObject.GetComponent<ResearchFacilityRequest>());
         }

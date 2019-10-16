@@ -22,9 +22,12 @@ namespace Game.CityMap
         public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
         private MapTile previousHoveredTile;
 
+        // Camera to reposition after rotation.
+        [SerializeField]
+        private GameObject camera;
+
         public Tilemap map;
         public GameObject parent;
-        public Text display;
         private int[,] terrainMap;
         private int WIDTH = 40;
         private int HEIGHT = 30;
@@ -410,6 +413,10 @@ namespace Game.CityMap
 
         public void Rotate(bool clockwise)
         {
+            // Find tile location that camera is currently centred at.
+            var cameraFocus = map.WorldToCell(camera.transform.position);
+            var cameraZPos = camera.transform.position.z;
+
             var centre = map.cellBounds.min + map.cellBounds.max;
             centre.x /= 2;
             centre.y /= 2;
@@ -425,46 +432,55 @@ namespace Game.CityMap
             }
             foreach (var (pos, tile) in tiles)
             {
-                // Transform into hexagonal coordinate system.
-                var hexCoords = new Vector3Int
-                {
-                    x = pos.x - (pos.y - (pos.y & 1)) / 2,
-                    y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
-                    z = pos.y,
-                };
-
-                // Rotate in the hexagonal coordinate system.
-                if (clockwise)
-                {
-                    hexCoords = new Vector3Int
-                    {
-                        x = -hexCoords.z,
-                        y = -hexCoords.x,
-                        z = -hexCoords.y,
-                    };
-                }
-                else
-                {
-                    hexCoords = new Vector3Int
-                    {
-                        x = -hexCoords.y,
-                        y = -hexCoords.z,
-                        z = -hexCoords.x,
-                    };
-                }
-
-                // Transform back to grid's rectangular coordinate system and apply.
-                var rectCoords = new Vector3Int
-                {
-                    x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
-                    y = hexCoords.z,
-                    z = 0,
-                };
-                SetTileTo(rectCoords, tile);
+                SetTileTo(RotateCellPosition(pos, clockwise), tile);
             }
 
             // Shrink bounds to where tiles exist.
             map.CompressBounds();
+
+            // Recenter camera to previous tile.
+            Vector3 newPos = map.CellToWorld(RotateCellPosition(cameraFocus, clockwise));
+            newPos.z = cameraZPos;
+            camera.transform.position = newPos;
+        }
+
+        private Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
+        {
+            // Transform into hexagonal coordinate system.
+            var hexCoords = new Vector3Int
+            {
+                x = pos.x - (pos.y - (pos.y & 1)) / 2,
+                y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
+                z = pos.y,
+            };
+
+            // Rotate in the hexagonal coordinate system.
+            if (clockwise)
+            {
+                hexCoords = new Vector3Int
+                {
+                    x = -hexCoords.z,
+                    y = -hexCoords.x,
+                    z = -hexCoords.y,
+                };
+            }
+            else
+            {
+                hexCoords = new Vector3Int
+                {
+                    x = -hexCoords.y,
+                    y = -hexCoords.z,
+                    z = -hexCoords.x,
+                };
+            }
+
+            // Transform back to grid's rectangular coordinate system and apply.
+            return new Vector3Int
+            {
+                x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
+                y = hexCoords.z,
+                z = 0,
+            };
         }
 
         private void SetTileTo(Vector3Int position, MapTile tile)

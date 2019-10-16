@@ -6007,9 +6007,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b193e1400b056a34caa48a54df04726b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 394646653}
   map: {fileID: 919822513}
   parent: {fileID: 1136636419}
-  display: {fileID: 0}
 --- !u!1 &1266710181
 GameObject:
   m_ObjectHideFlags: 0

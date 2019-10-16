@@ -51,11 +51,10 @@ namespace Game.Story.Events
         
         public override void OnYesClick()
         {
-            // Prevent the tech ending somehow.
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
-            // Placeholder building for now
+            // Build power plant
             StoryManager.toolbar.CurrentFactory = new PowerPlantFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;

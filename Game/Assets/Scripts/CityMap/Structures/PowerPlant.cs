@@ -25,8 +25,18 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            }
+            else
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            }
 
             // Render smoke.
             // Now the fun begins...
@@ -107,6 +117,12 @@ namespace Game.CityMap
             renderer.sortingLayerName = "Structure";
             renderer.sortingOrder = 1000;
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Power plant";
+        }
     }
 
     public class PowerPlantFactory : StructureFactory
@@ -150,6 +166,13 @@ namespace Game.CityMap
             }
 
             return true;
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a power plant";
+            details = "Everything needs power to function. Click on a tile to build a power plant. Be careful with it's pollution.";
         }
     }
 }

@@ -26,9 +26,15 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+            Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
             RenderOntoSprite(canvas, positionNew, "Textures/structures/windmill", new Vector2(1, 1.5f));
+            
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Wind farm";
         }
     }
 
@@ -51,6 +57,7 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
+            
             base.BuildOnto(tile);
 
             if (City != null)
@@ -73,6 +80,13 @@ namespace Game.CityMap
             }
 
             return true;
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a wind farm";
+            details = "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
         }
     }
 }

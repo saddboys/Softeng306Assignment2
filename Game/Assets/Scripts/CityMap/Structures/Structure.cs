@@ -5,6 +5,8 @@ namespace Game.CityMap
 {
     public abstract class Structure : InfoBoxSource
     {
+        public MapTile Tile { get; set; }
+
         private Sprite sprite;
 
         /// <summary>
@@ -94,7 +96,7 @@ namespace Game.CityMap
             }
         }
 
-        public void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        public virtual void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             title = "Structure";
             meta = "";

@@ -11,6 +11,5 @@ public class Dialogue
     public Sprite mayor;
     [TextArea(3,10)]
     public string[] sentences;
-
 }
 }

@@ -3,8 +3,12 @@ using UnityEngine.UI;
 
 namespace Game.CityMap
 {
-    public abstract class Structure
+    public abstract class Structure : InfoBoxSource
     {
+        public MapTile Tile { get; set; }
+
+        private Sprite sprite;
+
         /// <summary>
         /// Calculate how much this structure will contribute to the stats, such
         /// as CO2 generated, profits/losses, etc.
@@ -38,7 +42,7 @@ namespace Game.CityMap
             Unrender();
             gameObject = new GameObject();
             SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
-            Sprite sprite = Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[spriteNumber];
+            sprite = Resources.LoadAll<Sprite>("Textures/structures/hexagonObjects_sheet")[spriteNumber];
             renderer.sprite = sprite;
             renderer.sortingLayerName = "Structure";
 
@@ -59,7 +63,7 @@ namespace Game.CityMap
             gameObject = new GameObject();
             
             SpriteRenderer renderer = gameObject.AddComponent<SpriteRenderer>();
-            Sprite sprite = Resources.Load<Sprite>(spritePath);
+            sprite = Resources.Load<Sprite>(spritePath);
             renderer.sprite = sprite;
             renderer.sortingLayerName = "Structure";
             
@@ -90,6 +94,14 @@ namespace Game.CityMap
             {
                 Object.Destroy(gameObject);
             }
+        }
+
+        public virtual void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            title = "Structure";
+            meta = "";
+            sprite = this.sprite;
+            details = "This structure does not appear to do anything special.";
         }
     }
 }

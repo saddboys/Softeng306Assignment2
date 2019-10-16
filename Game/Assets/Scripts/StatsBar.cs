@@ -258,12 +258,12 @@ namespace Game
                 this.value = value;
                 if (change > 0)
                 {
-                    tooltipQueue?.Add("+" + change + suffix + explainer);
+                    tooltipQueue?.Add("+" + change.ToString(format) + suffix + explainer);
                 }
                 else if (change < 0)
                 {
                     change *= -1;
-                    tooltipQueue?.Add("-" + change + suffix + explainer);
+                    tooltipQueue?.Add("-" + change.ToString(format) + suffix + explainer);
                 }
                 ChangeEvent?.Invoke();
             }

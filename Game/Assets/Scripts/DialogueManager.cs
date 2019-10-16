@@ -10,6 +10,8 @@ public class DialogueManager : MonoBehaviour
     public Text dialogueText;
     public Queue<string> sentences;
     public GameObject stats;
+    public GameObject toolbar;
+    public GameObject tempbar;
     public Animator animator;
     // Start is called before the first frame update
     void Start()
@@ -37,29 +39,28 @@ public class DialogueManager : MonoBehaviour
                 EndDialogue();
                 return;
             }
-
-           string sentence = sentences.Dequeue();
+            string sentence = sentences.Dequeue();
             Debug.Log("next conversation!"+ sentence);
            dialogueText.text = sentence;
            StopAllCoroutines();
-        StartCoroutine(TypeSentence(sentence));
+           StartCoroutine(TypeSentence(sentence));
     }
     IEnumerator TypeSentence (string sentence)
-    {
-        dialogueText.text = "";
-        foreach (char letter in sentence.ToCharArray())
-        {
-            dialogueText.text += letter;
-            yield return null;
-        }
-    }
+	{
+		dialogueText.text = "";
+		foreach (char letter in sentence.ToCharArray())
+		{
+			dialogueText.text += letter;
+			yield return null;
+		}
+	}
 
     public void EndDialogue(){
       animator.SetBool("isOpen", false);
-    //GameObject.Find("ToolbarCanvas").SetActive(true);
-    // stats =  GameObject.Find("ToolbarCanvas");
-    // stats.SetActive(true);
-      GameObject.Find("DialogueCanvas").SetActive(false);
+      
+    stats.SetActive(true);
+    toolbar.SetActive(true);
+    GameObject.Find("IntroStory").SetActive(false);
     }
 
 

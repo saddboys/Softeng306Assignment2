@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game.CityMap;
 using UnityEngine;
@@ -33,31 +34,19 @@ namespace Game.Story.Events.RandomEvent
         private List<Stack<Vector3Int>> tempFloodTiles;
        // private Stack<Vector3Int> tempFloodTilePositions;
         private Random random;
+
         public override void OnYesClick()
         {
-            // Create the rain effect
-            //CreateRainEffect();
-            
-
             StoryManager.city.NextTurnEvent += DecreaseWater;
             random = new Random();
             GenerateFloodPositions();
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CircusEvent>());
         }
 
-        private void CreateRainEffect()
-        {
-            GameObject rainObject = new GameObject("rainParticle");
-            ParticleSystem particleSystem = new ParticleSystem();
-        }
-
         private void GenerateFloodPositions()
         {
-            // First generate the first position
-            // TODO: Grab the values for the city class/city map class instead of hard coding it here
             int height = 30;
             int width = 40;
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
             Tilemap map = StoryManager.city.Map.map;
 
             if (tempFloodTiles == null)
@@ -81,8 +70,6 @@ namespace Game.Story.Events.RandomEvent
                 tempFloodTiles.Add(newStack);
                 
                 GenerateSurroundingWater(100,i);
-                
-                
             }
         }
 
@@ -136,7 +123,6 @@ namespace Game.Story.Events.RandomEvent
                 StoryManager.city.NextTurnEvent -= DecreaseWater;
                 return;
             }
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
             Tilemap map = StoryManager.city.Map.map;
             for (int i = 0; i < tempFloodTiles.Count; i++)
             {
@@ -157,15 +143,10 @@ namespace Game.Story.Events.RandomEvent
 
         public override void GenerateScene(GameObject canvas)
         {
+            StoryManager.city.NextTurnEvent += StopRain;
             GameObject customParticleSystem = new GameObject("CustomParticleSystem");
-            
             customParticleSystem.transform.SetParent(StoryManager.city.Map.gameObject.transform,false);
             customParticleSystem.transform.position = new Vector3(10,14,32);
-//            Quaternion quaternion = new Quaternion();
-//            quaternion.x = 0;
-//            quaternion.y = 0;
-//            quaternion.z = 0.2f;
-//            quaternion.w = 0;
 
             Quaternion quaternion = Quaternion.Euler(0, 0, -20);
             customParticleSystem.transform.rotation = quaternion;
@@ -191,8 +172,20 @@ namespace Game.Story.Events.RandomEvent
             shapeModule.shapeType = ParticleSystemShapeType.SingleSidedEdge;
             shapeModule.radius = 25;
             shapeModule.rotation = new Vector3(0,0,180);
-            
+        }
 
+        private void StopRain()
+        {
+            ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem")
+                .GetComponent<ParticleSystem>();
+            particles.Stop();
+            StartCoroutine(StoppingRain());
+        }
+
+        IEnumerator StoppingRain()
+        {
+            yield return new WaitForSeconds(2);
+            Destroy(StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem").gameObject);
         }
     }
 }

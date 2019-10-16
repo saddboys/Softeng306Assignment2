@@ -22,12 +22,16 @@ namespace Game.CityMap
         public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
         private MapTile previousHoveredTile;
 
+        // Camera to reposition after rotation.
+        [SerializeField]
+        private GameObject camera;
+
         public Tilemap map;
         public GameObject parent;
-        public Text display;
         private int[,] terrainMap;
-        public int HEIGHT =  30;
         public int WIDTH = 40;
+        public int HEIGHT = 30;
+        private List<int[]> occupiedBiomSpots = new List<int[]>();
         Random random = new Random();
 
 
@@ -52,6 +56,10 @@ namespace Game.CityMap
         {
             CheckTileClick();
             CheckTileHover();
+            if (Input.GetKeyDown(KeyCode.R))
+            {
+                Rotate(true);
+            }
         }
 
         private void CheckTileHover()
@@ -132,16 +140,26 @@ namespace Game.CityMap
         private void Generate()
         {
             Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
 
             if (terrainMap == null)
             {
                 terrainMap = new int[WIDTH, HEIGHT];
             }
+
+            // create biomes
+            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
+
+            createBiome(Terrain.TerrainTypes.Desert);
+            for (int i = 0; i < numBiomes; i++) {
+                createBiome(Terrain.TerrainTypes.Ocean);
+            }
             
-            for (int j = HEIGHT; j >= 0; j--)
+
+
+            // Populate none biom areas with grass
+            for (int i = 0; i < WIDTH; i++)
             {
-                for (int i = 0; i < WIDTH; i++)             
+                for (int j = 0; j < HEIGHT; j++)
                 {
                     MapTile tile = ScriptableObject.CreateInstance<MapTile>();
 
@@ -151,15 +169,15 @@ namespace Game.CityMap
                     
                     
                     int value = random.Next(0,100);
-                    
-                    // Randomly generate the map with tiles (although the tiles are the same right now)
-                    if (value < 20)
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
-                    }
-                    else if (value < 40)
+                    int[] pos = new int[2];
+                    pos[0] = i;
+                    pos[1] = j;
+                    if (!TileOccupied(occupiedBiomSpots, pos))
                     {
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                        SetTileTo(vector, tile);
+                        // Refresh the tile whenever its sprite changes.
+                        tile.SpriteChange += () => map.RefreshTile(vector);
                     }
                     else if (value < 50)
                     {
@@ -194,19 +212,23 @@ namespace Game.CityMap
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
             {
+                new MountainFactory(),
+                new MountainFactory(), 
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
                 new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
+                new ForestFactory(),
                 new FactoryFactory(),
                 new FactoryFactory(),
-                new ParkFactory(),
-                new ParkFactory(),
                 new PowerPlantFactory(),
             };
 
@@ -226,9 +248,147 @@ namespace Game.CityMap
                 if (randomFactory.CanBuildOnto(tile, out _))
                 {
                     randomFactory.BuildOnto(tile);
-                    Debug.Log("got here");
                 }
             }
+
+            // Start off at an angle to further enhance 2.5D effect.
+            Rotate(true);
+        }
+        
+        /// <summary>
+        /// creates a biome for a given type of terrain
+        /// </summary>
+        private void createBiome(Terrain.TerrainTypes terrain)
+        {
+            // calculate biome half length proportional to the map size
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+            int biomeHalfLength = random.Next(biomeLenghtValue - 4, biomeLenghtValue + 4);
+
+            // random anchor spot for biome
+            // index 0 for x and 1 and y coordinate
+            int[] anchor = new int[2];
+            anchor[0] = random.Next(0, WIDTH);
+            anchor[1] = random.Next(0, HEIGHT);
+            
+            while (TileOccupied(occupiedBiomSpots, anchor))
+            {
+                anchor[0] = random.Next(0, WIDTH);
+                anchor[1] = random.Next(0, HEIGHT);
+            }
+            Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
+
+            // adding anchor to screen
+            MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
+            Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
+            Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
+
+            anchorTile.Canvas = parent;
+            anchorTile.ScreenPosition = anchorMappedVector;
+
+            anchorTile.Terrain = new Terrain(terrain);
+
+            growBoime(anchor, biomeHalfLength, terrain);
+
+            // create beach biom if the biome type is Ocean
+            if (terrain.Equals(Terrain.TerrainTypes.Ocean))
+            {
+                addBeachBiome(anchor, biomeHalfLength);
+            }
+            
+        }
+
+        /// <summary>
+        /// grows a biome
+        /// </summary>
+        private void growBoime(int[] anchor, int biomHalfLength, Terrain.TerrainTypes terrain)
+        {
+            // constants that will be used further down the line
+            float k = Mathf.Sqrt(Mathf.Pow(biomHalfLength, 2) * 2);
+            float a = (float) 2.0f / Mathf.Log10(Mathf.Pow(k, 2) - 2.0f);
+
+            // growing biom
+            for (int i = 0; i < biomHalfLength * 2; i++) 
+            {
+                for (int j = 0; j < biomHalfLength * 2; j++)
+                {
+                    // current position array where index 0 is X and index 1 is Y coordinate
+                    int[] curPos = new int[2];
+                    curPos[0] = anchor[0] - biomHalfLength + i;
+                    curPos[1] = anchor[1] - biomHalfLength + j;
+
+                    // check if X and Y values are within the map
+                    if (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
+                    {
+                        MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+                        // A vector used for hex position
+                        Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
+                        // Find the real position (the position on the screen)
+                        Vector3 mappedVector = map.CellToWorld(vector);
+
+                        tile.Canvas = parent;
+                        tile.ScreenPosition = mappedVector;
+
+                        // check if terrain is vacant
+                        if (!TileOccupied(occupiedBiomSpots, curPos))
+                        {
+                            // Debug.Log("Cur: X: " + curX + ", Y: " + curY);
+
+                            // weighted random terrain allocation depending on distance from anchor
+                            int value = random.Next(0, 100);
+
+                            // weighting is done in such a that:
+                            // P = (k^2 - d^2)^a,
+                            //    where:
+                            //       P = probability of the biome tile being set
+                            //       k = a constant (calculated earlier before the nested for loops)
+                            //       d = absolute distance between the anchor and any potential biome tile
+                            //       a = a constant (calculated earlier before the nested for loops)
+                            //
+                            // the formula satisfies the two equations below:
+                            //    100 = (k^2 - 2)^a, this ensures that the biome is atleast 3x3
+                            //    0 = (k^2 - d^2)^a, where d is a distance for an arbitrary square just outside the biome half length
+                            //
+                            // so if biome half length is 7 then k = 11.3 and a = 0.484
+                            float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - curPos[0], 2) + Mathf.Pow(anchor[1] - curPos[1], 2));
+                            double prob = Mathf.Pow(Mathf.Pow(k, 2) - Mathf.Pow(dist, 2), a);
+                            if (value < prob)
+                            {
+                                occupiedBiomSpots.Add(curPos);
+                                tile.Terrain = new Terrain(terrain);
+                                SetTileTo(vector, tile);
+                                // Refresh the tile whenever its sprite changes.
+                                tile.SpriteChange += () => map.RefreshTile(vector);
+                            }
+                        }
+                    } 
+                }
+            }
+        }
+
+        /// <summary>
+        /// updates the beach biome by growing the biome further beach tiles
+        /// </summary>
+        private void addBeachBiome(int[] anchor, int curBiomHalfLength)
+        {
+            int beachBiomeHalfLength = curBiomHalfLength + 3;
+            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Beach);
+        }
+
+        /// <summary>
+        /// Checks if the given position (int[2]) is in the given the list of int[2]
+        /// This is to check if a tile is already occupied
+        /// </summary>
+        /// <returns> Boolean if a position is occupied
+        private Boolean TileOccupied(List<int[]> occupiedPosList, int[] pos)
+        {
+            foreach(int[] occupiedPos in occupiedPosList)
+            {
+                if (occupiedPos[0].Equals(pos[0]) && occupiedPos[1].Equals(pos[1]))
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -252,8 +412,13 @@ namespace Game.CityMap
 
         public void Regenerate()
         {
-            foreach (var t in Tiles)
+            foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
+                var t = map.GetTile<MapTile>(pos);
+
+                // Clear tile from the tilemap.
+                map.SetTile(pos, null);
+
                 if (t == null)
                 {
                     continue;
@@ -263,7 +428,95 @@ namespace Game.CityMap
                 // Remove tile from object graph.
                 Destroy(t);
             }
+
+            occupiedBiomSpots.Clear();
+
             Generate();
+        }
+
+        public void Rotate(bool clockwise)
+        {
+            // Find tile location that camera is currently centred at.
+            var cameraFocus = map.WorldToCell(camera.transform.position);
+            var cameraZPos = camera.transform.position.z;
+
+            var centre = map.cellBounds.min + map.cellBounds.max;
+            centre.x /= 2;
+            centre.y /= 2;
+            centre.z = 0;
+            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+            List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
+            foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
+            {
+                tiles.Add((pos, map.GetTile<MapTile>(pos)));
+
+                // Remove the tile at the old position.
+                map.SetTile(pos, null);
+            }
+            foreach (var (pos, tile) in tiles)
+            {
+                SetTileTo(RotateCellPosition(pos, clockwise), tile);
+            }
+
+            // Shrink bounds to where tiles exist.
+            map.CompressBounds();
+
+            // Recenter camera to previous tile.
+            Vector3 newPos = map.CellToWorld(RotateCellPosition(cameraFocus, clockwise));
+            newPos.z = cameraZPos;
+            camera.transform.position = newPos;
+        }
+
+        private Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
+        {
+            // Transform into hexagonal coordinate system.
+            var hexCoords = new Vector3Int
+            {
+                x = pos.x - (pos.y - (pos.y & 1)) / 2,
+                y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
+                z = pos.y,
+            };
+
+            // Rotate in the hexagonal coordinate system.
+            if (clockwise)
+            {
+                hexCoords = new Vector3Int
+                {
+                    x = -hexCoords.z,
+                    y = -hexCoords.x,
+                    z = -hexCoords.y,
+                };
+            }
+            else
+            {
+                hexCoords = new Vector3Int
+                {
+                    x = -hexCoords.y,
+                    y = -hexCoords.z,
+                    z = -hexCoords.x,
+                };
+            }
+
+            // Transform back to grid's rectangular coordinate system and apply.
+            return new Vector3Int
+            {
+                x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
+                y = hexCoords.z,
+                z = 0,
+            };
+        }
+
+        private void SetTileTo(Vector3Int position, MapTile tile)
+        {
+            map.SetTile(position, tile);
+            if (tile != null)
+            {
+                tile.ScreenPosition = map.CellToWorld(position);
+                tile.Canvas = parent;
+
+                // Refresh the tile whenever its sprite changes.
+                tile.SpriteChange += () => map.RefreshTile(position);
+            }
         }
 
         private float NextNormalRandom()

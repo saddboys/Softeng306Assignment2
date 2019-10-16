@@ -1,6 +1,7 @@
 ﻿using Game;
 using Game.CityMap;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Game.CityMap
 {
@@ -28,9 +29,25 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.2f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
+
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
+            }
+            else
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.1f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
+            }
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "House";
         }
     }
 
@@ -92,6 +109,13 @@ namespace Game.CityMap
                 City.Stats.Population += 4;
                 City.Stats.Reputation -= 1;
             }
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a house";
+            details = "Citizens of your town need a place to live. Click on a tile to build a house.";
         }
     }
 }

@@ -41,7 +41,6 @@ namespace Story.Events.RandomEvent
         {
             Random random = new Random();
             MapTile[] tiles = StoryManager.city.Map.Tiles;
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
             foreach (var tile in tiles)
             {
                 // Randomly dry up patches of water

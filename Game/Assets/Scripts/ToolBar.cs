@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using Game.CityMap;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using System;
+
 namespace Game
 {
     public class ToolBar : MonoBehaviour
@@ -12,6 +14,8 @@ namespace Game
         [SerializeField] private Toggle[] toggles;
         [SerializeField] private GameObject popupInfo;
         private int popupInfoCount = 0;
+
+        private InfoBox infoBox;
 
         public StructureFactory CurrentFactory
         {
@@ -23,6 +27,7 @@ namespace Game
                 {
                     Ghost = currentFactory.CreateGhost();
                 }
+                infoBox.SetInfo(currentFactory);
             }
         }
         private StructureFactory currentFactory;
@@ -33,7 +38,7 @@ namespace Game
             get { return ghost; }
             set
             {
-                ghost?.Unrender();
+                HideGhostOnTile(ghostTile);
                 ghost = value;
                 if (ghostTile != null)
                 {
@@ -58,7 +63,7 @@ namespace Game
                 new DockFactory(city),
                 new ForestFactory(city), 
                 new WindFarmFactory(city), 
-                
+                new SolarFarmFactory(city), 
                 //Always Last
                 new DemolishFactory(city),
             };
@@ -85,14 +90,27 @@ namespace Game
                 addToggleHandler(toggles[i], factories[i]);
                 if (factories[i].Sprite != null)
                 {
+                    Image[] images = toggles[i].GetComponentsInChildren<Image>();
+                    if (images.Length < 2)
+                    {
+                        // Checkmark is missing. Add our own.
+                        var checkedObject = new GameObject();
+                        images = new Image[2]
+                        {
+                            images[0],
+                            checkedObject.AddComponent<Image>(),
+                        };
+                        toggles[i].graphic = images[1];
+                        images[1].canvasRenderer.SetAlpha(0);
+                    }
+
                     // Blue background when isOn.
-                    Image checkedImage = toggles[i]
-                        .GetComponentsInChildren<Image>()[1];
+                    Image checkedImage = images[1];
                     checkedImage.color = new Color(0.6f, 0.8f, 1.0f);
-                    checkedImage.sprite = toggles[i].GetComponentsInChildren<Image>()[0].sprite;
+                    checkedImage.sprite = images[0].sprite;
                     checkedImage.type = Image.Type.Sliced;
                     RectTransform transform = checkedImage.GetComponent<RectTransform>();
-                    transform.SetParent(toggles[i].GetComponentInChildren<Image>().transform);
+                    transform.SetParent(images[0].transform);
                     transform.anchorMin = new Vector2(0, 0);
                     transform.anchorMax = new Vector2(1, 1);
                     transform.offsetMin = new Vector2(0, 0);
@@ -116,7 +134,7 @@ namespace Game
                     image.sprite = factories[i].Sprite;
                     image.color = new Color(1.0f, 1.0f, 1.0f, 0.7f);
                     transform = buttonSprite.GetComponent<RectTransform>();
-                    transform.SetParent(toggles[i].GetComponentInChildren<Image>().transform);
+                    transform.SetParent(images[0].transform);
                     transform.anchorMin = new Vector2(0, 0);
                     transform.anchorMax = new Vector2(1, 1);
                     transform.offsetMin = new Vector2(2, 2);
@@ -131,6 +149,21 @@ namespace Game
             popupInfo.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
             popupInfo.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            infoBox = new InfoBox(gameObject.transform.parent.gameObject);
+        }
+
+        private void Update()
+        {
+            // Keys 1 to n to select the nth factory.
+            if (Input.anyKeyDown && Input.inputString.Length > 0)
+            {
+                char c = Input.inputString[0];
+                int x = c - '1';
+                if (x < 0 || x >= factories.Length) return;
+                CurrentFactory = factories[x];
+                toggles[x].isOn = true;
+            }
         }
 
         private void UpdateToggleEnabled()
@@ -158,17 +191,21 @@ namespace Game
                     CurrentFactory = null;
                 }
             });
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
+            var trigger = toggle.gameObject.AddComponent<EventTrigger>();
+            var enterEntry = new EventTrigger.Entry();
+            enterEntry.eventID = EventTriggerType.PointerEnter;
+            enterEntry.callback.AddListener((data) => infoBox.SetInfo(factory));
+            var exitEntry = new EventTrigger.Entry();
+            exitEntry.eventID = EventTriggerType.PointerExit;
+            exitEntry.callback.AddListener((data) => infoBox.SetInfo(currentFactory));
+            trigger.triggers.Add(enterEntry);
+            trigger.triggers.Add(exitEntry);
         }
 
         void OnNotify(MapTile tile) {
             if (CurrentFactory == null)
             {
+                infoBox.SetInfo(tile.Structure);
                 return;
             }
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
@@ -205,11 +242,18 @@ namespace Game
 
         private void ShowGhostOnTile(MapTile tile)
         {
-            if (CurrentFactory == null) return;
+            ghostTile = tile;
+
+            if (CurrentFactory == null)
+            {
+                tile.HandleMouseEnter();
+                return;
+            }
             if (!CurrentFactory.CanBuildOnto(tile, out _)) return;
             tile.HandleMouseEnter();
 
             if (Ghost == null) return;
+            Ghost.Tile = tile;
             Ghost.RenderOnto(tile.Canvas, tile.ScreenPosition);
             foreach (var renderer in Ghost.GameObject.GetComponentsInChildren<SpriteRenderer>())
             {
@@ -221,7 +265,7 @@ namespace Game
 
         private void HideGhostOnTile(MapTile tile)
         {
-            tile.HandleMouseLeave();
+            tile?.HandleMouseLeave();
             Ghost?.Unrender();
         }
     }

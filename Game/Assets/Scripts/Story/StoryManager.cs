@@ -122,26 +122,26 @@ namespace Game.Story
             //     CreatePopUp();   
             // }
 
-           if (city.Turn == storyQueue.Peek())
-           {
-               // Create new story event here
-               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-               // Get rid of the first thing in the queue
-               storyQueue.Dequeue();
-               CreateDialog();
-               //CreatePopUp();
-           }
-           else
-           {
-               // Events have a 10% chance of popping up
-               if (random.Next(0, 10) == 1)
-               {
-                   EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-                   // Randomly spawn events from the event pool
-                   storyEvent = factory.CreateRandomEvent(randomEvent);
-                   CreatePopUp();
-               }
-           }
+          if (city.Turn == storyQueue.Peek())
+          {
+              // Create new story event here
+              storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+              // Get rid of the first thing in the queue
+              storyQueue.Dequeue();
+              CreateDialog();
+              //CreatePopUp();
+          }
+          else
+          {
+              // Events have a 10% chance of popping up
+              if (random.Next(0, 10) == 1)
+              {
+                  EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+                  // Randomly spawn events from the event pool
+                  storyEvent = factory.CreateRandomEvent(randomEvent);
+                  CreatePopUp();
+              }
+          }
         }
 
         private void CreatePopUp()

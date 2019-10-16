@@ -60,7 +60,7 @@ public class DialogueManager : MonoBehaviour
       
     stats.SetActive(true);
     toolbar.SetActive(true);
-    GameObject.Find("DialogueCanvas").SetActive(false);
+    GameObject.Find("IntroStory").SetActive(false);
     }
 
 

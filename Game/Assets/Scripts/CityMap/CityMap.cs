@@ -389,11 +389,11 @@ namespace Game.CityMap
         {
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
+                var t = map.GetTile<MapTile>(pos);
+
                 // Clear tile from the tilemap.
                 map.SetTile(pos, null);
-            }
-            foreach (var t in Tiles)
-            {
+
                 if (t == null)
                 {
                     continue;
@@ -403,6 +403,9 @@ namespace Game.CityMap
                 // Remove tile from object graph.
                 Destroy(t);
             }
+
+            occupiedBiomSpots.Clear();
+
             Generate();
         }
 

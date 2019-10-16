@@ -36,9 +36,7 @@ namespace Game.Story
             factory = new EventFactory();
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
-            // Create a queue for turn number of the story events
-            storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
-            NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
+            ResetStory();
             city.NextTurnEvent += HandleTurnEvent;
             
             // Generate the event pool
@@ -56,6 +54,7 @@ namespace Game.Story
 
         private void ResetStory()
         {
+            // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
             NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
         }

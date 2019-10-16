@@ -462,6 +462,9 @@ namespace Game.CityMap
                 };
                 SetTileTo(rectCoords, tile);
             }
+
+            // Shrink bounds to where tiles exist.
+            map.CompressBounds();
         }
 
         private void SetTileTo(Vector3Int position, MapTile tile)

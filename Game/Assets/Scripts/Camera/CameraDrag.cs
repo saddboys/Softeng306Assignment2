@@ -6,11 +6,6 @@ public class CameraDrag : MonoBehaviour
     public float dragSpeed;
     private Vector3 dragOrigin;
 
-    private float minX = -5f;
-    private float maxX = 5f;
-    private float minY = -5f;
-    private float maxY = 5f;
-
     private bool dragEnabled = false;
 
     [SerializeField]

@@ -180,7 +180,7 @@ namespace Game.Story.Events.RandomEvent
 
         private void StopRain()
         {
-            ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem")
+            ParticleSystem particles = StoryManager.city.Map.map.gameObject.transform.Find("CustomParticleSystem")
                 .GetComponent<ParticleSystem>();
             particles.Stop();
             StartCoroutine(StoppingRain());

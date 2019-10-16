@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Game.CityMap;
 using Game.Story;
@@ -24,6 +25,8 @@ namespace Story.Events.RandomEvent
             get { return Resources.LoadAll<Sprite>("EventSprites/hurricane")[0]; }
         }
 
+        private Coroutine coroutine;
+
         public override Queue<string> Dialogues { get; }
 
         private const string TITLE = "Hurricane";
@@ -31,24 +34,36 @@ namespace Story.Events.RandomEvent
         public override void OnYesClick()
         {
             // Destroy random buildings
-            DestroyBuildings();
+            coroutine = StartCoroutine(DestroyBuildings());
             // Happiness goes down
             StoryManager.city.Stats.Reputation -= 10;
         }
 
-        private void DestroyBuildings()
+        IEnumerator DestroyBuildings()
         {
-            Random random = new Random();
+            StoryManager.city.NextTurnEvent += StopHurricane;
             MapTile[] tiles = StoryManager.city.Map.Tiles;
             foreach (var tile in tiles)
             {
-                if (tile.Structure != null && random.Next(0,5) == 1)
+
+                if (tile.Structure != null)
                 {
-                    tile.Structure.Unrender();
-                    StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
-                    tile.Structure = null;
+                    yield return new WaitForSeconds(3);
+                    new DemolishFactory(StoryManager.city).BuildOnto(tile);
+                    
                 }
             }
         }
+
+        private void StopHurricane()
+        {
+            StopCoroutine(coroutine);
+            ParticleSystem particles = StoryManager.city.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle").gameObject
+                .GetComponent<ParticleSystem>();
+             particles.Stop();
+             Destroy(particles);
+        }
+        
+        
     }
 }

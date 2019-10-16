@@ -27,8 +27,17 @@ namespace Game.CityMap
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
+            }
+            else
+            {           
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
+            }
 
             // Render smoke.
             // Now the fun begins...
@@ -109,6 +118,12 @@ namespace Game.CityMap
             renderer.sortingLayerName = "Structure";
             renderer.sortingOrder = 1000;
         }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out details);
+            title = "Factory";
+        }
     }
 
     public class FactoryFactory : StructureFactory
@@ -172,6 +187,11 @@ namespace Game.CityMap
             }
         }
 
-
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a factory";
+            details = "Citizens of your town need a place to work. Click on a tile to build a factory.";
+        }
     }
 }

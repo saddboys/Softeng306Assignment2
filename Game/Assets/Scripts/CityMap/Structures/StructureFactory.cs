@@ -130,7 +130,7 @@ namespace Game.CityMap
             return Create();
         }
 
-        public void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        public virtual void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             title = "Build a structure";
             meta = "Costs " + Cost.ToString("C");

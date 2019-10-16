@@ -29,10 +29,15 @@ namespace Game.CityMap
             {
                 return false;
             }
-
             if (tile.Structure == null)
             {
                 reason = "Nothing to demolish here";
+                return false;
+            } 
+            
+            if (tile.Structure.GetType() == typeof(Mountain))
+            {
+                reason = "Cannot demolish mountains";
                 return false;
             }
 
@@ -46,9 +51,16 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.AddContribution(tile.Structure.GetStatsChangeOnDemolish());
-            }
+            } 
 
             base.BuildOnto(tile);
+        }
+
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Demolish a structure";
+            details = "Be careful with what you destroy, as your actions cannot be undone. Click on a tile if you are sure.";
         }
     }
 }

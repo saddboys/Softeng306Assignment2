@@ -6,12 +6,10 @@ public class CameraDrag : MonoBehaviour
     public float dragSpeed;
     private Vector3 dragOrigin;
 
-    private float minX = -5f;
-    private float maxX = 5f;
-    private float minY = -5f;
-    private float maxY = 5f;
-
     private bool dragEnabled = false;
+
+    [SerializeField]
+    private Game.CityMap.CityMap map;
 
     void Update()
     {
@@ -26,18 +24,29 @@ public class CameraDrag : MonoBehaviour
             dragEnabled = true;
         }
 
+        Vector2 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
+        Vector2 move = -pos * dragSpeed;
+
         if (!Input.GetMouseButton(0) || !dragEnabled)
         {
-            return;
+            move *= 0;
         }
- 
-        Vector2 pos = Camera.main.ScreenToViewportPoint(Input.mousePosition - dragOrigin);
-        Vector2 move = new Vector2(-pos.x * dragSpeed, -pos.y * dragSpeed);
+
+        // Pan camera via keyboard arrow keys.
+        Vector2 screenKeyboardMove = new Vector2();
+        screenKeyboardMove.x = (Input.GetKey(KeyCode.RightArrow) ? 1 : 0) - (Input.GetKey(KeyCode.LeftArrow) ? 1 : 0);
+        screenKeyboardMove.y = (Input.GetKey(KeyCode.UpArrow) ? 1 : 0) - (Input.GetKey(KeyCode.DownArrow) ? 1 : 0);
+        move += screenKeyboardMove * 0.1f;
+
         transform.Translate(move, Space.World);
-        
+
+        Bounds mapBounds = map.map.localBounds;
+        mapBounds.min = map.map.LocalToWorld(mapBounds.min);
+        mapBounds.max = map.map.LocalToWorld(mapBounds.max);
+
         Vector3 v3 = transform.position;
-        v3.x = Mathf.Clamp(v3.x, minX, maxX);
-        v3.y = Mathf.Clamp(v3.y, minY, maxY);
+        v3.x = Mathf.Clamp(v3.x, mapBounds.min.x, mapBounds.max.x);
+        v3.y = Mathf.Clamp(v3.y, mapBounds.min.y, mapBounds.max.y);
         transform.position = v3;
     }
     

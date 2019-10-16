@@ -3258,6 +3258,7 @@ GameObject:
   - component: {fileID: 712698429}
   - component: {fileID: 712698431}
   - component: {fileID: 712698430}
+  - component: {fileID: 712698432}
   m_Layer: 5
   m_Name: ToolbarLabel
   m_TagString: Untagged
@@ -3324,6 +3325,20 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 712698428}
   m_CullTransparentMesh: 0
+--- !u!114 &712698432
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 712698428}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ccc5ccdf666a4cacb05b440cc1993ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timer: 0
+  slider: {fileID: 872495901}
 --- !u!1 &722780985
 GameObject:
   m_ObjectHideFlags: 0

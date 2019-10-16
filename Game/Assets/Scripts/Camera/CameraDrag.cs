@@ -13,6 +13,9 @@ public class CameraDrag : MonoBehaviour
 
     private bool dragEnabled = false;
 
+    [SerializeField]
+    private Game.CityMap.CityMap map;
+
     void Update()
     {
         if (Input.GetMouseButtonUp(0))
@@ -41,10 +44,14 @@ public class CameraDrag : MonoBehaviour
         move += screenKeyboardMove * 0.1f;
 
         transform.Translate(move, Space.World);
-        
+
+        Bounds mapBounds = map.map.localBounds;
+        mapBounds.min = map.map.LocalToWorld(mapBounds.min);
+        mapBounds.max = map.map.LocalToWorld(mapBounds.max);
+
         Vector3 v3 = transform.position;
-        v3.x = Mathf.Clamp(v3.x, minX, maxX);
-        v3.y = Mathf.Clamp(v3.y, minY, maxY);
+        v3.x = Mathf.Clamp(v3.x, mapBounds.min.x, mapBounds.max.x);
+        v3.y = Mathf.Clamp(v3.y, mapBounds.min.y, mapBounds.max.y);
         transform.position = v3;
     }
     

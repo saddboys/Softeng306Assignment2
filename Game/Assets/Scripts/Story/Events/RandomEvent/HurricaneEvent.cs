@@ -73,7 +73,7 @@ namespace Story.Events.RandomEvent
             StoryManager.city.NextTurnEvent += StopWind;
             GameObject customParticleSystem = new GameObject("HurricaneParticle");
             customParticleSystem.transform.SetParent(StoryManager.city.Map.gameObject.transform,false);
-            customParticleSystem.transform.position = new Vector3(0,0,32);
+            customParticleSystem.transform.position = new Vector3(0,0,-2);
 
             Quaternion quaternion = Quaternion.Euler(0, 0, 0);
             customParticleSystem.transform.rotation = quaternion;
@@ -83,7 +83,8 @@ namespace Story.Events.RandomEvent
             ParticleSystem.MainModule mainParticle = particles.main;
             mainParticle.startLifetime = 2f;
             mainParticle.startSpeed = 0;
-            mainParticle.maxParticles = 10;
+            mainParticle.startSize =  0.5f;
+            mainParticle.maxParticles = 20;
             
             
             ParticleSystem.TrailModule trailMode = particles.trails;
@@ -100,17 +101,17 @@ namespace Story.Events.RandomEvent
             emissionModule.rateOverTime = 3;
             ParticleSystemRenderer particleRenderer =  particles.GetComponent<ParticleSystemRenderer>();
             particleRenderer.sortingLayerName = "Terrain";
-            var material = Resources.Load<Material>("wind_head");
-            material.shader =  Shader.Find("Particles/Alpha Blended Premultiply");
-            particleRenderer.material = material;
+//            var material = Resources.Load<Material>("wind_head");
+//            material.shader =  Shader.Find("Particles/Alpha Blended Premultiply");
+//            particleRenderer.material = material;
             
             particleRenderer.trailMaterial =  Resources.Load<Material>("Wind");
             
-            ParticleSystem.TextureSheetAnimationModule textureSheet =
-                particles.textureSheetAnimation;
-            textureSheet.enabled = true;
-            textureSheet.mode = ParticleSystemAnimationMode.Sprites;
-            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/circle"));
+//            ParticleSystem.TextureSheetAnimationModule textureSheet =
+//                particles.textureSheetAnimation;
+//            textureSheet.enabled = true;
+//            textureSheet.mode = ParticleSystemAnimationMode.Sprites;
+//            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/circle"));
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
             shapeModule.shapeType = ParticleSystemShapeType.Cone;
@@ -172,11 +173,7 @@ namespace Story.Events.RandomEvent
             sizeOverLifetimeModule.x =  new ParticleSystem.MinMaxCurve(1, velocityCurveX);
             sizeOverLifetimeModule.y =  new ParticleSystem.MinMaxCurve(0, velocityCurveY);
             sizeOverLifetimeModule.z =  new ParticleSystem.MinMaxCurve(0, velocityCurveZ);
-
-
         }
-        
-        
 
         private void StopWind()
         {

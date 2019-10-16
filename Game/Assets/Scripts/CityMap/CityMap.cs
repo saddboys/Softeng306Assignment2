@@ -27,8 +27,8 @@ namespace Game.CityMap
         public Text display;
         private int[,] terrainMap;
         private int WIDTH = 40;
-        private int HEIGHT = 30;
-        private List<int[]> occupiedBiomSpots = new List<int[]>();
+        private int HEIGHT = 40;
+        private Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots = new Dictionary<int[], Terrain.TerrainTypes>();
         Random random = new Random();
 
 
@@ -148,7 +148,7 @@ namespace Game.CityMap
 
             // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
-
+            Debug.Log("Creating biomes");
             createBiome(Terrain.TerrainTypes.Desert);
             for (int i = 0; i < numBiomes; i++) {
                 createBiome(Terrain.TerrainTypes.Ocean);
@@ -157,6 +157,7 @@ namespace Game.CityMap
 
 
             // Populate none biom areas with grass
+            Debug.Log("Creating non biomes");
             for (int i = 0; i < WIDTH; i++)
             {
                 for (int j = 0; j < HEIGHT; j++)
@@ -165,16 +166,25 @@ namespace Game.CityMap
 
                     // A vector used for hex position
                     Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
-                    // Find the real position (the position on the screen)
-                    
-                    
-                    int value = random.Next(0,100);
+
                     int[] pos = new int[2];
                     pos[0] = i;
                     pos[1] = j;
-                    if (!TileOccupied(occupiedBiomSpots, pos))
+                    if (getTileTerrain(pos).Equals(Terrain.TerrainTypes.NotSet))
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                        if (nextToOcean(pos))
+                        {
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
+                        }
+                        else if (surroundedByDessert(pos))
+                        {
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
+                        }
+                        else
+                        {
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                        }
+
                         SetTileTo(vector, tile);
                         // Refresh the tile whenever its sprite changes.
                         tile.SpriteChange += () => map.RefreshTile(vector);
@@ -222,7 +232,6 @@ namespace Game.CityMap
                 if (randomFactory.CanBuildOnto(tile, out _))
                 {
                     randomFactory.BuildOnto(tile);
-                    Debug.Log("got here");
                 }
             }
 
@@ -245,12 +254,11 @@ namespace Game.CityMap
             anchor[0] = random.Next(0, WIDTH);
             anchor[1] = random.Next(0, HEIGHT);
             
-            while (TileOccupied(occupiedBiomSpots, anchor))
+            while (!getTileTerrain(anchor).Equals(Terrain.TerrainTypes.NotSet))
             {
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
-            Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -304,7 +312,7 @@ namespace Game.CityMap
                         tile.ScreenPosition = mappedVector;
 
                         // check if terrain is vacant
-                        if (!TileOccupied(occupiedBiomSpots, curPos))
+                        if (getTileTerrain(curPos).Equals(Terrain.TerrainTypes.NotSet))
                         {
                             // Debug.Log("Cur: X: " + curX + ", Y: " + curY);
 
@@ -328,7 +336,7 @@ namespace Game.CityMap
                             double prob = Mathf.Pow(Mathf.Pow(k, 2) - Mathf.Pow(dist, 2), a);
                             if (value < prob)
                             {
-                                occupiedBiomSpots.Add(curPos);
+                                occupiedBiomSpots[curPos] = terrain;
                                 tile.Terrain = new Terrain(terrain);
                                 SetTileTo(vector, tile);
                                 // Refresh the tile whenever its sprite changes.
@@ -350,20 +358,93 @@ namespace Game.CityMap
         }
 
         /// <summary>
-        /// Checks if the given position (int[2]) is in the given the list of int[2]
-        /// This is to check if a tile is already occupied
+        /// checks whether the vacant tile is next to an ocean tile
+        /// if yes then it the vacant tile will be a beach tile
         /// </summary>
-        /// <returns> Boolean if a position is occupied
-        private Boolean TileOccupied(List<int[]> occupiedPosList, int[] pos)
+        /// <returns> Boolean if the vacant tile is next to an ocean tile
+        private Boolean nextToOcean(int[] pos)
         {
-            foreach(int[] occupiedPos in occupiedPosList)
+            // gets adjacent positions
+            // index
+            //    0 = north
+            //    1 = east
+            //    2 = south
+            //    3 = west
+            int[,] adjPos = new int[4, 2];
+            adjPos[0, 0] = pos[0];
+            adjPos[0, 1] = pos[1] - 1;
+            adjPos[1, 0] = pos[0] + 1;
+            adjPos[1, 1] = pos[1];
+            adjPos[2, 0] = pos[0];
+            adjPos[2, 1] = pos[1] + 1;
+            adjPos[3, 0] = pos[0] - 1;
+            adjPos[3, 1] = pos[1];
+
+            for (int i = 0; i < 4; i++)
             {
-                if (occupiedPos[0].Equals(pos[0]) && occupiedPos[1].Equals(pos[1]))
+                int[] curPos = new int[2];
+                curPos[0] = adjPos[i, 0];
+                curPos[1] = adjPos[i, 1];
+                if (getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Ocean))
                 {
                     return true;
                 }
             }
             return false;
+        }
+
+        /// <summary>
+        /// checks whether the vacant tile is completely surrounded by sand tiles
+        /// if all 4 tiles are, then the vacant tile will be sand
+        /// </summary>
+        /// <returns> Boolean if the vacant tile is completely surrounded by sand tiles
+        private Boolean surroundedByDessert(int[] pos)
+        {
+            // gets adjacent positions
+            // index
+            //    0 = north
+            //    1 = east
+            //    2 = south
+            //    3 = west
+            int[,] adjPos = new int[4, 2];
+            adjPos[0, 0] = pos[0];
+            adjPos[0, 1] = pos[1] - 1;
+            adjPos[1, 0] = pos[0] + 1;
+            adjPos[1, 1] = pos[1];
+            adjPos[2, 0] = pos[0];
+            adjPos[2, 1] = pos[1] + 1;
+            adjPos[3, 0] = pos[0] - 1;
+            adjPos[3, 1] = pos[1];
+
+            for (int i = 0; i < 4; i++)
+            {
+                int[] curPos = new int[2];
+                curPos[0] = adjPos[i, 0];
+                curPos[1] = adjPos[i, 1];
+                if (!getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Desert) || !getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Beach))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if the given position (int[2]) is in the given the list of int[2]
+        /// This is to check if a tile is already occupied
+        /// </summary>
+        /// <returns> The terrain type if occupied, otherwise null
+        private Terrain.TerrainTypes getTileTerrain(int[] pos)
+        {
+            foreach (int[] occupiedPos in occupiedBiomSpots.Keys)
+            {
+                if (occupiedPos[0].Equals(pos[0]) && occupiedPos[1].Equals(pos[1]))
+                {
+                    return occupiedBiomSpots[occupiedPos];
+                }
+            }
+            return Terrain.TerrainTypes.NotSet;
         }
 
         /// <summary>

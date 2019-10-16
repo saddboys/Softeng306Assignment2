@@ -19,7 +19,7 @@ namespace Game.Story.Events
         
                 
         private const string TITLE = "Research Facility";
-        private const string DESCRIPTION = "Build a research facility for ThanTec to investigate climate solutions.";
+        private const string DESCRIPTION = "Build a power plant for ThanTec to investigate climate solutions?";
         public override Sprite EventImage { get; }
         private StoryManager storyManager;
         public override StoryManager StoryManager 
@@ -35,7 +35,10 @@ namespace Game.Story.Events
         {
             get { return dialogMessages; }
         }
-        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
+        private Queue<string> dialogMessages = new Queue<string>(new[] { 
+            "“Mayor, you have another request from ThanTec.”", 
+            "“They want us to build them a power plant to power their new research facility. They say it’s for their climate solution project.”",
+            "“What do you think?”"}); 
 
         private void OnBuild()
         {
@@ -53,7 +56,7 @@ namespace Game.Story.Events
             StoryManager.endTurnButton.interactable = false;
             
             // Placeholder building for now
-            StoryManager.toolbar.CurrentFactory = new FactoryFactory();
+            StoryManager.toolbar.CurrentFactory = new PowerPlantFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
             
@@ -65,7 +68,7 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
-            StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
+            StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<ResearchFacilityRequest>());
         }
         

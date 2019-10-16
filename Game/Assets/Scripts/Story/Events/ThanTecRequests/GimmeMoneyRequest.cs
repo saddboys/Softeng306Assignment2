@@ -16,14 +16,17 @@ namespace Game.Story.Events
         }
         
                 
-        private const string TITLE = "Give me money";
-        private const string DESCRIPTION = "Fund tech project";
+        private const string TITLE = "Invest in ThanTec";
+        private const string DESCRIPTION = "Fund ThanTec's climate research?";
         public override Sprite EventImage { get; }
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }
         }
-        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
+        private Queue<string> dialogMessages = new Queue<string>(new[] { 
+            "“ThanTec wants money for their climate research.”",
+            "“Personally, I’m not so sure if it’s a good investment.”",
+            "“Your thoughts?”"}); 
 
         public override void OnYesClick()
         {

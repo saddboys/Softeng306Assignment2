@@ -31,18 +31,13 @@ namespace Game.Story.Events
                 return dialogMessages;
             }
         } 
-        private const string TITLE = "Here comes the science!";
-        private const string DESCRIPTION = "A new research facility wishes to build their office in XXX. \nDo you accept?";
+        private const string TITLE = "ThanTec";
+        private const string DESCRIPTION = "ThanTec wishes you to build their office. \nDo you accept?";
         [TextArea(3,10)]
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "FUIBGIBGUbfusfbeiubreugbrieugbiuergbeiurbgierbguierbgiuerbgiuergiureiguebruigeriugbeiurgbiuergbiuerbgiuerbgiuerbgerugiberiguberg" +
-            "eifberiugbiuergbiuergbuierbguiebguiergb",
-            "abeifberiugbiuergbiuergbuierbguiebguierg" +
-            "eifberiugbiuergbiuergbuierbguiebguiergb" +
-            "eifberiugbiuergbiuergbuierbguiebguiergb" +
-            "eifberiugbiuergbiuergbuierbguiebguiergbb",
-            "111111111111111111111111111111111111111111" +
-            "1111111111111111111111111111111111111111111"}); 
+            "“You have a request from the company ThanTec for a new office tower. " +
+            "ThanTec! Imagine how much better off we would be if such a company was here.”",
+            "“They’re requesting an entire tower to themselves, though. What should we do?”"}); 
         
         private StoryManager storyManager;
         public override StoryManager StoryManager 

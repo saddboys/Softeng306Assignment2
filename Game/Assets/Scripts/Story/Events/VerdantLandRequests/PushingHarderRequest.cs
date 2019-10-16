@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Game.Story;
+using Game.CityMap;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
@@ -20,15 +22,20 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             get { return dialogMessages; }
         }
-        private Queue<string> dialogMessages = new Queue<string>(new[] { "please build","o pls"}); 
+        private Queue<string> dialogMessages = new Queue<string>(new[] { 
+            "“Mayor, I have an idea. Most of the carbon emissions in the area come from factories. ",
+            "If we shut down all the factories, we can dramatically reduce emissions.", 
+            "What do you think?”"}); 
 
         private const string TITLE = "Pushing Harder!";
-        private const string DESCRIPTION = "Secretary requests that you shut down factories, since they’re big contributors to emissions.";
+        private const string DESCRIPTION = "Shut down all factories to reduce emissions?";
         public override void OnYesClick()
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             
-            // Lock the factories, decrease happiness levels
+            DestroyFactories();
+
+            // TODO disable factory on toolbar
             
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
             
@@ -38,6 +45,20 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
+        }
+
+        private void DestroyFactories()
+        {
+            MapTile[] tiles = StoryManager.city.Map.Tiles;
+            foreach (var tile in tiles)
+            {
+                if (tile.Structure != null && tile.Structure.GetType() == typeof(Factory))
+                {
+                    tile.Structure.Unrender();
+                    StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
+                    tile.Structure = null;
+                }
+            }
         }
     }
 }

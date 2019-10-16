@@ -23,7 +23,8 @@ public class EventPopUp : MonoBehaviour
 
     void Start()
     {
-        POP_UP_WIDTH =  Screen.currentResolution.width/4;
+        POP_UP_WIDTH =  Screen.currentResolution.width/2;
+        Debug.Log("WIDTH IS: " + POP_UP_WIDTH);
         POP_UP_HEIGHT = Screen.currentResolution.height/4;
     }
 
@@ -189,7 +190,7 @@ public class EventPopUp : MonoBehaviour
         Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
         while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
         {
-            currentSize.x += 25;
+            currentSize.x += 40;
             currentSize.y += 25;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
             yield return null;

@@ -68,6 +68,7 @@ namespace Game.CityMap
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
             MapTile currentTile = map.GetTile<MapTile>(position);
+            
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 currentTile = null;
@@ -80,6 +81,7 @@ namespace Game.CityMap
                 }
                 if (currentTile != null)
                 {
+                    //Debug.Log("position of tile is: " + position.x + ", " + position.y + ", " + position.z);
                     TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
                 }
             }
@@ -200,7 +202,8 @@ namespace Game.CityMap
                     // Debug.Log("Screen: " + mappedVector);
                     
                     tile.ScreenPosition = mappedVector;
-                    tile.name = "j: " + j + " i: " + i;
+                    tile.name = "i: " + vector.x + " j: " + vector.y + "z: " + vector.z;
+                   // Debug.Log("NAME IS: " + tile.name);
                     tile.Canvas = parent;
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
@@ -453,10 +456,17 @@ namespace Game.CityMap
                 // Remove the tile at the old position.
                 map.SetTile(pos, null);
             }
+
+            int i = 0;
             foreach (var (pos, tile) in tiles)
             {
+                i++;
                 SetTileTo(RotateCellPosition(pos, clockwise), tile);
+                var position = RotateCellPosition(pos, clockwise);
+                Debug.Log("shithssss: " + position.x + " , " + position.y + " , " + position.z);
             }
+            Debug.Log("total is: " + i);
+            Debug.Log("size is: " + tiles.Count);
 
             // Shrink bounds to where tiles exist.
             map.CompressBounds();

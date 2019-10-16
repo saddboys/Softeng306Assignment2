@@ -5775,7 +5775,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb18959652bbc594dbc824c27e1c57b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  menu: {fileID: 0}
+  menu: {fileID: 1287379500}
+  statsBar: {fileID: 1518473962}
 --- !u!4 &1220393587
 Transform:
   m_ObjectHideFlags: 0

@@ -88,12 +88,22 @@ namespace Story.Events.RandomEvent
             
             ParticleSystem.TrailModule trailMode = particles.trails;
             trailMode.enabled = true;
-            trailMode.lifetime = new ParticleSystem.MinMaxCurve(0, 0.8f);
+            trailMode.lifetime = new ParticleSystem.MinMaxCurve(0.6f);
+            AnimationCurve trailCurve = new AnimationCurve();
+            trailCurve.AddKey(0, 0);
+            trailCurve.AddKey(0.5f, 1);
+            trailCurve.AddKey(1, 0);
+            trailMode.widthOverTrail = new ParticleSystem.MinMaxCurve(1,trailCurve);
+            
 
             ParticleSystem.EmissionModule emissionModule = particles.emission;
             emissionModule.rateOverTime = 50;
             ParticleSystemRenderer particleRenderer =  particles.GetComponent<ParticleSystemRenderer>();
             particleRenderer.sortingLayerName = "Terrain";
+            var material = Resources.Load<Material>("wind_head");
+            material.shader =  Shader.Find("Particles/Alpha Blended Premultiply");
+            particleRenderer.material = material;
+            
             particleRenderer.trailMaterial =  Resources.Load<Material>("Wind");
             
             ParticleSystem.TextureSheetAnimationModule textureSheet =
@@ -112,17 +122,17 @@ namespace Story.Events.RandomEvent
 
             AnimationCurve curveX = new AnimationCurve();
             curveX.AddKey(0, 10);
-            curveX.AddKey(0.4f, 10);
+            curveX.AddKey(0.3f, 10);
             curveX.AddKey(0.5f, -10);
-            curveX.AddKey(0.6f, 10);
+            curveX.AddKey(0.7f, 10);
             curveX.AddKey(1, 10);
             
             AnimationCurve curveY = new AnimationCurve();
             curveY.AddKey(0, 0);
-            curveY.AddKey(0.4f, 0);
-            curveY.AddKey(0.45f, 10);
-            curveY.AddKey(0.55f, -10);
-            curveY.AddKey(0.6f, 0);
+            curveY.AddKey(0.3f, 0);
+            curveY.AddKey(0.35f, 10);
+            curveY.AddKey(0.65f, -10);
+            curveY.AddKey(0.7f, 0);
             curveY.AddKey(1, 0);
             
             AnimationCurve curveZ = new AnimationCurve();
@@ -142,7 +152,31 @@ namespace Story.Events.RandomEvent
                 new [] { new GradientAlphaKey(1.0f, 0.0f),
                     new GradientAlphaKey(0.0f, 1.0f) });
             colorOverLifetimeModule.color = gradient;
+
+            ParticleSystem.SizeOverLifetimeModule sizeOverLifetimeModule = particles.sizeOverLifetime;
+            sizeOverLifetimeModule.enabled = true;
+            AnimationCurve velocityCurveX = new AnimationCurve();
+            velocityCurveX.AddKey(0, 0);
+            velocityCurveX.AddKey(0.4f, 0.3f);
+            velocityCurveX.AddKey(0.55f, 0.85f);
+            velocityCurveX.AddKey(0.75f, 0.85f);
+            velocityCurveX.AddKey(0.85f, 0.6f);
+            velocityCurveX.AddKey(1, 0);
+            AnimationCurve velocityCurveY = new AnimationCurve();
+            velocityCurveY.AddKey(0, 0);
+            velocityCurveY.AddKey(1, 0);
+            AnimationCurve velocityCurveZ = new AnimationCurve();
+            velocityCurveZ.AddKey(0, 0);
+            velocityCurveZ.AddKey(1, 0);
+            
+            sizeOverLifetimeModule.x =  new ParticleSystem.MinMaxCurve(1, velocityCurveX);
+            sizeOverLifetimeModule.y =  new ParticleSystem.MinMaxCurve(0, velocityCurveY);
+            sizeOverLifetimeModule.z =  new ParticleSystem.MinMaxCurve(0, velocityCurveZ);
+
+
         }
+        
+        
 
         private void StopWind()
         {

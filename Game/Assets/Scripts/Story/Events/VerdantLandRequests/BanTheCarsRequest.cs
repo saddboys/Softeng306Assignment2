@@ -33,6 +33,10 @@ namespace Game.Story.Events.VerdantLandRequests
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
             
             // Decrease happiness, reduce carbon emissions and also affects money 
+            StoryManager.city.Stats.Reputation -= 10;
+            StoryManager.city.Stats.CO2 -= 25;
+            StoryManager.city.Stats.Wealth -= 5000;
+
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
         }
 

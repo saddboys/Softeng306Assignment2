@@ -45,11 +45,8 @@ namespace Game.Story.Events.RandomEvent
 
         private void GenerateFloodPositions()
         {
-            // First generate the first position
-            // TODO: Grab the values for the city class/city map class instead of hard coding it here
             int height = 30;
             int width = 40;
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
             Tilemap map = StoryManager.city.Map.map;
 
             if (tempFloodTiles == null)
@@ -126,7 +123,6 @@ namespace Game.Story.Events.RandomEvent
                 StoryManager.city.NextTurnEvent -= DecreaseWater;
                 return;
             }
-            Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
             Tilemap map = StoryManager.city.Map.map;
             for (int i = 0; i < tempFloodTiles.Count; i++)
             {
@@ -180,7 +176,7 @@ namespace Game.Story.Events.RandomEvent
 
         private void StopRain()
         {
-            ParticleSystem particles = StoryManager.city.Map.map.gameObject.transform.Find("CustomParticleSystem")
+            ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem")
                 .GetComponent<ParticleSystem>();
             particles.Stop();
             StartCoroutine(StoppingRain());

@@ -49,8 +49,8 @@ namespace Game.CityMap
         public override void BuildOnto(MapTile tile)
         {
             City.NextTurnEvent += StopDemolish;
-           // City?.StartCoroutine(GenerateDestructionParticles(tile));
-             Test(tile);
+            City?.StartCoroutine(GenerateDestructionParticles(tile));
+            // Test(tile);
             // Note: Get structure before it is demolished.
             if (City != null)
             {
@@ -125,6 +125,7 @@ namespace Game.CityMap
             ParticleSystem particles = City.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle").gameObject
                 .GetComponent<ParticleSystem>();
             particles.Stop();
+            City.NextTurnEvent -= StopDemolish;
         }
     }
 }

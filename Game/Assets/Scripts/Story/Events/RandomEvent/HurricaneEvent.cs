@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Game;
 using Game.CityMap;
 using Game.Story;
 using UnityEngine;
@@ -48,8 +49,9 @@ namespace Story.Events.RandomEvent
 
                 if (tile.Structure != null)
                 {
-                    yield return new WaitForSeconds(3);
+                   
                     new DemolishFactory(StoryManager.city).BuildOnto(tile);
+                    yield return new WaitForSeconds(3);
                     
                 }
             }
@@ -57,13 +59,61 @@ namespace Story.Events.RandomEvent
 
         private void StopHurricane()
         {
+            StoryManager.city.NextTurnEvent -= StopHurricane;
             StopCoroutine(coroutine);
             ParticleSystem particles = StoryManager.city.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle").gameObject
                 .GetComponent<ParticleSystem>();
              particles.Stop();
              Destroy(particles);
         }
-        
-        
+
+
+        public override void GenerateScene(GameObject canvas)
+        {
+            StoryManager.city.NextTurnEvent += StopWind;
+            GameObject customParticleSystem = new GameObject("HurricaneParticle");
+            customParticleSystem.transform.SetParent(StoryManager.city.Map.gameObject.transform,false);
+            customParticleSystem.transform.position = new Vector3(10,14,32);
+
+            Quaternion quaternion = Quaternion.Euler(0, 0, -20);
+            customParticleSystem.transform.rotation = quaternion;
+            ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
+            Particles.InitParticleSystem(particles);
+
+            ParticleSystem.MainModule mainParticle = particles.main;
+            mainParticle.startLifetime = 2f;
+            mainParticle.startSpeed = 20;
+
+            ParticleSystem.EmissionModule emissionModule = particles.emission;
+            emissionModule.rateOverTime = 50;
+            
+            Renderer renderer =  particles.GetComponent<Renderer>();
+            renderer.sortingLayerName = "Terrain";
+            ParticleSystem.TextureSheetAnimationModule textureSheet =
+                particles.textureSheetAnimation;
+            textureSheet.enabled = true;
+            textureSheet.mode = ParticleSystemAnimationMode.Sprites;
+            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/park2"));
+
+            ParticleSystem.ShapeModule shapeModule = particles.shape;
+            shapeModule.shapeType = ParticleSystemShapeType.SingleSidedEdge;
+            shapeModule.radius = 25;
+            shapeModule.rotation = new Vector3(0,0,180);
+        }
+
+        private void StopWind()
+        {
+            ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("HurricaneParticle")
+                .GetComponent<ParticleSystem>();
+            particles.Stop();
+            StoryManager.city.NextTurnEvent -= StopWind;
+            StartCoroutine(StoppingWind());
+        }
+
+        IEnumerator StoppingWind()
+        {
+            yield return new WaitForSeconds(2);
+            Destroy(StoryManager.city.Map.gameObject.transform.Find("HurricaneParticle").gameObject);
+        }
     }
 }

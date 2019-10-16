@@ -197,7 +197,7 @@ namespace Game
             enterEntry.callback.AddListener((data) => infoBox.SetInfo(factory));
             var exitEntry = new EventTrigger.Entry();
             exitEntry.eventID = EventTriggerType.PointerExit;
-            exitEntry.callback.AddListener((data) => infoBox.SetInfo(null));
+            exitEntry.callback.AddListener((data) => infoBox.SetInfo(currentFactory));
             trigger.triggers.Add(enterEntry);
             trigger.triggers.Add(exitEntry);
         }

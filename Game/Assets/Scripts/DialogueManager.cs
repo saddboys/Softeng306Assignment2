@@ -57,9 +57,10 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue(){
       animator.SetBool("isOpen", false);
-      
+      tempbar.SetActive(true);
     stats.SetActive(true);
     toolbar.SetActive(true);
+    
     GameObject.Find("IntroStory").SetActive(false);
     }
 

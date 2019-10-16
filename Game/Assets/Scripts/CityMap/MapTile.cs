@@ -37,7 +37,6 @@ namespace Game.CityMap
             get { return structure; }
             set
             {
-                
                 Assert.IsNotNull(Canvas,
                     "The ScreenPosition and Canvas to draw the structure on should " +
                     "be set before setting the structure");

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject toolbar;
     public GameObject tempbar;
     public Animator animator;
+    public Action Finished;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,9 +22,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     public void StartDialogue(Dialogue dialogue){
-        // GameObject.Find("ToolbarCanvas").SetActive(false);
-        // GameObject.Find("Game Stats Overlay").SetActive(false);
-       animator.SetBool("isOpen", true);
+       
         Debug.Log("start conversation!"+ dialogue.name);
         nameText.text = dialogue.name;
         sentences.Clear();
@@ -57,10 +57,11 @@ public class DialogueManager : MonoBehaviour
 
     public void EndDialogue(){
       animator.SetBool("isOpen", false);
-      
+      tempbar.SetActive(true);
     stats.SetActive(true);
     toolbar.SetActive(true);
-    GameObject.Find("DialogueCanvas").SetActive(false);
+    Finished?.Invoke();
+    GameObject.Find("IntroStory").SetActive(false);
     }
 
 

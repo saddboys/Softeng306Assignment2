@@ -24,6 +24,8 @@ namespace Game.Story
         public GameObject canvas;
         [SerializeField]
         public GameObject storyManagerGameObject;
+        [SerializeField]
+        public GameObject IntroStory;
         public EventFactory.StoryEvents NextStoryEvent { get; set; }
         private EventFactory factory;
         private Queue<int> storyQueue;
@@ -36,9 +38,7 @@ namespace Game.Story
             factory = new EventFactory();
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
-            // Create a queue for turn number of the story events
-            storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
-            NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
+            ResetStory();
             city.NextTurnEvent += HandleTurnEvent;
             
             // Generate the event pool
@@ -56,6 +56,7 @@ namespace Game.Story
 
         private void ResetStory()
         {
+            // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
             NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
         }
@@ -122,32 +123,31 @@ namespace Game.Story
                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
                 CreatePopUp();   
             }
-
-//           if (city.Turn == storyQueue.Peek())
-//           {
-//               // Create new story event here
-//               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-//               // Get rid of the first thing in the queue
-//               storyQueue.Dequeue();
-//               CreateDialog();
-//               //CreatePopUp();
-//           }
-//           else
-//           {
-//               // Events have a 10% chance of popping up
-//               if (random.Next(0, 10) == 1)
-//               {
-//                   EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-//                   // Randomly spawn events from the event pool
-//                   storyEvent = factory.CreateRandomEvent(randomEvent);
-//                   CreatePopUp();
-//               }
-//           }
+//
+//            if (city.Turn == storyQueue.Peek())
+//          {
+//              // Create new story event here
+//              storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+//              // Get rid of the first thing in the queue
+//              storyQueue.Dequeue();
+//              CreateDialog();
+//          }
+//          else
+//          {
+//              // Events have a 10% chance of popping up
+//              if (random.Next(0, 10) == 1)
+//              {
+//                  EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+//                  // Randomly spawn events from the event pool
+//                  storyEvent = factory.CreateRandomEvent(randomEvent);
+//                  CreatePopUp();
+//              }
+//          }
         }
 
         private void CreatePopUp()
         {
-            Debug.Log("goes here");
+           
             EventPopUp popUp;
             if (storyEvent != null && !city.HasEnded)
             {
@@ -165,15 +165,16 @@ namespace Game.Story
         private void CreateDialog()
         {
             DialogPopUp dialogPopUp;
+            Dialogue dialog = new Dialogue(); 
             if (storyEvent != null && !city.HasEnded)
             {
-                dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
-                dialogPopUp.Canvas = canvas;
-                dialogPopUp.StoryEvent = storyEvent;
-                canvas.transform.Find("Panel").gameObject.SetActive(true);
-                dialogPopUp.Finished += CreatePopUp;
-                dialogPopUp.Create();
+                dialog.name = "Secretary";
+                dialog.sentences = storyEvent.Dialogues.ToArray();
+                IntroStory.SetActive(true);
+                FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+                FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
             }
+           
         }
         
     }

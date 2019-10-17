@@ -23,9 +23,10 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Mayor, I have an idea. Most of the carbon emissions in the area come from factories. ",
+            "Mayor, I have an idea.",
+            "Most of the carbon emissions in the area come from factories.",
             "If we shut down all the factories, we can dramatically reduce emissions.", 
-            "What do you think?”"}); 
+            "What do you think?"});
 
         private const string TITLE = "Pushing Harder!";
         private const string DESCRIPTION = "Shut down all factories to reduce emissions?";
@@ -34,8 +35,6 @@ namespace Game.Story.Events.VerdantLandRequests
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             
             DestroyFactories();
-
-            // TODO disable factory on toolbar
             
             Destroy(StoryManager.storyManagerGameObject.GetComponent<PushingHarderRequest>());
             
@@ -54,9 +53,10 @@ namespace Game.Story.Events.VerdantLandRequests
             {
                 if (tile.Structure != null && tile.Structure.GetType() == typeof(Factory))
                 {
-                    tile.Structure.Unrender();
-                    StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
-                    tile.Structure = null;
+                    // tile.Structure.Unrender();
+                    new DemolishFactory(StoryManager.city).BuildOnto(tile);
+                    // StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
+                    // tile.Structure = null;
                 }
             }
         }

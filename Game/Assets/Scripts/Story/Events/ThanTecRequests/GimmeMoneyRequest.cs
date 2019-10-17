@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,12 @@ namespace Game.Story.Events
                 
         private const string TITLE = "Invest in ThanTec";
         private const string DESCRIPTION = "Fund ThanTec's climate research?";
-        public override Sprite EventImage { get; }
+
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/gimmemoney"); }
+        }
+
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }

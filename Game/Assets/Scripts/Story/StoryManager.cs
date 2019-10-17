@@ -24,6 +24,8 @@ namespace Game.Story
         public GameObject canvas;
         [SerializeField]
         public GameObject storyManagerGameObject;
+        [SerializeField]
+        public GameObject IntroStory;
         public EventFactory.StoryEvents NextStoryEvent { get; set; }
         private EventFactory factory;
         private Queue<int> storyQueue;
@@ -119,7 +121,8 @@ namespace Game.Story
             if (city.Turn == 2)
             {
                 storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-                CreatePopUp();   
+               // CreatePopUp();   
+               CreateDialog();
             }
 
 //           if (city.Turn == storyQueue.Peek())
@@ -164,15 +167,24 @@ namespace Game.Story
         private void CreateDialog()
         {
             DialogPopUp dialogPopUp;
+            Dialogue dialog = new Dialogue(); 
             if (storyEvent != null && !city.HasEnded)
             {
-                dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
-                dialogPopUp.Canvas = canvas;
-                dialogPopUp.StoryEvent = storyEvent;
-                canvas.transform.Find("Panel").gameObject.SetActive(true);
-                dialogPopUp.Finished += CreatePopUp;
-                dialogPopUp.Create();
+                dialog.name = "probelm";
+                string[] strings = new string[1]{"hello!"};
+                dialog.sentences = storyEvent.Dialogues.ToArray();//
+                // dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
+                // dialogPopUp.Canvas = canvas;
+                
+                // canvas.transform.Find("Panel").gameObject.SetActive(true);
+                // dialogPopUp.Finished += CreatePopUp;
+                // dialogPopUp.Create();
+            //dialog = storyManagerGameObject.AddComponent<Game.Dialogue>();
+            //dialog.Canvas = canvas;
+            IntroStory.SetActive(true);
+            FindObjectOfType<DialogueManager>().StartDialogue(dialog);
             }
+           
         }
         
     }

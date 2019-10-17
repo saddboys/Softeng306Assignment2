@@ -20,9 +20,7 @@ public class DialogueManager : MonoBehaviour
     }
 
     public void StartDialogue(Dialogue dialogue){
-        // GameObject.Find("ToolbarCanvas").SetActive(false);
-        // GameObject.Find("Game Stats Overlay").SetActive(false);
-       animator.SetBool("isOpen", true);
+       
         Debug.Log("start conversation!"+ dialogue.name);
         nameText.text = dialogue.name;
         sentences.Clear();

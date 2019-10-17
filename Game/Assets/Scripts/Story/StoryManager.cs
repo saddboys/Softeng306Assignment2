@@ -39,7 +39,7 @@ namespace Game.Story
         
         public enum StoryEndings {TECH_ENDING, REVISIONIST_ENDING, NEUTRAL_ENDING}
 
-        private int storyEnding;
+        private int storyEnding = (int) StoryEndings.NEUTRAL_ENDING;
         public int StoryEnding
         {
             get => storyEnding;
@@ -199,11 +199,13 @@ namespace Game.Story
         /// </summary>
         private void HandleEndGame()
         { 
-            Debug.Log("End Story reached");
+            
             // Check reason for ending game
             if (city.Turn == city.MaxTurns)
             {
+                
                 CheckNonFinalStoryEventEffect();
+                Debug.Log("End Story reached " + StoryEnding);
                 string reason = "";
                 
                 // Check which storyline we are on
@@ -215,6 +217,9 @@ namespace Game.Story
                     case (int) StoryEndings.REVISIONIST_ENDING:
                         reason =
                             "You did it! The town’s temperature stayed below the threshold. Perhaps climate change can be managed after all, though it required sacrificing some modern comforts. The people aren’t the happiest about that, but they’re not too unhappy. At least their planet is still there.";
+                        break;
+                    case (int) StoryEndings.NEUTRAL_ENDING:
+                        reason = "Undecided ending";
                         break;
                         
                 }

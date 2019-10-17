@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,12 @@ namespace Game.Story.Events.VerdantLandRequests
                 
         private const string TITLE = "Ban the Cars!";
         private const string DESCRIPTION = "Get rid of cars, to reduce pollution from them?";
-        public override Sprite EventImage { get; }
+
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/banthecars"); }
+        }
+
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }

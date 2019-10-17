@@ -119,7 +119,7 @@ namespace Game.Story
             // For testing an event
             if (city.Turn == 2)
             {
-                storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIMME_MONEY_REQUEST);
+                storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.BAN_THE_CARS_REQUEST);
                //storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
                 CreatePopUp();   
             }

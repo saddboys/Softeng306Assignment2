@@ -38,9 +38,7 @@ namespace Game.Story
             factory = new EventFactory();
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
-            // Create a queue for turn number of the story events
-            storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
-            NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
+            ResetStory();
             city.NextTurnEvent += HandleTurnEvent;
             
             // Generate the event pool
@@ -58,6 +56,7 @@ namespace Game.Story
 
         private void ResetStory()
         {
+            // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
             NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
         }
@@ -125,26 +124,26 @@ namespace Game.Story
                CreateDialog();
             }
 
-//           if (city.Turn == storyQueue.Peek())
-//           {
-//               // Create new story event here
-//               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-//               // Get rid of the first thing in the queue
-//               storyQueue.Dequeue();
-//               CreateDialog();
-//               //CreatePopUp();
-//           }
-//           else
-//           {
-//               // Events have a 10% chance of popping up
-//               if (random.Next(0, 10) == 1)
-//               {
-//                   EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-//                   // Randomly spawn events from the event pool
-//                   storyEvent = factory.CreateRandomEvent(randomEvent);
-//                   CreatePopUp();
-//               }
-//           }
+          if (city.Turn == storyQueue.Peek())
+          {
+              // Create new story event here
+              storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+              // Get rid of the first thing in the queue
+              storyQueue.Dequeue();
+              CreateDialog();
+              //CreatePopUp();
+          }
+          else
+          {
+              // Events have a 10% chance of popping up
+              if (random.Next(0, 10) == 1)
+              {
+                  EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+                  // Randomly spawn events from the event pool
+                  storyEvent = factory.CreateRandomEvent(randomEvent);
+                  CreatePopUp();
+              }
+          }
         }
 
         private void CreatePopUp()
@@ -172,7 +171,7 @@ namespace Game.Story
             {
                 dialog.name = "probelm";
                 string[] strings = new string[1]{"hello!"};
-                dialog.sentences = storyEvent.Dialogues.ToArray();//
+                dialog.sentences =strings; //TODO: storyEvent.Dialogues.ToArray();//
                 // dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
                 // dialogPopUp.Canvas = canvas;
                 

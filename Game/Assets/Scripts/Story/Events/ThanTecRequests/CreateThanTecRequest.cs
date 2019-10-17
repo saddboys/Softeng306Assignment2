@@ -35,9 +35,9 @@ namespace Game.Story.Events
         private const string DESCRIPTION = "ThanTec wishes you to build their office. \nDo you accept?";
         [TextArea(3,10)]
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“You have a request from the company ThanTec for a new office tower. " +
-            "ThanTec! Imagine how much better off we would be if such a company was here.”",
-            "“They’re requesting an entire tower to themselves, though. What should we do?”"}); 
+            "You have a request from the company ThanTec for a new office.",
+            "ThanTec! Imagine how much better off we would be if such a company was here.",
+            "What should we do?"}); 
         
         private StoryManager storyManager;
         public override StoryManager StoryManager 

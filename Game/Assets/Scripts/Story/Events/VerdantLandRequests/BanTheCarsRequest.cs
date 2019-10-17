@@ -24,8 +24,9 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return dialogMessages; }
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
-            "“Cars are big emitters of carbon dioxide, right? What if we get rid of cars?”",
-            "“The town is fairly small. People can walk or bike.”"}); 
+            "Cars are big emitters of carbon dioxide, right?",
+            "What if we get rid of the cars?",
+            "The town is fairly small. People can walk or bike."}); 
 
         public override void OnYesClick()
         {
@@ -33,6 +34,10 @@ namespace Game.Story.Events.VerdantLandRequests
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
             
             // Decrease happiness, reduce carbon emissions and also affects money 
+            StoryManager.city.Stats.Reputation -= 10;
+            StoryManager.city.Stats.CO2 -= 25;
+            StoryManager.city.Stats.Wealth -= 5000;
+
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
         }
 

@@ -117,12 +117,11 @@ namespace Game.Story
         private void HandleTurnEvent()
         {
             // For testing an event
-            if (city.Turn == 2)
-            {
-                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-               //CreatePopUp();   
-               CreateDialog();
-            }
+            // if (city.Turn == 2)
+            // {
+            //     storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
+            //    CreatePopUp();   
+            // }
 
           if (city.Turn == storyQueue.Peek())
           {
@@ -130,8 +129,7 @@ namespace Game.Story
               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
               // Get rid of the first thing in the queue
               storyQueue.Dequeue();
-              //CreateDialog();
-              CreatePopUp();
+              CreateDialog();
           }
           else
           {
@@ -151,7 +149,7 @@ namespace Game.Story
            
             EventPopUp popUp;
             if (storyEvent != null && !city.HasEnded)
-            { Debug.Log("goes here pop up");
+            {
                 popUp = storyManagerGameObject.AddComponent<EventPopUp>();
                 popUp.name = "event-pop-up";
                 popUp.Canvas = canvas;
@@ -171,21 +169,9 @@ namespace Game.Story
             {
                 dialog.name = "Secretary";
                 dialog.sentences = storyEvent.Dialogues.ToArray();
-                // dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
-                // dialogPopUp.Canvas = canvas;
-                
-                // canvas.transform.Find("Panel").gameObject.SetActive(true);
-                
-                // dialogPopUp.Create();
-            //dialog = storyManagerGameObject.AddComponent<Game.Dialogue>();
-            //dialog.Canvas = canvas;
-            IntroStory.SetActive(true);
-            FindObjectOfType<DialogueManager>().StartDialogue(dialog);
-            FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
-            // if(FindObjectOfType<DialogueManager>().Finished){
-                
-            //     CreatePopUp();
-            // }
+                IntroStory.SetActive(true);
+                FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+                FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
             }
            
         }

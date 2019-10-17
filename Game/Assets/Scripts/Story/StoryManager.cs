@@ -171,9 +171,6 @@ namespace Game.Story
             {
                 dialog.name = "Secretary";
                 dialog.sentences = storyEvent.Dialogues.ToArray();
-                if (FindObjectOfType<DialogueManager>().Finished) {
-                    CreatePopUp();
-                }
                 // dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
                 // dialogPopUp.Canvas = canvas;
                 

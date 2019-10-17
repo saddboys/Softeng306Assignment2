@@ -6,12 +6,21 @@ namespace Game.CityMap
 {
     public class PowerPlant : Structure
     {
+        
+        public const int StructCO2 = 30;
+        public const int StructReputation = -1;
+        public const int StructCost = 1500;
+        public const int StructUpkeep = -200;
+        public const int StructScore = 600;
+        public const int StructPopulation = -5;
+        public const int StructElectricity = 30;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 30,
-                Wealth = -200,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -19,7 +28,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = -20,
+                Population = -StructPopulation,
+                Reputation = -StructReputation,
+                ElectricCapacity = -StructElectricity,
             };
         }
 
@@ -125,7 +136,7 @@ namespace Game.CityMap
         public PowerPlantFactory() : base() { }
         public override int Cost
         {
-            get { return 1500; }
+            get { return PowerPlant.StructCost; }
         }
 
         public override Sprite Sprite { get; } =
@@ -142,7 +153,9 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 20;
+                City.Stats.ElectricCapacity += PowerPlant.StructElectricity;
+                City.Stats.Score += PowerPlant.StructScore;
+                City.Stats.Population += PowerPlant.StructPopulation;
             }
         }
 

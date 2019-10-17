@@ -7,13 +7,21 @@ namespace Game.CityMap
 {
     public class House : Structure
     {
+        public const int StructCO2 = 1;
+        public const int StructReputation = -1;
+        public const int StructCost = 250;
+        public const int StructUpkeep = 50;
+        public const int StructScore = 100;
+        public const int StructPopulation = 5;
+        public const int StructElectricity = -1;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
                 
-                Wealth = 50,
-                CO2 = 1,
+                Wealth = StructUpkeep,
+                CO2 = StructCO2,
             };
         }
 
@@ -21,9 +29,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 1,
-                Population = -4,
-                Reputation = 1
+                ElectricCapacity = -StructElectricity,
+                Population = -StructPopulation,
+                Reputation = -StructReputation
             };
         }
 
@@ -58,7 +66,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 250; }
+            get { return House.StructCost; }
         }
 
         public override Sprite Sprite { get; } =
@@ -75,7 +83,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 1)
+            if (City?.Stats.ElectricCapacity < -House.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -105,9 +113,10 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
-                City.Stats.Population += 4;
-                City.Stats.Reputation -= 1;
+                City.Stats.ElectricCapacity += House.StructElectricity;
+                City.Stats.Population += House.StructPopulation;
+                City.Stats.Reputation += House.StructReputation;
+                City.Stats.Score += House.StructScore;
             }
         }
 

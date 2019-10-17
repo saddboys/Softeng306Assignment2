@@ -2,7 +2,6 @@ using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
@@ -59,14 +58,6 @@ namespace Game
         [SerializeField]
         private Text turnText;
 
-        [SerializeField]
-        private GameSceneController controller;
-
-        public GameSceneController Controller
-        {
-            get { return controller; }
-        }
-        
         /// <summary>
         /// Fires at the beginning of each new turn.
         /// Useful for spawning events and for updating structures.
@@ -116,43 +107,11 @@ namespace Game
         /// </summary>
         public void CheckEndGame()
         {
-            double temp = stats.Temperature;
-            double wealth = stats.Wealth;
-                
-            if (Turn == 20)
+            if (Turn == 20 || Stats.Wealth <= 0 || Stats.Temperature > 2)
             {
-                string reason = "Congratulations! You have sustainably developed your city!";
-                EndGame(true, reason);
-                hasEnded = true;
-            } else if (wealth <= 0)
-            {
-                string reason = "You've run out of assets to support your city!";
-                EndGame(false, reason);
-                hasEnded = true;
-            } else if (temp > 2)
-            {
-                string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
-                EndGame(false, reason);
-                hasEnded = true;
-            } 
-        }
-
-        /// <summary>
-        /// The function triggers the game over overlay, specifying the reason for failure
-        /// </summary>
-        /// <param name="reason">The reason the player has lost the game</param>
-        public void EndGame(bool isWon, string reason)
-        {
-            EndGameEvent?.Invoke();
-            EndTurnButton.interactable = false;
-            if (isWon)
-            {
-                Controller.GameWon(reason);   
+                EndGameEvent?.Invoke();
             }
-            else 
-            {
-                Controller.GameOver(reason);    
-            }
+            
         }
 
         /// <summary>

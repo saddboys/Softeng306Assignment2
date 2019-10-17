@@ -60,7 +60,9 @@ namespace Game.Story.Events
         }
         public override void OnYesClick()
         {
-            
+            // Mark result of event in route tracker
+            StoryManager.StoryChoices.Add((int) EventFactory.StoryEvents.INITIAL_THANTEC, true);
+
             //TODO: Allow the user to build the thanTec building
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;

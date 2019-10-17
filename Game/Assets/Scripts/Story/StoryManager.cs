@@ -26,6 +26,9 @@ namespace Game.Story
         public GameObject storyManagerGameObject;
         [SerializeField]
         public GameObject IntroStory;
+
+        public GameSceneController Controller;
+        
         public EventFactory.StoryEvents NextStoryEvent { get; set; }
         private EventFactory factory;
         private Queue<int> storyQueue;
@@ -33,6 +36,20 @@ namespace Game.Story
         private StoryEvent storyEvent;
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
+        
+        public enum StoryEndings {TECH_ENDING, REVISIONIST_ENDING, NEUTRAL_ENDING}
+
+        private int storyEnding;
+        public int StoryEnding
+        {
+            get => storyEnding;
+            set => storyEnding = value;
+        } 
+//        private Dictionary<int, bool> storyChoices;
+
+
+        public Dictionary<int, bool> StoryChoices = new Dictionary<int, bool>();
+
         void Start()
         {
             factory = new EventFactory();
@@ -51,6 +68,7 @@ namespace Game.Story
             city.Stats.WealthChangeEvent += HandleWealthChangeEvent;
             city.Stats.ElectricCapacityChangeEvent += HandleElectricCapacityChangeEvent;
 
+            city.EndGameEvent += HandleEndGame;
             city.EndGameEvent += ResetStory;
         }
 
@@ -116,17 +134,18 @@ namespace Game.Story
 
         private void HandleTurnEvent()
         {
-            // For testing an event
-            // if (city.Turn == 2)
-            // {
-            //     storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-            //    CreatePopUp();   
-            // }
+//            For testing an event
+//            if (city.Turn == 2)
+//            {
+//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
+//               CreatePopUp();   
+//            }
 
           if (city.Turn == storyQueue.Peek())
           {
               // Create new story event here
               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+
               // Get rid of the first thing in the queue
               storyQueue.Dequeue();
               CreateDialog();
@@ -174,7 +193,64 @@ namespace Game.Story
             }
            
         }
-        
+
+        /// <summary>
+        /// Determines the ending to show
+        /// </summary>
+        private void HandleEndGame()
+        {
+            // Check reason for ending game
+            if (city.Turn == 20)
+            {
+                CheckNonFinalStoryEventEffect();
+                string reason = "";
+                
+                // Check which storyline we are on
+                switch (StoryEnding)
+                {
+                    case (int) StoryEndings.TECH_ENDING:
+                        reason = "You keep the town’s temperature under the threshold! People are happy and can keep living like they do, but outside the town, the world continues to heat and go chaotic. However, with technology, we can survive through it. If only everyone in the world had access to the technology…";
+                        break;
+                    case (int) StoryEndings.REVISIONIST_ENDING:
+                        reason =
+                            "You did it! The town’s temperature stayed below the threshold. Perhaps climate change can be managed after all, though it required sacrificing some modern comforts. The people aren’t the happiest about that, but they’re not too unhappy. At least their planet is still there.";
+                        break;
+                        
+                }
+                Controller.GameWon(reason);
+
+            } else if (city.Stats.Wealth <= 0)
+            {
+                string reason = "You've run out of assets to support your city!";
+                Controller.GameOver(reason);
+                
+            } else if (city.Stats.Temperature > 2)
+            {
+                string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
+                Controller.GameOver(reason);
+            }
+        }
+
+        /// <summary>
+        /// This method is used check the result of events that determine the ending, but are not the final story events
+        /// in a route. 
+        /// </summary>
+        private void CheckNonFinalStoryEventEffect()
+        {
+            List<int> keys = StoryChoices.Keys.ToList();
+            bool thanTechExists = false;
+            
+            if (keys.Contains((int) EventFactory.StoryEvents.INITIAL_THANTEC))
+            {
+                StoryChoices.TryGetValue((int) EventFactory.StoryEvents.INITIAL_THANTEC, out thanTechExists);
+            }
+
+            if (thanTechExists && StoryEnding != (int) StoryEndings.TECH_ENDING)
+            {
+                storyEnding = (int) StoryEndings.REVISIONIST_ENDING;
+            }
+        }
+
     }
 }
 

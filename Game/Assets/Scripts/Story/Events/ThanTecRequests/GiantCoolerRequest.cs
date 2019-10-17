@@ -33,11 +33,13 @@ namespace Game.Story.Events
         {
             StoryManager.city.Stats.Temperature -= 0.5;
             // Go to tech ending
+            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.TECH_ENDING;
         }
 
         public override void OnNoClick()
         {
             // Go to non-tech ending
+            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.REVISIONIST_ENDING;
         }
     }
 }

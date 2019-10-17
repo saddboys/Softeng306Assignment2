@@ -1198,7 +1198,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dialogue:
-    name: Mayor
+    name: Secretatory
     mayor: {fileID: 21300000, guid: fad0582232b2146ca93101ded33de2af, type: 3}
     sentences:
     - 'hello, you are the mayor of terratopia! This is your first day of your job!
@@ -2275,7 +2275,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 529811275}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
   m_Name: 
@@ -2299,7 +2299,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 
+  m_Text: Secretatory
 --- !u!222 &529811278
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -6462,6 +6462,7 @@ GameObject:
   - component: {fileID: 1311220690}
   - component: {fileID: 1311220692}
   - component: {fileID: 1311220691}
+  - component: {fileID: 1311220693}
   m_Layer: 5
   m_Name: GameTitleText
   m_TagString: Untagged
@@ -6528,6 +6529,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1311220689}
   m_CullTransparentMesh: 0
+--- !u!95 &1311220693
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1311220689}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 105da64baa9314e488bb677a2da02493, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1329455445
 GameObject:
   m_ObjectHideFlags: 0

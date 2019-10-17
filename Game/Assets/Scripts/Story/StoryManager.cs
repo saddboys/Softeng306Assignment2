@@ -178,12 +178,16 @@ namespace Game.Story
                 // dialogPopUp.Canvas = canvas;
                 
                 // canvas.transform.Find("Panel").gameObject.SetActive(true);
-                // dialogPopUp.Finished += CreatePopUp;
+                
                 // dialogPopUp.Create();
             //dialog = storyManagerGameObject.AddComponent<Game.Dialogue>();
             //dialog.Canvas = canvas;
             IntroStory.SetActive(true);
             FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+            // dialogPopUp.Finished += CreatePopUp;
+            if(FindObjectOfType<DialogueManager>().Finished){
+                CreatePopUp();
+            }
             }
            
         }

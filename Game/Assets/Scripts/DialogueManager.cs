@@ -13,6 +13,7 @@ public class DialogueManager : MonoBehaviour
     public GameObject toolbar;
     public GameObject tempbar;
     public Animator animator;
+    public bool Finished = false;
     // Start is called before the first frame update
     void Start()
     {
@@ -58,7 +59,7 @@ public class DialogueManager : MonoBehaviour
       tempbar.SetActive(true);
     stats.SetActive(true);
     toolbar.SetActive(true);
-    
+    Finished =true;
     GameObject.Find("IntroStory").SetActive(false);
     }
 

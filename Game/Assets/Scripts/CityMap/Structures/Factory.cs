@@ -7,12 +7,20 @@ namespace Game.CityMap
 {
     public class Factory : Structure
     {
+        public const int StructCO2 = 10;
+        public const int StructReputation = 0;
+        public const int StructCost = 3000;
+        public const int StructUpkeep = 500;
+        public const int StructScore = 750;
+        public const int StructPopulation = -5;
+        public const int StructElectricity = -10;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats()
             {
-                CO2 = 20,
-                Wealth = 500,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep
             };
         }
 
@@ -20,8 +28,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 5,
-                Reputation = -3
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
 
@@ -122,7 +131,7 @@ namespace Game.CityMap
         {
             get
             {
-                return 2500;
+                return Factory.StructCost;
             }
         }
 
@@ -142,7 +151,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 5)
+            if (City?.Stats.ElectricCapacity < -Factory.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -172,9 +181,10 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 5;
-                City.Stats.Reputation += 3;
-                City.Stats.Score += 800;
+                City.Stats.ElectricCapacity += Factory.StructElectricity;
+                City.Stats.Reputation += Factory.StructReputation;
+                City.Stats.Score += Factory.StructScore;
+                City.Stats.Population += Factory.StructPopulation;
             }
         }
 

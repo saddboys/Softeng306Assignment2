@@ -6,12 +6,20 @@ namespace Game.CityMap
 {
     public class Dock : Structure
     {
+        public const int StructCO2 = 30;
+        public const int StructReputation = 0;
+        public const int StructCost = 5000;
+        public const int StructUpkeep = 1500;
+        public const int StructScore = 2000;
+        public const int StructPopulation = -15;
+        public const int StructElectricity = -30;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 10,
-                Wealth = 250,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
         
@@ -26,8 +34,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 1,
-                Reputation = -5
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
 
@@ -44,7 +53,7 @@ namespace Game.CityMap
         public DockFactory() : base() { }
         public override int Cost
         {
-            get { return 2000; }
+            get { return Dock.StructCost; }
         }
 
         public override Sprite Sprite { get; } =
@@ -57,7 +66,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 1)
+            if (City?.Stats.ElectricCapacity < -Dock.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -91,9 +100,10 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
-                City.Stats.Reputation += 5;
-                City.Stats.Score += 1500;
+                City.Stats.ElectricCapacity -= Dock.StructElectricity;
+                City.Stats.Reputation += Dock.StructReputation;
+                City.Stats.Score += Dock.StructScore;
+                City.Stats.Population += Dock.StructPopulation;
             }
         }
 

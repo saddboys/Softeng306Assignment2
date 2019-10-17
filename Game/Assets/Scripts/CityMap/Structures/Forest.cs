@@ -6,11 +6,19 @@ namespace Game.CityMap
 {
     public class Forest : Structure
     {
+        public const int StructCO2 = -5;
+        public const int StructReputation = 0;
+        public const int StructCost = 500;
+        public const int StructUpkeep = 0;
+        public const int StructScore = 100;
+        public const int StructPopulation = 0;
+        public const int StructElectricity = 0;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = -5,
+                CO2 = StructCO2,
             };
         }
 
@@ -18,7 +26,7 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                Reputation = -1
+                Reputation = -StructReputation
             };
         }
 
@@ -53,7 +61,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 500; }
+            get { return Forest.StructCost; }
         }
 
         public override Sprite Sprite { get; } =
@@ -96,8 +104,8 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.Reputation += 1;
-                City.Stats.Score += 100;
+                City.Stats.Reputation += Forest.StructReputation;
+                City.Stats.Score += Forest.StructScore;
             }
         }
 

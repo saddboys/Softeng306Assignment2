@@ -6,12 +6,20 @@ namespace Game.CityMap
 {
     public class Park : Structure
     {
+        public const int StructCO2 = 0;
+        public const int StructReputation = 5;
+        public const int StructCost = 1000;
+        public const int StructUpkeep = -100;
+        public const int StructScore = 250;
+        public const int StructPopulation = 0;
+        public const int StructElectricity = 0;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = -1,
-                Wealth = -100,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -36,7 +44,8 @@ namespace Game.CityMap
         {
             return new Stats()
             {
-                Reputation = -10
+                Population = -StructPopulation,
+                Reputation = -StructReputation,
             };
         }
 
@@ -54,7 +63,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 1000; }
+            get { return Park.StructCost; }
         }
 
         public override Sprite Sprite { get; } =
@@ -80,8 +89,8 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.Reputation += 10;
-                City.Stats.Score += 250;
+                City.Stats.Reputation += Park.StructReputation;
+                City.Stats.Score += Park.StructScore;
             }
         }
 

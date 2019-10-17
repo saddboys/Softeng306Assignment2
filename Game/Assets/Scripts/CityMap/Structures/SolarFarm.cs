@@ -6,13 +6,20 @@ namespace Game.CityMap
 {
     public class SolarFarm : Structure
     {
+        public const int StructCO2 = 0;
+        public const int StructReputation = 1;
+        public const int StructCost = 2000;
+        public const int StructUpkeep = -50;
+        public const int StructScore = 900;
+        public const int StructPopulation = -3;
+        public const int StructElectricity = 20;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 0,
-                Wealth = -50,
-                ElectricCapacity = 0,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -20,7 +27,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = -10,
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
 
@@ -47,7 +56,7 @@ namespace Game.CityMap
         public SolarFarmFactory() : base() { }
         public override int Cost
         {
-            get { return 2000; }
+            get { return SolarFarm.StructCost; }
         }
 
         public override Sprite Sprite { get; } =
@@ -64,8 +73,10 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 10;
-                City.Stats.Score += 900;
+                City.Stats.ElectricCapacity += SolarFarm.StructElectricity;
+                City.Stats.Score += SolarFarm.StructScore;
+                City.Stats.Population += SolarFarm.StructPopulation;
+                City.Stats.Reputation += SolarFarm.StructReputation;
             }
         }
 

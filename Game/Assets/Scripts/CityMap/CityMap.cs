@@ -153,7 +153,7 @@ namespace Game.CityMap
 
             createBiome(Terrain.TerrainTypes.Desert);
             for (int i = 0; i < numBiomes; i++) {
-                createBiome(Terrain.TerrainTypes.Desert);
+                createBiome(Terrain.TerrainTypes.Ocean);
             }
             
 
@@ -195,7 +195,7 @@ namespace Game.CityMap
                     } 
                     else
                     {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                     }
                     map.SetTile(vector, tile);
                     Vector3 mappedVector = map.CellToWorld(vector);

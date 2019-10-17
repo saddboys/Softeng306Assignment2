@@ -75,8 +75,6 @@ public class EventPopUp : MonoBehaviour
 
     private void CreateDefaultElements()
     {
-                
-        
         // Creating the title
         GameObject title = new GameObject("Title");
         TextMeshProUGUI titleText = title.AddComponent<TextMeshProUGUI>();
@@ -94,15 +92,23 @@ public class EventPopUp : MonoBehaviour
         
         // Creating the description
         GameObject description = new GameObject("Description");
-        Text descriptionText = description.AddComponent<Text>();
+        Image backgroundImage = description.AddComponent<Image>();
+        backgroundImage.color = new Color32(255,255,255,50);
+        
+        GameObject descriptionTextObject = new GameObject("DescriptionBackground");
+
+        Text descriptionText = descriptionTextObject.AddComponent<Text>();
         descriptionText.text = StoryEvent.Description;
         descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         descriptionText.color = Color.black;
         descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
         descriptionText.alignment = TextAnchor.UpperCenter;
         description.transform.SetParent(panel.transform,false);
-        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_LIMIT_HEIGHT/1.5f);
+        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,POP_UP_LIMIT_HEIGHT/4);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        descriptionTextObject.transform.SetParent(description.transform);
+        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,20);
+        descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
 
     }
     /// <summary>

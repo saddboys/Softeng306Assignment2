@@ -118,8 +118,8 @@ namespace Game.Story
             // For testing an event
             if (city.Turn == 2)
             {
-                storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.INITIAL_THANTEC);
-             //  storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+              //  storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.INITIAL_THANTEC);
+               storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
                 CreatePopUp();   
             }
 

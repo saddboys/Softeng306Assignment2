@@ -107,7 +107,7 @@ public class EventPopUp : MonoBehaviour
         description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,POP_UP_LIMIT_HEIGHT/4);
         description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         descriptionTextObject.transform.SetParent(description.transform);
-        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,20);
+        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,100);
         descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
 
     }

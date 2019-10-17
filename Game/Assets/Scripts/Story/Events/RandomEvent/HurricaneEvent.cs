@@ -35,7 +35,7 @@ namespace Story.Events.RandomEvent
         public override void OnYesClick()
         {
             // Destroy random buildings
-           // coroutine = StartCoroutine(DestroyBuildings());
+            coroutine = StartCoroutine(DestroyBuildings());
             // Happiness goes down
             StoryManager.city.Stats.Reputation -= 10;
         }
@@ -47,12 +47,13 @@ namespace Story.Events.RandomEvent
             foreach (var tile in tiles)
             {
 
-                if (tile.Structure != null)
+                if (tile != null && tile.Structure != null)
                 {
-                   
-                    new DemolishFactory(StoryManager.city).BuildOnto(tile);
-                    yield return new WaitForSeconds(3);
-                    
+                    if (tile.Structure.GetType() != typeof(Mountain))
+                    {
+                        new DemolishFactory(StoryManager.city).BuildOnto(tile);
+                        yield return new WaitForSeconds(3);
+                    }
                 }
             }
         }

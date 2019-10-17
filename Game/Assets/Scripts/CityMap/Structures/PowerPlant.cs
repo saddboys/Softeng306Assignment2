@@ -39,8 +39,6 @@ namespace Game.CityMap
             }
 
             // Render smoke.
-            // Now the fun begins...
-
             GameObject smoke = new GameObject();
             smoke.transform.SetParent(GameObject.transform);
             smoke.transform.localPosition = new Vector3(-0.23f, 0.55f);
@@ -50,18 +48,19 @@ namespace Game.CityMap
             Particles.InitParticleSystem(particles);
 
             var main = particles.main;
-            main.startLifetime = 10;
-            main.startSize = 0.1f;
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.1f, 0.2f);
-            main.maxParticles = 4000;
+            main.startLifetime = 5;
+            main.startSize = 1;
+            main.startSpeed = 1;
+            main.startColor = new Color(221, 221, 221);
+            main.maxParticles = 40;
 
             var emission = particles.emission;
-            emission.rateOverTime = 200;
+            emission.rateOverTime = 3;
             emission.enabled = true;
 
             var shape = particles.shape;
             shape.angle = 10;
-            shape.radius = 3.0f;
+            shape.radius = 0.0001f;
             shape.rotation = new Vector3(-90, 90, 0);
             shape.scale = new Vector3(0.05f, 0.05f, 0.05f);
             shape.enabled = true;
@@ -69,53 +68,48 @@ namespace Game.CityMap
             var limit = particles.limitVelocityOverLifetime;
             limit.limit = 1;
             limit.dampen = 1;
-            limit.multiplyDragByParticleSize = true;
+            limit.multiplyDragByParticleSize = false;
             limit.multiplyDragByParticleVelocity = true;
-            limit.drag = 400;
+            limit.drag = 4;
             limit.enabled = true;
 
             var force = particles.forceOverLifetime;
-            force.x = new ParticleSystem.MinMaxCurve(0.05f, 0.01f);
-            force.y = new ParticleSystem.MinMaxCurve(-0.4f, 0.4f);
+            force.x = new ParticleSystem.MinMaxCurve(0.15f, 0.2f);
+            force.y = new ParticleSystem.MinMaxCurve(-0.45f, 0.5f);
             force.randomized = true;
             force.enabled = true;
 
             var colorOverLifetime = particles.colorOverLifetime;
             Gradient gradientLifetime = new Gradient();
             GradientColorKey[] colorKeys = new GradientColorKey[2];
-            colorKeys[0].color = Color.white;
+            colorKeys[0].color = new Color(178, 178, 178);
             colorKeys[0].time = 0.0f;
             colorKeys[1].color = Color.white;
-            colorKeys[1].time = 1.0f;
-            GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-            alphaKeys[0].alpha = 82.0f / 255.0f;
-            alphaKeys[0].time = 0.0f;
-            alphaKeys[1].alpha = 0;
-            alphaKeys[1].time = 1.0f;
+            colorKeys[1].time = 0.1f;
+            GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
+            alphaKeys[0].alpha = 0;
+            alphaKeys[0].time = 0;
+            alphaKeys[1].alpha = 1;
+            alphaKeys[1].time = 0.15f;
+            alphaKeys[2].alpha = 1;
+            alphaKeys[2].time = 0.5f;
+            alphaKeys[3].alpha = 0;
+            alphaKeys[3].time = 1.0f;
             gradientLifetime.SetKeys(colorKeys, alphaKeys);
             colorOverLifetime.color = gradientLifetime;
             colorOverLifetime.enabled = true;
 
-            var colorBySpeed = particles.colorBySpeed;
-            Gradient gradientSpeed = new Gradient();
-            GradientColorKey[] colorKeysSpeed = new GradientColorKey[2];
-            colorKeysSpeed[0].color = Color.white;
-            colorKeysSpeed[0].time = 0.0f;
-            colorKeysSpeed[1].color = Color.black;
-            colorKeysSpeed[1].time = 1.0f;
-            GradientAlphaKey[] alphaKeysSpeed = new GradientAlphaKey[2];
-            alphaKeysSpeed[0].alpha = 1;
-            alphaKeysSpeed[0].time = 0;
-            alphaKeysSpeed[1].alpha = 1;
-            alphaKeysSpeed[1].time = 1;
-            gradientSpeed.SetKeys(colorKeysSpeed, alphaKeysSpeed);
-            colorBySpeed.color = gradientSpeed;
-            colorBySpeed.range = new Vector2(0, 0.3f);
-            colorBySpeed.enabled = true;
+            var sizeOverLifetime = particles.sizeOverLifetime;
+            sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1,
+                new AnimationCurve(new Keyframe(0.0f, 0.12f), new Keyframe(0.025f, 0.45f, 5, 5), new Keyframe(0.2f, 0.7f)));
+            sizeOverLifetime.enabled = true;
 
             var renderer = smoke.GetComponent<ParticleSystemRenderer>();
             renderer.sortingLayerName = "Structure";
             renderer.sortingOrder = 1000;
+            Material material = new Material(renderer.material);
+            material.mainTexture = Resources.Load<Texture>("Textures/CloudParticle");
+            renderer.material = material;
         }
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)

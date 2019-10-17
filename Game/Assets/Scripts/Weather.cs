@@ -31,7 +31,7 @@ namespace Game
             main.duration = mapWidth / 1.1f;
             main.prewarm = true;
             main.startSize = 3;
-            main.startColor = new Color(1, 1, 1, 4.0f / 256.0f);
+            main.startColor = Color.white;
             main.simulationSpace = ParticleSystemSimulationSpace.World;
             main.maxParticles = 2000;
 
@@ -48,6 +48,9 @@ namespace Game
             var renderer = particles.GetComponent<ParticleSystemRenderer>();
             renderer.sortingLayerName = "Structure";
             renderer.sortingOrder = 2000;
+            Material material = new Material(renderer.material);
+            material.mainTexture = Resources.Load<Texture>("Textures/CloudParticle");
+            renderer.material = material;
 
             particles.Play();
         }
@@ -67,7 +70,7 @@ namespace Game
                 {
                     var shape = particles.shape;
                     shape.position = new Vector3(shape.position.x, (float)random.NextDouble() * mapHeight - mapHeight / 2.0f);
-                    emission.rateOverTime = 100;
+                    emission.rateOverTime = 3;
                     triggerSecondsLeft = random.Next(2, 5);
                     isGenerating = true;
                 }

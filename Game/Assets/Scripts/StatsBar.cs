@@ -44,6 +44,12 @@ namespace Game
         private Text scoreValueText;
 
         public Action ChangeEvent;
+        public Action CO2ChangeEvent;
+        public Action TemperatureChangeEvent;
+        public Action PopulationChangeEvent;
+        public Action ElectricCapacityChangeEvent;
+        public Action ReputationChangeEvent;
+        public Action WealthChangeEvent;
 
         private void Start()
         {
@@ -55,12 +61,19 @@ namespace Game
             scoreStat = new ForecastableStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, 50);
             wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5);
             co2Stat.ChangeEvent += OnChange;
+            co2Stat.ChangeEvent += CO2ChangeEvent.Invoke;
             tempStat.ChangeEvent += OnChange;
+            tempStat.ChangeEvent += TemperatureChangeEvent.Invoke;
             popStat.ChangeEvent += OnChange;
+            popStat.ChangeEvent += PopulationChangeEvent.Invoke;
             elecStat.ChangeEvent += OnChange;
+            elecStat.ChangeEvent += ElectricCapacityChangeEvent.Invoke;
             repStat.ChangeEvent += OnChange;
+            repStat.ChangeEvent += ReputationChangeEvent.Invoke;
             scoreStat.ChangeEvent += OnChange;
             wealthStat.ChangeEvent += OnChange;
+            wealthStat.ChangeEvent += WealthChangeEvent.Invoke;
+            
 
             tooltipCanvas = new GameObject();
             Canvas canvas = tooltipCanvas.AddComponent<Canvas>();

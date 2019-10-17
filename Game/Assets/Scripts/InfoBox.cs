@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class InfoBox
+    public class InfoBox 
     {
         private const float X = 0;
         private const float Y = 0;

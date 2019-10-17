@@ -29,8 +29,8 @@ namespace Game.CityMap
         public Tilemap map;
         public GameObject parent;
         private int[,] terrainMap;
-        private int WIDTH = 40;
-        private int HEIGHT = 30;
+        public int WIDTH = 40;
+        public int HEIGHT = 30;
         private List<int[]> occupiedBiomSpots = new List<int[]>();
         Random random = new Random();
 
@@ -40,9 +40,6 @@ namespace Game.CityMap
             get
             {
                 BoundsInt cellBounds = map.cellBounds;
-                // Debug.Log("Cell bounds are" + cellBounds);
-                // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
-                // Debug.Log("Bounds are" + cellBounds);
                 return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }
@@ -182,6 +179,32 @@ namespace Game.CityMap
                         // Refresh the tile whenever its sprite changes.
                         tile.SpriteChange += () => map.RefreshTile(vector);
                     }
+                    else if (value < 50)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
+                    }
+                    else if (value < 60)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.GrassHill);  
+                    } 
+                    else if (value < 70)
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.DesertHill);
+                    } 
+                    else
+                    {
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+                    }
+                    map.SetTile(vector, tile);
+                    Vector3 mappedVector = map.CellToWorld(vector);
+                    // Debug.Log("Screen: " + mappedVector);
+                    
+                    tile.ScreenPosition = mappedVector;
+                    tile.name = "j: " + j + " i: " + i;
+                    tile.Canvas = parent;
+                    // Refresh the tile whenever its sprite changes.
+                    tile.SpriteChange += () => map.RefreshTile(vector);
+                    
                 }
             }
 

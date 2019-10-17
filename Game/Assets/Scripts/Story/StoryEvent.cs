@@ -10,7 +10,7 @@ namespace Game.Story
     /// A skeleton for an event.
     /// Events are occurrences in the story that cannot be declined.
     /// </summary>
-    public abstract class StoryEvent 
+    public abstract class StoryEvent : MonoBehaviour
     {
         public enum EventTypes  { Request, Event}
 
@@ -18,12 +18,17 @@ namespace Game.Story
         public abstract string Description { get; }
         public abstract Sprite EventImage { get; }
         
-        public City City { get; set; }
-        public virtual ToolBar ToolBar { get; set; }
-        public Button EndButton { get; set; }
+        public abstract Queue<string> Dialogues { get; }
+
+        public virtual StoryManager StoryManager { get; set; }
         public virtual EventTypes EventType
         {
             get { return EventTypes.Event; }
+        }
+
+        public virtual void GenerateScene(GameObject canvas)
+        {
+            return;
         }
         
         

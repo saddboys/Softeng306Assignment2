@@ -81,6 +81,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.Reputation += 10;
+                City.Stats.Score += 250;
             }
         }
 

@@ -174,6 +174,7 @@ namespace Game.CityMap
             {
                 City.Stats.ElectricCapacity -= 5;
                 City.Stats.Reputation += 3;
+                City.Stats.Score += 800;
             }
         }
 

@@ -93,6 +93,7 @@ namespace Game.CityMap
             {
                 City.Stats.ElectricCapacity -= 1;
                 City.Stats.Reputation += 5;
+                City.Stats.Score += 1500;
             }
         }
 

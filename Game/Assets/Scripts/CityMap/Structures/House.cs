@@ -108,6 +108,7 @@ namespace Game.CityMap
                 City.Stats.ElectricCapacity -= 1;
                 City.Stats.Population += 4;
                 City.Stats.Reputation -= 1;
+                City.Stats.Score += 100;
             }
         }
 

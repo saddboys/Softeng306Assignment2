@@ -63,6 +63,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity += 10;
+                City.Stats.Score += 900;
             }
         }
 

@@ -46,6 +46,9 @@ namespace Game.Story.Events.VerdantLandRequests
             Destroy(StoryManager.storyManagerGameObject.GetComponent<PushingHarderRequest>());
         }
 
+        /// <summary>
+        /// Removes all factories from the map
+        /// </summary>
         private void DestroyFactories()
         {
             MapTile[] tiles = StoryManager.city.Map.Tiles;

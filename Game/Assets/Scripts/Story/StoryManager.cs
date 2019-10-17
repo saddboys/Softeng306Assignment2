@@ -58,7 +58,7 @@ namespace Game.Story
         {
             // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
-            NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
+            NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
         }
         private void HandleCO2ChangeEvent()
         {
@@ -163,7 +163,6 @@ namespace Game.Story
 
         private void CreateDialog()
         {
-            DialogPopUp dialogPopUp;
             Dialogue dialog = new Dialogue(); 
             if (storyEvent != null && !city.HasEnded)
             {

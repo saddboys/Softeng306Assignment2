@@ -54,7 +54,7 @@ namespace Game.Story.Events.VerdantLandRequests
             MapTile[] tiles = StoryManager.city.Map.Tiles;
             foreach (var tile in tiles)
             {
-                if (tile.Structure != null && tile.Structure.GetType() == typeof(Factory))
+                if (tile != null && tile.Structure != null && tile.Structure.GetType() == typeof(Factory))
                 {
                     // tile.Structure.Unrender();
                     new DemolishFactory(StoryManager.city).BuildOnto(tile);

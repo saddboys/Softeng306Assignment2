@@ -2850,6 +2850,9 @@ MonoBehaviour:
   endScreen: {fileID: 1902950562}
   endStatusText: {fileID: 125953123}
   endReasonText: {fileID: 2074054662}
+  stats: {fileID: 1518473962}
+  toolbar: {fileID: 140038115}
+  tempbar: {fileID: 1076415658}
 --- !u!4 &692689141
 Transform:
   m_ObjectHideFlags: 0
@@ -5461,17 +5464,6 @@ MonoBehaviour:
           m_BoolArgument: 1
         m_CallState: 2
       - m_Target: {fileID: 1518473962}
-        m_MethodName: SetActive
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1287379500}
         m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:

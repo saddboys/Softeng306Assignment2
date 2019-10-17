@@ -32,10 +32,9 @@ namespace Game.Story.Events.VerdantLandRequests
         private const string DESCRIPTION = "Shut down all factories to reduce emissions?";
         public override void OnYesClick()
         {
-            StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
-            
             DestroyFactories();
-            
+
+            StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<PushingHarderRequest>());
             
         }
@@ -56,10 +55,7 @@ namespace Game.Story.Events.VerdantLandRequests
             {
                 if (tile != null && tile.Structure != null && tile.Structure.GetType() == typeof(Factory))
                 {
-                    // tile.Structure.Unrender();
                     new DemolishFactory(StoryManager.city).BuildOnto(tile);
-                    // StoryManager.city.Stats.UpdateContribution(tile.Structure.GetStatsChangeOnDemolish());
-                    // tile.Structure = null;
                 }
             }
         }

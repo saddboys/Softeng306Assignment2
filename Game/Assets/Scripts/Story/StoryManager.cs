@@ -69,7 +69,7 @@ namespace Game.Story
             city.Stats.ElectricCapacityChangeEvent += HandleElectricCapacityChangeEvent;
 
             city.EndGameEvent += HandleEndGame;
-            city.EndGameEvent += ResetStory;
+//            city.EndGameEvent += ResetStory;
         }
 
         private void ResetStory()
@@ -198,9 +198,10 @@ namespace Game.Story
         /// Determines the ending to show
         /// </summary>
         private void HandleEndGame()
-        {
+        { 
+            Debug.Log("End Story reached");
             // Check reason for ending game
-            if (city.Turn == 20)
+            if (city.Turn == city.MaxTurns)
             {
                 CheckNonFinalStoryEventEffect();
                 string reason = "";
@@ -229,6 +230,8 @@ namespace Game.Story
                 string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
                 Controller.GameOver(reason);
             }
+            
+            ResetStory();
         }
 
         /// <summary>

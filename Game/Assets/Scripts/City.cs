@@ -22,6 +22,9 @@ namespace Game
         }
         private int turn;
 
+        private readonly int maxTurns = 5;
+        public int MaxTurns => maxTurns;
+
         [SerializeField]
         private StatsBar stats;
 
@@ -99,7 +102,7 @@ namespace Game
             Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             CheckEndGame();
-            NextTurnEvent?.Invoke();
+//            NextTurnEvent?.Invoke();
         }
 
         /// <summary>
@@ -107,9 +110,15 @@ namespace Game
         /// </summary>
         public void CheckEndGame()
         {
-            if (Turn == 20 || Stats.Wealth <= 0 || Stats.Temperature > 2)
+            Debug.Log("Checking end game " + turn);
+            if (Turn == MaxTurns || Stats.Wealth <= 0 || Stats.Temperature > 2)
             {
+                Debug.Log("Trying to end game");
                 EndGameEvent?.Invoke();
+            }
+            else
+            {
+                NextTurnEvent?.Invoke();
             }
             
         }

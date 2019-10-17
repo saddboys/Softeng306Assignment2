@@ -243,7 +243,7 @@ public class EventPopUp : MonoBehaviour
         Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
         while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
         {
-            currentSize.x += 30;
+            currentSize.x += 27;
             currentSize.y += 25;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
             yield return null;

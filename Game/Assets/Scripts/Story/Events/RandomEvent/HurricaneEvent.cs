@@ -23,7 +23,7 @@ namespace Story.Events.RandomEvent
 
         public override Sprite EventImage
         {
-            get { return Resources.LoadAll<Sprite>("EventSprites/hurricane")[0]; }
+            get { return Resources.Load<Sprite>("EventSprites/hurricane"); }
         }
 
         private Coroutine coroutine;

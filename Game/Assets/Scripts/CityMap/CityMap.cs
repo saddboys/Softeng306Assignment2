@@ -146,7 +146,8 @@ namespace Game.CityMap
                 terrainMap = new int[WIDTH, HEIGHT];
             }
 
-            BiomeManager biomeManager = new BiomeManager(WIDTH, HEIGHT, map, parent);
+            BiomeManager biomeManager = new BiomeManager(WIDTH, HEIGHT, map, parent, occupiedBiomSpots);
+            occupiedBiomSpots = biomeManager.occupiedBiomSpots;
 
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
@@ -231,6 +232,7 @@ namespace Game.CityMap
                 // Remove tile from object graph.
                 Destroy(t);
             }
+            occupiedBiomSpots = new Dictionary<int[], Terrain.TerrainTypes>();
             Generate();
         }
 

@@ -15,16 +15,17 @@ namespace Game.CityMap
         private readonly int HEIGHT;
         private Tilemap map;
         private GameObject parent;
-        private Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots = new Dictionary<int[], Terrain.TerrainTypes>();
+        public Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots { get; }
         Random random = new Random();
 
 
-        public BiomeManager(int width, int height, Tilemap m, GameObject p)
+        public BiomeManager(int width, int height, Tilemap m, GameObject p, Dictionary<int[], Terrain.TerrainTypes> obs)
         {
             WIDTH = width;
             HEIGHT = height;
             map = m;
             parent = p;
+            occupiedBiomSpots = obs;
 
             // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
@@ -39,7 +40,41 @@ namespace Game.CityMap
         /// creates a biome for a given type of terrain
         /// </summary>
         private void createBiome(Terrain.TerrainTypes terrain)
-        {
+        {   
+            // calculate biome half length proportional to the map size
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+            int biomeHalfLength = random.Next(biomeLenghtValue - 4, biomeLenghtValue + 4);
+
+            // random anchor spot for biome
+            // index 0 for x and 1 and y coordinate
+            int[] anchor = new int[2];
+            anchor[0] = random.Next(0, WIDTH);
+            anchor[1] = random.Next(0, HEIGHT);
+            
+            while (!getTileTerrain(anchor).Equals(Terrain.TerrainTypes.NotSet))
+            {
+                anchor[0] = random.Next(0, WIDTH);
+                anchor[1] = random.Next(0, HEIGHT);
+            }
+
+            // adding anchor to screen
+            MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
+            Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
+            Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
+
+            anchorTile.Canvas = parent;
+            anchorTile.ScreenPosition = anchorMappedVector;
+
+            anchorTile.Terrain = new Terrain(terrain);
+
+            growBoime(anchor, biomeHalfLength, terrain);
+
+            // create beach biom if the biome type is Ocean
+            if (terrain.Equals(Terrain.TerrainTypes.Ocean))
+            {
+                addBeachBiome(anchor, biomeHalfLength);
+            }
+            
             // Populate none biom areas with grass
             Debug.Log("Creating non biomes");
             for (int i = 0; i < WIDTH; i++)
@@ -75,41 +110,6 @@ namespace Game.CityMap
                     }
                 }
             }
-            
-            // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
-            int biomeHalfLength = random.Next(biomeLenghtValue - 4, biomeLenghtValue + 4);
-
-            // random anchor spot for biome
-            // index 0 for x and 1 and y coordinate
-            int[] anchor = new int[2];
-            anchor[0] = random.Next(0, WIDTH);
-            anchor[1] = random.Next(0, HEIGHT);
-            
-            while (!getTileTerrain(anchor).Equals(Terrain.TerrainTypes.NotSet))
-            {
-                anchor[0] = random.Next(0, WIDTH);
-                anchor[1] = random.Next(0, HEIGHT);
-            }
-
-            // adding anchor to screen
-            MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
-            Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
-            Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
-
-            anchorTile.Canvas = parent;
-            anchorTile.ScreenPosition = anchorMappedVector;
-
-            anchorTile.Terrain = new Terrain(terrain);
-
-            growBoime(anchor, biomeHalfLength, terrain);
-
-            // create beach biom if the biome type is Ocean
-            if (terrain.Equals(Terrain.TerrainTypes.Ocean))
-            {
-                addBeachBiome(anchor, biomeHalfLength);
-            }
-            
         }
 
         /// <summary>
@@ -197,22 +197,10 @@ namespace Game.CityMap
         private Boolean nextToOcean(int[] pos)
         {
             // gets adjacent positions
-            // index
-            //    0 = north
-            //    1 = east
-            //    2 = south
-            //    3 = west
-            int[,] adjPos = new int[4, 2];
-            adjPos[0, 0] = pos[0];
-            adjPos[0, 1] = pos[1] - 1;
-            adjPos[1, 0] = pos[0] + 1;
-            adjPos[1, 1] = pos[1];
-            adjPos[2, 0] = pos[0];
-            adjPos[2, 1] = pos[1] + 1;
-            adjPos[3, 0] = pos[0] - 1;
-            adjPos[3, 1] = pos[1];
+            int[,] adjPos = getNeighbouringTiles(pos);
 
-            for (int i = 0; i < 4; i++)
+            // check it's neighbouring tiles
+            for (int i = 0; i < adjPos.GetLength(0); i++)
             {
                 int[] curPos = new int[2];
                 curPos[0] = adjPos[i, 0];
@@ -227,28 +215,16 @@ namespace Game.CityMap
 
         /// <summary>
         /// checks whether the vacant tile is completely surrounded by sand tiles
-        /// if all 4 tiles are, then the vacant tile will be sand
+        /// if all 6 tiles are, then the vacant tile will be sand
         /// </summary>
         /// <returns> Boolean if the vacant tile is completely surrounded by sand tiles
         private Boolean surroundedByDessert(int[] pos)
         {
             // gets adjacent positions
-            // index
-            //    0 = north
-            //    1 = east
-            //    2 = south
-            //    3 = west
-            int[,] adjPos = new int[4, 2];
-            adjPos[0, 0] = pos[0];
-            adjPos[0, 1] = pos[1] - 1;
-            adjPos[1, 0] = pos[0] + 1;
-            adjPos[1, 1] = pos[1];
-            adjPos[2, 0] = pos[0];
-            adjPos[2, 1] = pos[1] + 1;
-            adjPos[3, 0] = pos[0] - 1;
-            adjPos[3, 1] = pos[1];
+            int[,] adjPos = getNeighbouringTiles(pos);
 
-            for (int i = 0; i < 4; i++)
+            // check it's neighbouring tiles
+            for (int i = 0; i < adjPos.GetLength(0); i++)
             {
                 int[] curPos = new int[2];
                 curPos[0] = adjPos[i, 0];
@@ -277,6 +253,36 @@ namespace Game.CityMap
                 }
             }
             return Terrain.TerrainTypes.NotSet;
+        }
+
+        /// <summary>
+        /// For a given position it returns it's neighbouring positions as a 2 * 6 int array
+        /// The first 2 coordinates are for top right tile, and the subsequent indexes are clockwise to the central tile
+        /// </summary>
+        /// <returns> The neighbouring 2 * 6 array
+        private int[,] getNeighbouringTiles(int[] pos)
+        {
+            int[,] adjPos = new int[6, 2];
+            // 1 o'clock position
+            adjPos[0, 0] = pos[0];
+            adjPos[0, 1] = pos[1] + 1;
+            // 3 o'clock position
+            adjPos[1, 0] = pos[0] + 1;
+            adjPos[1, 1] = pos[1];
+            // 5 o'clock position
+            adjPos[2, 0] = pos[0];
+            adjPos[2, 1] = pos[1] - 1;
+            // 7 o'clock position
+            adjPos[3, 0] = pos[0] - 1;
+            adjPos[3, 1] = pos[1] - 1;
+            // 9 o'clock position
+            adjPos[4, 0] = pos[0] - 1;
+            adjPos[4, 1] = pos[1];
+            // 11 o'clock position
+            adjPos[5, 0] = pos[0] - 1;
+            adjPos[5, 1] = pos[1] + 1;
+
+            return adjPos;
         }
 
         private void SetTileTo(Vector3Int position, MapTile tile)

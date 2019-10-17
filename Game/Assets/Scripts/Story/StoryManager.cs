@@ -120,7 +120,7 @@ namespace Game.Story
             if (city.Turn == 2)
             {
                 storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-               // CreatePopUp();   
+               //CreatePopUp();   
                CreateDialog();
             }
 
@@ -130,8 +130,8 @@ namespace Game.Story
               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
               // Get rid of the first thing in the queue
               storyQueue.Dequeue();
-              CreateDialog();
-              //CreatePopUp();
+              //CreateDialog();
+              CreatePopUp();
           }
           else
           {
@@ -148,10 +148,10 @@ namespace Game.Story
 
         private void CreatePopUp()
         {
-            Debug.Log("goes here");
+           
             EventPopUp popUp;
             if (storyEvent != null && !city.HasEnded)
-            {
+            { Debug.Log("goes here pop up");
                 popUp = storyManagerGameObject.AddComponent<EventPopUp>();
                 popUp.name = "event-pop-up";
                 popUp.Canvas = canvas;
@@ -170,7 +170,7 @@ namespace Game.Story
             if (storyEvent != null && !city.HasEnded)
             {
                 dialog.name = "probelm";
-                string[] strings = new string[1]{"hello!"};
+                string[] strings = new string[2]{"hello!","hhhhhh"};
                 dialog.sentences =strings; //TODO: storyEvent.Dialogues.ToArray();//
                 // dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
                 // dialogPopUp.Canvas = canvas;
@@ -182,10 +182,11 @@ namespace Game.Story
             //dialog.Canvas = canvas;
             IntroStory.SetActive(true);
             FindObjectOfType<DialogueManager>().StartDialogue(dialog);
-            // dialogPopUp.Finished += CreatePopUp;
-            if(FindObjectOfType<DialogueManager>().Finished){
-                CreatePopUp();
-            }
+            FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
+            // if(FindObjectOfType<DialogueManager>().Finished){
+                
+            //     CreatePopUp();
+            // }
             }
            
         }

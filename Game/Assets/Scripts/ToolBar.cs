@@ -22,7 +22,28 @@ namespace Game
             get { return currentFactory; }
             set
             {
+                if (currentFactory == value) return;
+
+                // Update the toolbar toggles if CurrentFactory manually set.
+                // (I.e. not due to user clicking the toggles themselves, but by an event).
+                int newToggleIdx = Array.IndexOf(factories, value);
+                int oldToggleIdx = Array.IndexOf(factories, currentFactory);
+                if (newToggleIdx < 0)
+                {
+                    if (oldToggleIdx >= 0 && toggles[oldToggleIdx].isOn)
+                    {
+                        // Manually clear previous toggle.
+                        toggles[oldToggleIdx].isOn = false;
+                    }
+                }
+                else if (!toggles[newToggleIdx].isOn)
+                {
+                    // Manually set new toggle.
+                    toggles[newToggleIdx].isOn = true;
+                }
+
                 currentFactory = value;
+
                 if (currentFactory != null)
                 {
                     Ghost = currentFactory.CreateGhost();

@@ -169,9 +169,11 @@ namespace Game.Story
             Dialogue dialog = new Dialogue(); 
             if (storyEvent != null && !city.HasEnded)
             {
-                dialog.name = "probelm";
-                string[] strings = new string[1]{"hello!"};
-                dialog.sentences =strings; //TODO: storyEvent.Dialogues.ToArray();//
+                dialog.name = "Secretary";
+                dialog.sentences = storyEvent.Dialogues.ToArray();
+                if (FindObjectOfType<DialogueManager>().Finished) {
+                    CreatePopUp();
+                }
                 // dialogPopUp = storyManagerGameObject.AddComponent<DialogPopUp>();
                 // dialogPopUp.Canvas = canvas;
                 

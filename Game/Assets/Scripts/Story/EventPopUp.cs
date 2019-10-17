@@ -87,7 +87,7 @@ public class EventPopUp : MonoBehaviour
         titleText.fontSize = TITLE_FONT_SIZE;
         titleText.alignment = TextAlignmentOptions.Center;
         title.transform.SetParent(panel.transform,false);
-        title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+        title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,100);
         title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_HEIGHT/2);
         
         // Creating the description
@@ -95,19 +95,19 @@ public class EventPopUp : MonoBehaviour
         Image backgroundImage = description.AddComponent<Image>();
         backgroundImage.color = new Color32(255,255,255,50);
         
-        GameObject descriptionTextObject = new GameObject("DescriptionBackground");
+        GameObject descriptionTextObject = new GameObject("DescriptionText");
 
         Text descriptionText = descriptionTextObject.AddComponent<Text>();
         descriptionText.text = StoryEvent.Description;
         descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         descriptionText.color = Color.black;
         descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
-        descriptionText.alignment = TextAnchor.UpperCenter;
+        descriptionText.alignment = TextAnchor.MiddleCenter;
         description.transform.SetParent(panel.transform,false);
-        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,POP_UP_LIMIT_HEIGHT/4);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.transform.SetParent(description.transform);
-        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/2,100);
+        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
 
     }
@@ -141,24 +141,24 @@ public class EventPopUp : MonoBehaviour
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/2.4f);
         
-        EventTrigger eventTrigger = buttonObj.AddComponent<EventTrigger>();
-        EventTrigger.Entry entry = new EventTrigger.Entry();
-        entry.eventID = EventTriggerType.PointerEnter;
-        entry.callback.AddListener((eventData) =>
-        {
-            buttonImage.color = new Color32(212,212,212,255);
-        } );
-        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
-        exitEntry.eventID = EventTriggerType.PointerExit;
-        exitEntry.callback.AddListener((eventData) =>
-        {
-            buttonImage.color = Color.white;
-        } );
-        
-        
-        
-        eventTrigger.triggers.Add(entry);
-        eventTrigger.triggers.Add(exitEntry);
+//        EventTrigger eventTrigger = buttonObj.AddComponent<EventTrigger>();
+//        EventTrigger.Entry entry = new EventTrigger.Entry();
+//        entry.eventID = EventTriggerType.PointerEnter;
+//        entry.callback.AddListener((eventData) =>
+//        {
+//            buttonImage.color = new Color32(212,212,212,255);
+//        } );
+//        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
+//        exitEntry.eventID = EventTriggerType.PointerExit;
+//        exitEntry.callback.AddListener((eventData) =>
+//        {
+//            buttonImage.color = Color.white;
+//        } );
+//        
+//        
+//        
+//        eventTrigger.triggers.Add(entry);
+//        eventTrigger.triggers.Add(exitEntry);
     }
     
     
@@ -243,7 +243,7 @@ public class EventPopUp : MonoBehaviour
         Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
         while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
         {
-            currentSize.x += 40;
+            currentSize.x += 30;
             currentSize.y += 25;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
             yield return null;

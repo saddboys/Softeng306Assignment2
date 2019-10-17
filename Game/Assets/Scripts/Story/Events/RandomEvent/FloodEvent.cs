@@ -24,7 +24,7 @@ namespace Game.Story.Events.RandomEvent
 
         public override Sprite EventImage
         {
-            get { return Resources.LoadAll<Sprite>("EventSprites/flood")[0]; }
+            get { return Resources.Load<Sprite>("EventSprites/flood"); }
         }
 
         public override Queue<string> Dialogues { get; }

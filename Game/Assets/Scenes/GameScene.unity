@@ -6890,7 +6890,7 @@ MonoBehaviour:
   city: {fileID: 1518473967}
   toolbar: {fileID: 623686491}
   endTurnButton: {fileID: 675100792}
-  canvas: {fileID: 50466573}
+  canvas: {fileID: 1235322262}
   storyManagerGameObject: {fileID: 1411043461}
   IntroStory: {fileID: 1223622121}
 --- !u!4 &1411043463

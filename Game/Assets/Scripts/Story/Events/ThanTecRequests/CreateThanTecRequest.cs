@@ -22,7 +22,10 @@ namespace Game.Story.Events
             get { return DESCRIPTION; }
         }
 
-        public override Sprite EventImage { get; }
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/thantec"); }
+        }
 
         public override Queue<string> Dialogues
         {
@@ -66,7 +69,7 @@ namespace Game.Story.Events
             StoryManager.endTurnButton.interactable = false;
             
             // Placeholder building for now
-            StoryManager.toolbar.CurrentFactory = new HouseFactory();
+            StoryManager.toolbar.CurrentFactory = new ThantecFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CreateThanTecRequest>());

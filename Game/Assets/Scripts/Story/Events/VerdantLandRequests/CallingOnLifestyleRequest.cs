@@ -31,12 +31,16 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             // ending goes here ?
             // Decrease happiness, decrease population, reduce carbon emissions
+            StoryManager.city.Stats.Reputation -= 20;
+            StoryManager.city.Stats.CO2 -= 25;
+            StoryManager.city.Stats.Population -= 10;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
 
         public override void OnNoClick()
         {
             // Increase CO2 emissions from houses
+            StoryManager.city.Stats.CO2 += 25;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
     }

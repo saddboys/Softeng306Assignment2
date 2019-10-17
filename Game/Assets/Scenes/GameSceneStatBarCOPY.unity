@@ -6000,6 +6000,8 @@ MonoBehaviour:
   camera: {fileID: 394646653}
   map: {fileID: 919822513}
   parent: {fileID: 1136636419}
+  WIDTH: 40
+  HEIGHT: 30
 --- !u!1 &1266710181
 GameObject:
   m_ObjectHideFlags: 0
@@ -6519,6 +6521,8 @@ MonoBehaviour:
   endTurnButton: {fileID: 675100792}
   canvas: {fileID: 1235322262}
   storyManagerGameObject: {fileID: 1411043461}
+  IntroStory: {fileID: 0}
+  Controller: {fileID: 0}
 --- !u!4 &1411043463
 Transform:
   m_ObjectHideFlags: 0
@@ -6932,7 +6936,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1518473963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7030,7 +7034,6 @@ MonoBehaviour:
   map: {fileID: 1250365477}
   endTurnButton: {fileID: 675100792}
   turnText: {fileID: 2019561805}
-  controller: {fileID: 692689140}
 --- !u!1 &1542176977
 GameObject:
   m_ObjectHideFlags: 0

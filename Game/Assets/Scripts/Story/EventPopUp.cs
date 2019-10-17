@@ -128,7 +128,6 @@ public class EventPopUp : MonoBehaviour
         GameObject textContainer = new GameObject();
         textContainer.transform.SetParent(buttonObj.transform);
         Text text = textContainer.AddComponent<Text>();
-//        Text text = buttonObj.AddComponent<Text>();
         text.text = "OK";
         text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = Color.black;
@@ -174,41 +173,67 @@ public class EventPopUp : MonoBehaviour
         // Setting the buttons
         // The yes button
         GameObject buttonObj = new GameObject();
-        Button button = buttonObj.AddComponent<Button>();
+        buttonObj.name = "YesButton";
+        buttonObj.transform.SetParent(panel.transform,false);
         
+        Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(DestroyPanel);
         button.onClick.AddListener(storyRequest.OnYesClick);
         
-//        Image buttonImage = buttonObj.AddComponent<Image>();
-//        buttonImage.sprite = Resources.LoadAll<Sprite>("Textures/Structures")[0];
-        Text text = buttonObj.AddComponent<Text>();
+        GameObject textContainer = new GameObject();
+        textContainer.transform.SetParent(buttonObj.transform);
+        Text text = textContainer.AddComponent<Text>();
         text.text = "Yes";
         text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = Color.black;
+        text.alignment = TextAnchor.MiddleCenter;
         text.fontSize = DESCRIPTION_FONT_SIZE;
-        buttonObj.name = "YesButton";
-        buttonObj.transform.SetParent(panel.transform,false);
+        textContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        textContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
+
+
+        Image buttonImage = buttonObj.AddComponent<Image>();
+        buttonImage.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
+        
+//        Image buttonImage = buttonObj.AddComponent<Image>();
+//        buttonImage.sprite = Resources.LoadAll<Sprite>("Textures/Structures")[0];
+//        Text text = buttonObj.AddComponent<Text>();
+//        text.text = "Yes";
+//        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+//        text.color = Color.black;
+//        text.fontSize = DESCRIPTION_FONT_SIZE;
+
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
-        buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-POP_UP_WIDTH/4,-POP_UP_HEIGHT/2.4f);
+        buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-POP_UP_LIMIT_WIDTH/4,-POP_UP_HEIGHT/2.4f);
+        
         
         // The no button or whatever it is going to be called
         GameObject buttonObj2 = new GameObject();
         Button noButton = buttonObj2.AddComponent<Button>();
-        
+        buttonObj2.name = "NoButton";
+        buttonObj2.transform.SetParent(panel.transform,false);
         noButton.onClick.AddListener(DestroyPanel);
         noButton.onClick.AddListener(storyRequest.OnNoClick);
         
 //        Image noButtonImage = buttonObj2.AddComponent<Image>();
 //        noButtonImage.sprite = Resources.LoadAll<Sprite>("Textures/Structures")[1];
-        Text noText = buttonObj2.AddComponent<Text>();
-        noText.text = "No";
-        noText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        noText.color = Color.black;
-        noText.fontSize = DESCRIPTION_FONT_SIZE;
-        buttonObj2.name = "NoButton";
-        buttonObj2.transform.SetParent(panel.transform,false);
+        GameObject textContainer2 = new GameObject();
+        textContainer2.transform.SetParent(buttonObj2.transform);
+        Text text2 = textContainer2.AddComponent<Text>();
+        text2.text = "No";
+        text2.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        text2.color = Color.black;
+        text2.alignment = TextAnchor.MiddleCenter;
+        text2.fontSize = DESCRIPTION_FONT_SIZE;
+        textContainer2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        textContainer2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
+
+
+        Image buttonImage2 = buttonObj2.AddComponent<Image>();
+        buttonImage2.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
+
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
-        buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_WIDTH/4,-POP_UP_HEIGHT/2.4f);
+        buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_LIMIT_WIDTH/4,-POP_UP_HEIGHT/2.4f);
     }
 
     IEnumerator Popup(bool isEvent)

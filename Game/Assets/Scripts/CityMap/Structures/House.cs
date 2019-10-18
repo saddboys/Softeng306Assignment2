@@ -7,13 +7,13 @@ namespace Game.CityMap
 {
     public class House : Structure
     {
-        public const int StructCO2 = 1;
-        public const int StructReputation = -1;
-        public const int StructCost = 250;
-        public const int StructUpkeep = 50;
-        public const int StructScore = 100;
-        public const int StructPopulation = 5;
-        public const int StructElectricity = -1;
+        public static int StructCO2 = 1;
+        public static int StructReputation = -1;
+        public static int StructCost = 250;
+        public static int StructUpkeep = 50;
+        public static int StructScore = 100;
+        public static int StructPopulation = 5;
+        public static int StructElectricity = -1;
         
         public override Stats GetStatsContribution()
         {
@@ -68,6 +68,11 @@ namespace Game.CityMap
         {
             get { return House.StructCost; }
         }
+        
+        public override int Population
+        {
+            get { return -House.StructPopulation; }
+        }
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/House");
@@ -114,7 +119,6 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.ElectricCapacity += House.StructElectricity;
-                City.Stats.Population += House.StructPopulation;
                 City.Stats.Reputation += House.StructReputation;
                 City.Stats.Score += House.StructScore;
             }
@@ -122,9 +126,15 @@ namespace Game.CityMap
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            base.GetInfoBoxData(out _, out _, out sprite, out _);
             title = "Build a house";
-            details = "Citizens of your town need a place to live. Click on a tile to build a house.";
+            meta = "Cost: $" + House.StructCost + "k" + "\t\t" +
+                   "CO2: " + House.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + House.StructElectricity + "\t\t" +
+                   "Income: $" + House.StructUpkeep + "k";
+            details = "Provides 5k workers." +
+                      "They will pay you tax, but use some electricity and generate some pollution. " +
+                      "Building too many without parks will make your city unhappy";
         }
     }
 }

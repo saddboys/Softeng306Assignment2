@@ -7,13 +7,13 @@ namespace Game.CityMap
     public class WindFarm : Structure
     {
         
-        public const int StructCO2 = 0;
-        public const int StructReputation = 1;
-        public const int StructCost = 2000;
-        public const int StructUpkeep = -50;
-        public const int StructScore = 900;
-        public const int StructPopulation = -3;
-        public const int StructElectricity = 20;
+        public static int StructCO2 = 0;
+        public static int StructReputation = 1;
+        public static int StructCost = 2000;
+        public static int StructUpkeep = -50;
+        public static int StructScore = 900;
+        public static int StructPopulation = -3;
+        public static int StructElectricity = 20;
         
         public override Stats GetStatsContribution()
         {
@@ -56,6 +56,11 @@ namespace Game.CityMap
         {
             get { return WindFarm.StructCost; }
         }
+        public override int Population
+        {
+            get { return -WindFarm.StructPopulation; }
+        }
+
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/windmill");
@@ -75,7 +80,6 @@ namespace Game.CityMap
                 City.Stats.ElectricCapacity += WindFarm.StructElectricity;
                 City.Stats.Score += WindFarm.StructScore;
                 City.Stats.Reputation += WindFarm.StructReputation;
-                City.Stats.Population += WindFarm.StructPopulation;
             }
         }
 
@@ -99,7 +103,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a wind farm";
-            details = "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
+            meta = "Cost: $" + WindFarm.StructCost + "k" + "\t\t" +
+                   "CO2: " + WindFarm.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + WindFarm.StructElectricity + "\t\t" +
+                   "Income: $" + WindFarm.StructUpkeep + "k";
+            details = "Requires 3k workers. " +
+                      "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
         }
     }
 }

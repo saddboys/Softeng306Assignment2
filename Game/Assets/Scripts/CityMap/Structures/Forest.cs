@@ -6,13 +6,13 @@ namespace Game.CityMap
 {
     public class Forest : Structure
     {
-        public const int StructCO2 = -5;
-        public const int StructReputation = 0;
-        public const int StructCost = 500;
-        public const int StructUpkeep = 0;
-        public const int StructScore = 100;
-        public const int StructPopulation = 0;
-        public const int StructElectricity = 0;
+        public static int StructCO2 = -5;
+        public static int StructReputation = 0;
+        public static int StructCost = 500;
+        public static int StructUpkeep = 0;
+        public static int StructScore = 100;
+        public static int StructPopulation = 0;
+        public static int StructElectricity = 0;
         
         public override Stats GetStatsContribution()
         {
@@ -112,8 +112,12 @@ namespace Game.CityMap
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
-            title = "Grow a forrest";
-            details = "Although it may seem expensive, you should grow some forrests to help keep the pollution down.";
+            title = "Grow a forest";
+            meta = "Cost: $" + Forest.StructCost + "k" + "\t\t" +
+                   "CO2: " + Forest.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Forest.StructElectricity + "\t\t" +
+                   "Income: $" + Forest.StructUpkeep + "k";
+            details = "Although it may seem expensive, you should grow some forests to help keep the pollution down.";
         }
     }
 }

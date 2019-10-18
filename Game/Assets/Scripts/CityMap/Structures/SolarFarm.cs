@@ -6,13 +6,13 @@ namespace Game.CityMap
 {
     public class SolarFarm : Structure
     {
-        public const int StructCO2 = 0;
-        public const int StructReputation = 1;
-        public const int StructCost = 2000;
-        public const int StructUpkeep = -50;
-        public const int StructScore = 900;
-        public const int StructPopulation = -3;
-        public const int StructElectricity = 20;
+        public static int StructCO2 = 0;
+        public static int StructReputation = 1;
+        public static int StructCost = 2000;
+        public static int StructUpkeep = -50;
+        public static int StructScore = 900;
+        public static int StructPopulation = -3;
+        public static int StructElectricity = 20;
         
         public override Stats GetStatsContribution()
         {
@@ -59,6 +59,11 @@ namespace Game.CityMap
             get { return SolarFarm.StructCost; }
         }
 
+        public override int Population
+        {
+            get { return -SolarFarm.StructPopulation; }
+        }
+
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/solarPanel");
 
@@ -75,7 +80,6 @@ namespace Game.CityMap
             {
                 City.Stats.ElectricCapacity += SolarFarm.StructElectricity;
                 City.Stats.Score += SolarFarm.StructScore;
-                City.Stats.Population += SolarFarm.StructPopulation;
                 City.Stats.Reputation += SolarFarm.StructReputation;
             }
         }
@@ -95,6 +99,19 @@ namespace Game.CityMap
             }
 
             return true;
+        }
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a solar farm";
+            meta = "Cost: $" + SolarFarm.StructCost + "k" + "\t\t" +
+                   "CO2: " + SolarFarm.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + SolarFarm.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -SolarFarm.StructUpkeep + "k";
+            details = "Requires 3k workers. " +
+                      "Although expensive and less effective, solar farms can produce electricity " +
+                      "for your town without adding pollution.";
         }
     }
 }

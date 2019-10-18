@@ -6,13 +6,13 @@ namespace Game.CityMap
 {
     public class Dock : Structure
     {
-        public const int StructCO2 = 30;
-        public const int StructReputation = 0;
-        public const int StructCost = 5000;
-        public const int StructUpkeep = 1500;
-        public const int StructScore = 2000;
-        public const int StructPopulation = -15;
-        public const int StructElectricity = -30;
+        public static int StructCO2 = 30;
+        public static int StructReputation = 0;
+        public static int StructCost = 5000;
+        public static int StructUpkeep = 1500;
+        public static int StructScore = 2000;
+        public static int StructPopulation = -15;
+        public static int StructElectricity = -30;
         
         public override Stats GetStatsContribution()
         {
@@ -54,6 +54,11 @@ namespace Game.CityMap
         public override int Cost
         {
             get { return Dock.StructCost; }
+        }
+
+        public override int Population
+        {
+            get { return -Dock.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
@@ -103,7 +108,6 @@ namespace Game.CityMap
                 City.Stats.ElectricCapacity -= Dock.StructElectricity;
                 City.Stats.Reputation += Dock.StructReputation;
                 City.Stats.Score += Dock.StructScore;
-                City.Stats.Population += Dock.StructPopulation;
             }
         }
 
@@ -111,7 +115,13 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a dock";
-            details = "Click on a tile to build a dock.";
+            meta = "Cost: $" + Dock.StructCost + "k" + "\t\t" +
+                   "CO2: " + Dock.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Dock.StructElectricity + "\t\t" +
+                   "Income: $" + Dock.StructUpkeep + "k";
+            details = "Requires 15k workers." +
+                      "Docks are huge commercial buildings to help generate money, but make a lot of pollution." +
+                      " Click on a tile to build a dock.";
         }
     }
 }

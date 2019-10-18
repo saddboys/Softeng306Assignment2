@@ -15,6 +15,7 @@ namespace Game.CityMap
         /// This is to be set by each concrete StructureFactory implementation.
         /// </summary>
         public virtual int Cost { get; }
+        public virtual int Population { get; }
 
         /// <summary>
         /// Sprite to use for the toolbar button.
@@ -74,6 +75,12 @@ namespace Game.CityMap
                 return false;
             }
 
+            if (City?.Stats.Population < Population)
+            {
+                reason = "Not enough workers";
+                return false;
+            }
+
             reason = "";
             return true;
         }
@@ -122,6 +129,7 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.Wealth -= Cost;
+                City.Stats.Population -= Population;
             }
         }
 

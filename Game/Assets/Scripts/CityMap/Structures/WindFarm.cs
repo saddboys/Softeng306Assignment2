@@ -6,13 +6,21 @@ namespace Game.CityMap
 {
     public class WindFarm : Structure
     {
+        
+        public static int StructCO2 = 0;
+        public static int StructReputation = 1;
+        public static int StructCost = 2000;
+        public static int StructUpkeep = -50;
+        public static int StructScore = 900;
+        public static int StructPopulation = -3;
+        public static int StructElectricity = 20;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 0,
-                Wealth = -50,
-                ElectricCapacity = 0,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -20,7 +28,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = -10,
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
 
@@ -40,12 +50,20 @@ namespace Game.CityMap
 
     public class WindFarmFactory : StructureFactory
     {
-        public WindFarmFactory(City city) : base(city) { }
+        public WindFarmFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/PowerPlant");
+        }
         public WindFarmFactory() : base() { }
         public override int Cost
         {
-            get { return 2000; }
+            get { return WindFarm.StructCost; }
         }
+        public override int Population
+        {
+            get { return -WindFarm.StructPopulation; }
+        }
+
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/windmill");
@@ -62,7 +80,9 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 10;
+                City.Stats.ElectricCapacity += WindFarm.StructElectricity;
+                City.Stats.Score += WindFarm.StructScore;
+                City.Stats.Reputation += WindFarm.StructReputation;
             }
         }
 
@@ -86,7 +106,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a wind farm";
-            details = "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
+            meta = "Cost: $" + WindFarm.StructCost + "k" + "\t\t" +
+                   "CO2: " + WindFarm.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + WindFarm.StructElectricity + "\t\t" +
+                   "Income: $" + WindFarm.StructUpkeep + "k";
+            details = "Requires 3k workers. " +
+                      "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
         }
     }
 }

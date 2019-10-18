@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.CityMap;
 using Game.Story;
 using Game.Story.Events;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,59 +13,78 @@ public class EventPopUp : MonoBehaviour
 
     public GameObject Canvas { get; set; }
     public CityMap CityMap { get; set; }
-
-    private const int POP_UP_WIDTH = 400;
-    private const int POP_UP_HEIGHT = 250;
+    public StoryEvent StoryEvent { get; set; }
+    private int POP_UP_WIDTH;
+    private int POP_UP_HEIGHT;
     private const int BUTTON_WIDTH = 50;
     private const int BUTTON_HEIGHT = 30;
-    private const int TITLE_FONT_SIZE = 30;
+    private const int TITLE_FONT_SIZE = 45;
     private const int DESCRIPTION_FONT_SIZE = 15;
 
-    public StoryEvent StoryEvent { get; set; }
+    void Start()
+    {
+        POP_UP_WIDTH =  Screen.currentResolution.width/4;
+        POP_UP_HEIGHT = Screen.currentResolution.height/4;
+    }
+
 
     // Placeholder method to create the pop up. Used for testing purposes
     // May call this function when the turn event is fired
     // Maybe have an event fire whenever a create event is called
     private const string POP_UP_NAME = "popup-panel";
 
+    private Animator animator;
+
     public void Create()
     {
         if (StoryEvent.EventType == StoryEvent.EventTypes.Request)
         {
-            CreateRequestPopUp();
+            CreatePopUp(false);
         }
         else
         {
-            CreateEventPopUp();
+            CreatePopUp(true);
         }
     }
-    
-    private void CreatePopUp()
+
+    private GameObject panel;
+    private void CreatePopUp(bool isEvent)
     {
         
-        // Upon creating we want to disable everything else.
-        // TODO: Need some way to make the background darker probably.
-       // cityMap.active = false;
-
         // Creating the panel 
-        GameObject panel = new GameObject(POP_UP_NAME);
+        panel = new GameObject(POP_UP_NAME);
         panel.AddComponent<CanvasRenderer>();
         Image i = panel.AddComponent<Image>();
-        i.color = Color.white;
+        i.sprite = StoryEvent.EventImage;
         panel.transform.SetParent(Canvas.transform, false);
-        panel.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+        panel.GetComponent<RectTransform>().sizeDelta = new Vector2(0,0);
+        StartCoroutine(Popup(isEvent));
+
+
+       
+//       animator = panel.AddComponent<Animator>();
+//       animator.runtimeAnimatorController = Resources.Load("Animations/popup-panel") as RuntimeAnimatorController;;
+//       animator.SetBool("IsOpen", true);
+    }
+
+    private void CreateDefaultElements()
+    {
+                
         
         // Creating the title
         GameObject title = new GameObject("Title");
-        Text titleText = title.AddComponent<Text>();
+        TextMeshProUGUI titleText = title.AddComponent<TextMeshProUGUI>();
+        //Text titleText = title.AddComponent<Text>();
         titleText.text = StoryEvent.Title;
-        titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-        titleText.color = Color.black;
+        titleText.font = Resources.Load<TMP_FontAsset>("Fonts/Bangers SDF");
+        titleText.color = Color.white;
+        titleText.outlineColor = Color.black;
+        titleText.outlineWidth = 0.3f;
         titleText.fontSize = TITLE_FONT_SIZE;
-        titleText.alignment = TextAnchor.UpperCenter;
+        titleText.alignment = TextAlignmentOptions.Center;
         title.transform.SetParent(panel.transform,false);
         title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
-        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-10);
+        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_HEIGHT/2);
         
         // Creating the description
         GameObject description = new GameObject("Description");
@@ -81,28 +101,24 @@ public class EventPopUp : MonoBehaviour
        // description.GetComponent<RectTransform>().localScale = new Vector3(0.5f,0.5f,1);
        
        // Setting the image 
-       GameObject imageGameObject = new GameObject("Image");
-       Image sprite = imageGameObject.AddComponent<Image>();
-       sprite.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH/2,POP_UP_HEIGHT/2);
-       sprite.sprite = StoryEvent.EventImage;
-       Debug.Log(StoryEvent.EventImage);
-       imageGameObject.transform.SetParent(panel.transform,false);
-       description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
-       description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/6);
-
+//       GameObject imageGameObject = new GameObject("Image");
+//       Image sprite = imageGameObject.AddComponent<Image>();
+//       sprite.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH/2,POP_UP_HEIGHT/2);
+//       sprite.sprite = StoryEvent.EventImage;
+//       imageGameObject.transform.SetParent(panel.transform,false);
+//       description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,POP_UP_HEIGHT);
+//       description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/6);
     }
-
-    
     /// <summary>
     /// Creates the additional button for an event pop up
     /// </summary>
     private void CreateEventPopUp()
     {
-        CreatePopUp();
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         GameObject buttonObj = new GameObject();
         Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(DestroyPanel);
+        button.onClick.AddListener(StoryEvent.OnYesClick);
         button.name = "HELLO";
         Text text = buttonObj.AddComponent<Text>();
         text.text = "OK";
@@ -123,7 +139,6 @@ public class EventPopUp : MonoBehaviour
     /// </summary>
     private void CreateRequestPopUp()
     {
-        CreatePopUp();
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
 
         StoryRequest storyRequest = (StoryRequest) StoryEvent;
@@ -166,13 +181,38 @@ public class EventPopUp : MonoBehaviour
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_WIDTH/4,-POP_UP_HEIGHT/2.4f);
     }
+
+    IEnumerator Popup(bool isEvent)
+    {
+
+
+        Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
+        while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
+        {
+            currentSize.x += 25;
+            currentSize.y += 25;
+            panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
+            yield return null;
+        }
+        CreateDefaultElements();
+        if (isEvent)
+        {
+            CreateEventPopUp();
+        }
+        else
+        {
+            CreateRequestPopUp();
+        }
+    }
+    
     
     /// <summary>
     /// Upon clicking a button, we destroy the panel.
     /// </summary>
     private void DestroyPanel()
     {
-        Canvas.SetActive(false);
+        StoryEvent.GenerateScene(Canvas);
+        Canvas.transform.Find("Panel").gameObject.SetActive(false);
         GameObject panel = Canvas.transform.Find(POP_UP_NAME).gameObject;
         Destroy(panel);
         Destroy(GetComponent<EventPopUp>());

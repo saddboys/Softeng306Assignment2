@@ -6,12 +6,20 @@ namespace Game.CityMap
 {
     public class Park : Structure
     {
+        public static int StructCO2 = 0;
+        public static int StructReputation = 5;
+        public static int StructCost = 1000;
+        public static int StructUpkeep = -100;
+        public static int StructScore = 250;
+        public static int StructPopulation = 0;
+        public static int StructElectricity = 0;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = -1,
-                Wealth = -100,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -36,7 +44,8 @@ namespace Game.CityMap
         {
             return new Stats()
             {
-                Reputation = -10
+                Population = -StructPopulation,
+                Reputation = -StructReputation,
             };
         }
 
@@ -54,7 +63,11 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 1000; }
+            get { return Park.StructCost; }
+        }
+        public override int Population
+        {
+            get { return -Park.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
@@ -80,7 +93,8 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.Reputation += 10;
+                City.Stats.Reputation += Park.StructReputation;
+                City.Stats.Score += Park.StructScore;
             }
         }
 
@@ -88,6 +102,10 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a park";
+            meta = "Cost: $" + Park.StructCost + "k" + "\t\t" +
+                   "CO2: " + Park.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Park.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -Park.StructUpkeep + "k";
             details = "Add a park to your town. Make it a wonderful town to live in. Click on a tile to build a park.";
         }
     }

@@ -6,12 +6,21 @@ namespace Game.CityMap
 {
     public class PowerPlant : Structure
     {
+        
+        public static int StructCO2 = 30;
+        public static int StructReputation = -1;
+        public static int StructCost = 1500;
+        public static int StructUpkeep = -200;
+        public static int StructScore = 600;
+        public static int StructPopulation = -5;
+        public static int StructElectricity = 30;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 30,
-                Wealth = -200,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -19,7 +28,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = -20,
+                Population = -StructPopulation,
+                Reputation = -StructReputation,
+                ElectricCapacity = -StructElectricity,
             };
         }
 
@@ -121,11 +132,19 @@ namespace Game.CityMap
 
     public class PowerPlantFactory : StructureFactory
     {
-        public PowerPlantFactory(City city) : base(city) { }
+        public PowerPlantFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/PowerPlant");
+        }
+
         public PowerPlantFactory() : base() { }
         public override int Cost
         {
-            get { return 1500; }
+            get { return PowerPlant.StructCost; }
+        }
+        public override int Population
+        {
+            get { return -PowerPlant.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
@@ -142,7 +161,8 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 20;
+                City.Stats.ElectricCapacity += PowerPlant.StructElectricity;
+                City.Stats.Score += PowerPlant.StructScore;
             }
         }
 
@@ -166,7 +186,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a power plant";
-            details = "Everything needs power to function. Click on a tile to build a power plant. Be careful with it's pollution.";
+            meta = "Cost: $" + PowerPlant.StructCost + "k" + "\t\t" +
+                   "CO2: " + PowerPlant.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + PowerPlant.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -PowerPlant.StructUpkeep + "k";
+            details = "Requires 5k workers. Everything needs power to function. Be careful with it's pollution. " +
+                      "Click on a tile to build a power plant. ";
         }
     }
 }

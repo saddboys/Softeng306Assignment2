@@ -2,7 +2,6 @@ using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
@@ -22,6 +21,9 @@ namespace Game
             }
         }
         private int turn;
+
+        private readonly int maxTurns = 20;
+        public int MaxTurns => maxTurns;
 
         [SerializeField]
         private StatsBar stats;
@@ -59,23 +61,15 @@ namespace Game
         [SerializeField]
         private Text turnText;
 
-        [SerializeField]
-        private GameSceneController controller;
-
-        public GameSceneController Controller
-        {
-            get { return controller; }
-        }
-        
         /// <summary>
         /// Fires at the beginning of each new turn.
         /// Useful for spawning events and for updating structures.
         /// E.g. Some structures take 3 turns to build, etc.
         /// </summary>
         public event Action NextTurnEvent;
-
+        
+        public event Action EndGameEvent;
         private Weather weather;
-
         // Start is called before the first frame update
         void Start()
         {
@@ -108,7 +102,7 @@ namespace Game
             Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             CheckEndGame();
-            NextTurnEvent?.Invoke();
+//            NextTurnEvent?.Invoke();
         }
 
         /// <summary>
@@ -116,42 +110,17 @@ namespace Game
         /// </summary>
         public void CheckEndGame()
         {
-            double temp = stats.Temperature;
-            double wealth = stats.Wealth;
-                
-            if (Turn == 20)
+            Debug.Log("Checking end game " + turn);
+            if (Turn == MaxTurns || Stats.Wealth <= 0 || Stats.Temperature > 2)
             {
-                string reason = "Congratulations! You have sustainably developed your city!";
-                EndGame(true, reason);
-                hasEnded = true;
-            } else if (wealth <= 0)
-            {
-                string reason = "You've run out of assets to support your city!";
-                EndGame(false, reason);
-                hasEnded = true;
-            } else if (temp > 2)
-            {
-                string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
-                EndGame(false, reason);
-                hasEnded = true;
-            } 
-        }
-
-        /// <summary>
-        /// The function triggers the game over overlay, specifying the reason for failure
-        /// </summary>
-        /// <param name="reason">The reason the player has lost the game</param>
-        public void EndGame(bool isWon, string reason)
-        {
-            EndTurnButton.interactable = false;
-            if (isWon)
-            {
-                Controller.GameWon(reason);   
+                Debug.Log("Trying to end game");
+                EndGameEvent?.Invoke();
             }
-            else 
+            else
             {
-                Controller.GameOver(reason);    
+                NextTurnEvent?.Invoke();
             }
+            
         }
 
         /// <summary>

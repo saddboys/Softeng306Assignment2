@@ -18,6 +18,7 @@ namespace Game
         private InfoBox infoBox;
 
         private AudioClip invalidSound;
+        private AudioClip keyboardSelectSound;
 
         public StructureFactory CurrentFactory
         {
@@ -176,6 +177,7 @@ namespace Game
             infoBox = new InfoBox(gameObject.transform.parent.gameObject);
 
             invalidSound = Resources.Load<AudioClip>("SoundEffects/Invalid");
+            keyboardSelectSound = Resources.Load<AudioClip>("SoundEffects/Click");
         }
 
         private void Update()
@@ -186,8 +188,16 @@ namespace Game
                 char c = Input.inputString[0];
                 int x = c - '1';
                 if (x < 0 || x >= factories.Length) return;
-                CurrentFactory = factories[x];
-                toggles[x].isOn = true;
+                if (!factories[x].CanBuild(out string reason))
+                {
+                    ShowPopupInfo(reason);
+                }
+                else
+                {
+                    GameObject.FindObjectOfType<AudioBehaviour>().Play(keyboardSelectSound);
+                    CurrentFactory = factories[x];
+                    toggles[x].isOn = true;
+                }
             }
         }
 

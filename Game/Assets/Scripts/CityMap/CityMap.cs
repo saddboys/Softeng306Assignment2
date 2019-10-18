@@ -34,6 +34,7 @@ namespace Game.CityMap
         private List<int[]> occupiedBiomSpots = new List<int[]>();
         Random random = new Random();
 
+        private AudioClip rotateSound;
 
         public MapTile[] Tiles
         {
@@ -49,6 +50,7 @@ namespace Game.CityMap
         // Start is called before the first frame update
         void Start()
         {
+            rotateSound = Resources.Load<AudioClip>("SoundEffects/CameraRotate");
             Generate();
         }
         // Update is called once per frame
@@ -56,7 +58,7 @@ namespace Game.CityMap
         {
             CheckTileClick();
             CheckTileHover();
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
             {
                 Rotate(true);
             }
@@ -471,6 +473,9 @@ namespace Game.CityMap
             Vector3 newPos = map.CellToWorld(RotateCellPosition(cameraFocus, clockwise));
             newPos.z = cameraZPos;
             camera.GetComponent<CameraDrag>().TeleportTo(newPos);
+
+            // Nice swoosh sound.
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(rotateSound);
         }
 
         private Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)

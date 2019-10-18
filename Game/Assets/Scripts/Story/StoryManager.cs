@@ -119,8 +119,8 @@ namespace Game.Story
             // For testing an event
             if (city.Turn == 2)
             {
-                storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.PUSHING_HARDER_REQUEST);
-               //storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
+               // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.PUSHING_HARDER_REQUEST);
+               storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
                 CreatePopUp();   
             }
 //

@@ -99,13 +99,14 @@ public class EventPopUp : MonoBehaviour
 
         Text descriptionText = descriptionTextObject.AddComponent<Text>();
         descriptionText.text = StoryEvent.Description;
-        descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+       // descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+       descriptionText.font = Resources.Load<Font>("Fonts/Electronic");
         descriptionText.color = Color.black;
         descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
         descriptionText.alignment = TextAnchor.MiddleCenter;
         description.transform.SetParent(panel.transform,false);
         description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_LIMIT_HEIGHT/4);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_LIMIT_HEIGHT/3);
         descriptionTextObject.transform.SetParent(description.transform);
         descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);

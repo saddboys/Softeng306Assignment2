@@ -61,22 +61,26 @@ namespace Game
     {
         private AudioClip hover;
         private AudioClip click;
+        private Selectable selectable;
 
         public AudioManager Audio { get; set; }
 
         private void Start()
         {
+            selectable = (Selectable)gameObject.GetComponent<Button>() ?? gameObject.GetComponent<Toggle>();
             hover = Resources.Load<AudioClip>("SoundEffects/Hover");
             click = Resources.Load<AudioClip>("SoundEffects/Click");
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            if (!selectable.interactable) return;
             Audio?.Play(click);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (!selectable.interactable) return;
             Audio?.Play(hover);
         }
     }

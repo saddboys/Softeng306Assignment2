@@ -40,6 +40,11 @@ namespace Game.CityMap
                 reason = "Nothing to demolish here";
                 return false;
             } 
+            if (tile.Structure.GetType() == typeof(House) && City.Stats.Population < 5)
+            {
+                reason = "Cannot demolish a house when you have less than 5k people";
+                return false;
+            } 
             
             if (tile.Structure.GetType() == typeof(Mountain))
             {

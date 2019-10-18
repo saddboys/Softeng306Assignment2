@@ -30,9 +30,57 @@ namespace Game.CityMap
             // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
             Debug.Log("Creating biomes");
-            createBiome(Terrain.TerrainTypes.Desert);
-            for (int i = 0; i < numBiomes; i++) {
+            
+            // desert
+            for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
+            {
+                createBiome(Terrain.TerrainTypes.Desert);
+            }
+            // ocean
+            for (int i = 0; i < numBiomes; i++)
+            {
                 createBiome(Terrain.TerrainTypes.Ocean);
+            }
+            // graas hills
+            for (int i = 0; i < numBiomes; i++)
+            {
+                createBiome(Terrain.TerrainTypes.GrassHill);
+            }
+
+            // Populate none biom areas with grass
+            Debug.Log("Creating non biomes");
+            for (int i = 0; i < WIDTH; i++)
+            {
+                for (int j = 0; j < HEIGHT; j++)
+                {
+                    MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+
+                    // A vector used for hex position
+                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
+
+                    int[] pos = new int[2];
+                    pos[0] = i;
+                    pos[1] = j;
+                    if (getTileTerrain(pos).Equals(Terrain.TerrainTypes.NotSet))
+                    {
+                        if (nextToOcean(pos))
+                        {
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
+                        }
+                        else if (surroundedByDessert(pos))
+                        {
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
+                        }
+                        else
+                        {
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
+                        }
+
+                        SetTileTo(vector, tile);
+                        // Refresh the tile whenever its sprite changes.
+                        tile.SpriteChange += () => map.RefreshTile(vector);
+                    }
+                }
             }
         }
 
@@ -73,42 +121,6 @@ namespace Game.CityMap
             if (terrain.Equals(Terrain.TerrainTypes.Ocean))
             {
                 addBeachBiome(anchor, biomeHalfLength);
-            }
-            
-            // Populate none biom areas with grass
-            Debug.Log("Creating non biomes");
-            for (int i = 0; i < WIDTH; i++)
-            {
-                for (int j = 0; j < HEIGHT; j++)
-                {
-                    MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-
-                    // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
-
-                    int[] pos = new int[2];
-                    pos[0] = i;
-                    pos[1] = j;
-                    if (getTileTerrain(pos).Equals(Terrain.TerrainTypes.NotSet))
-                    {
-                        if (nextToOcean(pos))
-                        {
-                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
-                        }
-                        else if (surroundedByDessert(pos))
-                        {
-                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
-                        }
-                        else
-                        {
-                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
-                        }
-
-                        SetTileTo(vector, tile);
-                        // Refresh the tile whenever its sprite changes.
-                        tile.SpriteChange += () => map.RefreshTile(vector);
-                    }
-                }
             }
         }
 
@@ -263,24 +275,50 @@ namespace Game.CityMap
         private int[,] getNeighbouringTiles(int[] pos)
         {
             int[,] adjPos = new int[6, 2];
-            // 1 o'clock position
-            adjPos[0, 0] = pos[0];
-            adjPos[0, 1] = pos[1] + 1;
-            // 3 o'clock position
-            adjPos[1, 0] = pos[0] + 1;
-            adjPos[1, 1] = pos[1];
-            // 5 o'clock position
-            adjPos[2, 0] = pos[0];
-            adjPos[2, 1] = pos[1] - 1;
-            // 7 o'clock position
-            adjPos[3, 0] = pos[0] - 1;
-            adjPos[3, 1] = pos[1] - 1;
-            // 9 o'clock position
-            adjPos[4, 0] = pos[0] - 1;
-            adjPos[4, 1] = pos[1];
-            // 11 o'clock position
-            adjPos[5, 0] = pos[0] - 1;
-            adjPos[5, 1] = pos[1] + 1;
+            // when y coordinate is even
+            if (pos[1] % 2 == 1)
+            {
+                // 1 o'clock position
+                adjPos[0, 0] = pos[0];
+                adjPos[0, 1] = pos[1] + 1;
+                // 3 o'clock position
+                adjPos[1, 0] = pos[0] + 1;
+                adjPos[1, 1] = pos[1];
+                // 5 o'clock position
+                adjPos[2, 0] = pos[0];
+                adjPos[2, 1] = pos[1] - 1;
+                // 7 o'clock position
+                adjPos[3, 0] = pos[0] - 1;
+                adjPos[3, 1] = pos[1] - 1;
+                // 9 o'clock position
+                adjPos[4, 0] = pos[0] - 1;
+                adjPos[4, 1] = pos[1];
+                // 11 o'clock position
+                adjPos[5, 0] = pos[0] - 1;
+                adjPos[5, 1] = pos[1] + 1;
+            }
+            else
+            {
+                // 1 o'clock position
+                adjPos[0, 0] = pos[0] + 1;
+                adjPos[0, 1] = pos[1] + 1;
+                // 3 o'clock position
+                adjPos[1, 0] = pos[0] + 1;
+                adjPos[1, 1] = pos[1];
+                // 5 o'clock position
+                adjPos[2, 0] = pos[0] + 1;
+                adjPos[2, 1] = pos[1] - 1;
+                // 7 o'clock position
+                adjPos[3, 0] = pos[0];
+                adjPos[3, 1] = pos[1] - 1;
+                // 9 o'clock position
+                adjPos[4, 0] = pos[0] - 1;
+                adjPos[4, 1] = pos[1];
+                // 11 o'clock position
+                adjPos[5, 0] = pos[0];
+                adjPos[5, 1] = pos[1] + 1;
+            }
+            
 
             return adjPos;
         }

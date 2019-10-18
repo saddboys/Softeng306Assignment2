@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Game.CityMap;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
@@ -29,14 +30,23 @@ namespace Game.Story.Events.VerdantLandRequests
 
         public override void OnYesClick()
         {
-            // ending goes here ?
-            // Decrease happiness, decrease population, reduce carbon emissions
+            // ending goes here
+
+            // Decrease happiness, decrease population
+            StoryManager.city.Stats.Reputation -= 20;
+            StoryManager.city.Stats.Population -= 10;
+
+            // Decrease energy usage and reduce carbon emissions of houses
+            House.StructElectricity += 1;
+            House.StructCO2 -= 1;
+
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
 
         public override void OnNoClick()
         {
             // Increase CO2 emissions from houses
+            House.StructCO2 += 1;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }
     }

@@ -19,7 +19,10 @@ namespace Game.CityMap
                 return 100;
             }
         }
-        public DemolishFactory(City city) : base(city) { }
+        public DemolishFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Demolish");
+        }
         public DemolishFactory() : base() { }
 
         public override Sprite Sprite { get; } =
@@ -38,6 +41,11 @@ namespace Game.CityMap
             if (tile.Structure == null)
             {
                 reason = "Nothing to demolish here";
+                return false;
+            } 
+            if (tile.Structure.GetType() == typeof(House) && City.Stats.Population < 5)
+            {
+                reason = "Cannot demolish a house when you have less than 5k people";
                 return false;
             } 
             

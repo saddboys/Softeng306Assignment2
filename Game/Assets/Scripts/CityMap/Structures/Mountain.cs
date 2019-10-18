@@ -43,6 +43,11 @@ namespace Game.CityMap
             get { return 1000000; }
         }
 
+        public override int Population 
+        {
+            get { return 1000000; }
+        }
+
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/mountain");
 
@@ -92,7 +97,7 @@ namespace Game.CityMap
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
-            title = "mountain";
+            title = "Mountain";
             details = "A tall mountain which cannot be used for anything";
         }
     }

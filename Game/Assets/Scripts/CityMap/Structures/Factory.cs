@@ -7,12 +7,20 @@ namespace Game.CityMap
 {
     public class Factory : Structure
     {
+        public static int StructCO2 = 10;
+        public static int StructReputation = 0;
+        public static int StructCost = 3000;
+        public static int StructUpkeep = 500;
+        public static int StructScore = 750;
+        public static int StructPopulation = -5;
+        public static int StructElectricity = -10;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats()
             {
-                CO2 = 20,
-                Wealth = 500,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep
             };
         }
 
@@ -20,8 +28,9 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 5,
-                Reputation = -3
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
 
@@ -122,13 +131,21 @@ namespace Game.CityMap
         {
             get
             {
-                return 2500;
+                return Factory.StructCost;
             }
+        }
+
+        public override int Population
+        {
+            get { return -Factory.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/FactoryNew");
-        public FactoryFactory(City city) : base(city) { }
+        public FactoryFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Factory");
+        }
         public FactoryFactory() : base() { }
 
         protected override Structure Create()
@@ -142,7 +159,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 5)
+            if (City?.Stats.ElectricCapacity < -Factory.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -172,8 +189,9 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 5;
-                City.Stats.Reputation += 3;
+                City.Stats.ElectricCapacity += Factory.StructElectricity;
+                City.Stats.Reputation += Factory.StructReputation;
+                City.Stats.Score += Factory.StructScore;
             }
         }
 
@@ -181,7 +199,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a factory";
-            details = "Citizens of your town need a place to work. Click on a tile to build a factory.";
+            meta = "Cost: $" + Factory.StructCost + "k" + "\t\t" +
+                   "CO2: " + Factory.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Factory.StructElectricity + "\t\t" +
+                   "Income: $" + Factory.StructUpkeep + "k";
+            details = "Requires 5k Workers. Citizens of your town need a place to work, and you need a source of money." +
+                      " Click on a tile to build a factory.";
         }
     }
 }

@@ -121,7 +121,11 @@ namespace Game.CityMap
 
     public class PowerPlantFactory : StructureFactory
     {
-        public PowerPlantFactory(City city) : base(city) { }
+        public PowerPlantFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/PowerPlant");
+        }
+
         public PowerPlantFactory() : base() { }
         public override int Cost
         {

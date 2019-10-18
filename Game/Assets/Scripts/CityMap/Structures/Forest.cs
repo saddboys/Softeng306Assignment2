@@ -48,7 +48,10 @@ namespace Game.CityMap
 
     public class ForestFactory : StructureFactory
     {
-        public ForestFactory(City city) : base(city) { }
+        public ForestFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Trees");
+        }
         public ForestFactory() : base() { }
 
         public override int Cost

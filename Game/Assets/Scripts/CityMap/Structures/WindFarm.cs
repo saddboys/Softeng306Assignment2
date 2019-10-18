@@ -40,7 +40,10 @@ namespace Game.CityMap
 
     public class WindFarmFactory : StructureFactory
     {
-        public WindFarmFactory(City city) : base(city) { }
+        public WindFarmFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/PowerPlant");
+        }
         public WindFarmFactory() : base() { }
         public override int Cost
         {

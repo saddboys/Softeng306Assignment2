@@ -112,8 +112,12 @@ namespace Game.CityMap
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
-            title = "Grow a forrest";
-            details = "Although it may seem expensive, you should grow some forrests to help keep the pollution down.";
+            title = "Grow a forest";
+            meta = "Cost: $" + Forest.StructCost + "k" + "\t\t" +
+                   "CO2: " + Forest.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Forest.StructElectricity + "\t\t" +
+                   "Income: $" + Forest.StructUpkeep + "k";
+            details = "Although it may seem expensive, you should grow some forests to help keep the pollution down.";
         }
     }
 }

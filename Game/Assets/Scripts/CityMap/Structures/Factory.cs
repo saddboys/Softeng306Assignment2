@@ -135,6 +135,11 @@ namespace Game.CityMap
             }
         }
 
+        public override int Population
+        {
+            get { return -Factory.StructPopulation; }
+        }
+
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/FactoryNew");
         public FactoryFactory(City city) : base(city) { }
@@ -184,7 +189,6 @@ namespace Game.CityMap
                 City.Stats.ElectricCapacity += Factory.StructElectricity;
                 City.Stats.Reputation += Factory.StructReputation;
                 City.Stats.Score += Factory.StructScore;
-                City.Stats.Population += Factory.StructPopulation;
             }
         }
 
@@ -192,7 +196,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a factory";
-            details = "Citizens of your town need a place to work. Click on a tile to build a factory.";
+            meta = "Cost: $" + Factory.StructCost + "k" + "\t\t" +
+                   "CO2: " + Factory.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Factory.StructElectricity + "\t\t" +
+                   "Income: $" + Factory.StructUpkeep + "k";
+            details = "Requires 5k Workers. Citizens of your town need a place to work, and you need a source of money." +
+                      " Click on a tile to build a factory.";
         }
     }
 }

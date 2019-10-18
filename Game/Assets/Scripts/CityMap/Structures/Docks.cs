@@ -56,6 +56,11 @@ namespace Game.CityMap
             get { return Dock.StructCost; }
         }
 
+        public override int Population
+        {
+            get { return -Dock.StructPopulation; }
+        }
+
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/dock");
 
@@ -103,7 +108,6 @@ namespace Game.CityMap
                 City.Stats.ElectricCapacity -= Dock.StructElectricity;
                 City.Stats.Reputation += Dock.StructReputation;
                 City.Stats.Score += Dock.StructScore;
-                City.Stats.Population += Dock.StructPopulation;
             }
         }
 
@@ -111,7 +115,13 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a dock";
-            details = "Click on a tile to build a dock.";
+            meta = "Cost: $" + Dock.StructCost + "k" + "\t\t" +
+                   "CO2: " + Dock.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Dock.StructElectricity + "\t\t" +
+                   "Income: $" + Dock.StructUpkeep + "k";
+            details = "Requires 15k workers." +
+                      "Docks are huge commercial buildings to help generate money, but make a lot of pollution." +
+                      " Click on a tile to build a dock.";
         }
     }
 }

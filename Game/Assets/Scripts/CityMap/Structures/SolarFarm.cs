@@ -59,6 +59,11 @@ namespace Game.CityMap
             get { return SolarFarm.StructCost; }
         }
 
+        public override int Population
+        {
+            get { return -SolarFarm.StructPopulation; }
+        }
+
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/solarPanel");
 
@@ -75,7 +80,6 @@ namespace Game.CityMap
             {
                 City.Stats.ElectricCapacity += SolarFarm.StructElectricity;
                 City.Stats.Score += SolarFarm.StructScore;
-                City.Stats.Population += SolarFarm.StructPopulation;
                 City.Stats.Reputation += SolarFarm.StructReputation;
             }
         }
@@ -95,6 +99,19 @@ namespace Game.CityMap
             }
 
             return true;
+        }
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Build a solar farm";
+            meta = "Cost: $" + SolarFarm.StructCost + "k" + "\t\t" +
+                   "CO2: " + SolarFarm.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + SolarFarm.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -SolarFarm.StructUpkeep + "k";
+            details = "Requires 3k workers. " +
+                      "Although expensive and less effective, solar farms can produce electricity " +
+                      "for your town without adding pollution.";
         }
     }
 }

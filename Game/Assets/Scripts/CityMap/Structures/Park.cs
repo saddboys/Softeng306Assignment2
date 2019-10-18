@@ -65,6 +65,10 @@ namespace Game.CityMap
         {
             get { return Park.StructCost; }
         }
+        public override int Population
+        {
+            get { return -Park.StructPopulation; }
+        }
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/park");
@@ -98,6 +102,10 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a park";
+            meta = "Cost: $" + Park.StructCost + "k" + "\t\t" +
+                   "CO2: " + Park.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Park.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -Park.StructUpkeep + "k";
             details = "Add a park to your town. Make it a wonderful town to live in. Click on a tile to build a park.";
         }
     }

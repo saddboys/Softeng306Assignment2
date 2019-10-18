@@ -223,8 +223,18 @@ namespace Game
             var exitEntry = new EventTrigger.Entry();
             exitEntry.eventID = EventTriggerType.PointerExit;
             exitEntry.callback.AddListener((data) => infoBox.SetInfo(currentFactory));
+            var clickEntry = new EventTrigger.Entry();
+            clickEntry.eventID = EventTriggerType.PointerClick;
+            clickEntry.callback.AddListener((data) =>
+            {
+                if (!factory.CanBuild(out string reason))
+                {
+                    ShowPopupInfo(reason);
+                }
+            });
             trigger.triggers.Add(enterEntry);
             trigger.triggers.Add(exitEntry);
+            trigger.triggers.Add(clickEntry);
         }
 
         void OnNotify(MapTile tile) {
@@ -236,7 +246,6 @@ namespace Game
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
             {
                 ShowPopupInfo(reason);
-                GameObject.FindObjectOfType<AudioBehaviour>().Play(invalidSound);
                 return;
             }
             CurrentFactory.BuildOnto(tile);
@@ -250,6 +259,7 @@ namespace Game
 
         void ShowPopupInfo(string text)
         {
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(invalidSound);
             popupInfo.GetComponentInChildren<Text>().text = text;
             popupInfo.transform.position = Input.mousePosition;
             popupInfo.SetActive(true);

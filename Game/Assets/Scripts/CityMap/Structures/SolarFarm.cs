@@ -6,13 +6,13 @@ namespace Game.CityMap
 {
     public class SolarFarm : Structure
     {
-        public const int StructCO2 = 0;
-        public const int StructReputation = 1;
-        public const int StructCost = 2000;
-        public const int StructUpkeep = -50;
-        public const int StructScore = 900;
-        public const int StructPopulation = -3;
-        public const int StructElectricity = 20;
+        public static int StructCO2 = 0;
+        public static int StructReputation = 1;
+        public static int StructCost = 2000;
+        public static int StructUpkeep = -50;
+        public static int StructScore = 900;
+        public static int StructPopulation = -3;
+        public static int StructElectricity = 20;
         
         public override Stats GetStatsContribution()
         {

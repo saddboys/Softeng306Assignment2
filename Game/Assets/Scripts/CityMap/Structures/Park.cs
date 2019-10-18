@@ -6,13 +6,13 @@ namespace Game.CityMap
 {
     public class Park : Structure
     {
-        public const int StructCO2 = 0;
-        public const int StructReputation = 5;
-        public const int StructCost = 1000;
-        public const int StructUpkeep = -100;
-        public const int StructScore = 250;
-        public const int StructPopulation = 0;
-        public const int StructElectricity = 0;
+        public static int StructCO2 = 0;
+        public static int StructReputation = 5;
+        public static int StructCost = 1000;
+        public static int StructUpkeep = -100;
+        public static int StructScore = 250;
+        public static int StructPopulation = 0;
+        public static int StructElectricity = 0;
         
         public override Stats GetStatsContribution()
         {

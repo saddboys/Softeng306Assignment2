@@ -58,7 +58,7 @@ namespace Game.CityMap
         {
             CheckTileClick();
             CheckTileHover();
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
             {
                 Rotate(true);
             }

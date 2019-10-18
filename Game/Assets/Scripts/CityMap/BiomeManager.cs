@@ -34,17 +34,17 @@ namespace Game.CityMap
             // desert
             for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
             {
-                createBiome(Terrain.TerrainTypes.Desert);
+                createBiome(Terrain.TerrainTypes.DesertHill);
+            }
+            // grass hills
+            for (int i = 0; i < numBiomes; i++)
+            {
+                createBiome(Terrain.TerrainTypes.GrassHill);
             }
             // ocean
             for (int i = 0; i < numBiomes; i++)
             {
                 createBiome(Terrain.TerrainTypes.Ocean);
-            }
-            // graas hills
-            for (int i = 0; i < numBiomes; i++)
-            {
-                createBiome(Terrain.TerrainTypes.GrassHill);
             }
 
             // Populate none biom areas with grass
@@ -122,6 +122,10 @@ namespace Game.CityMap
             {
                 addBeachBiome(anchor, biomeHalfLength);
             }
+            else if (terrain.Equals(Terrain.TerrainTypes.DesertHill))
+            {
+                addDessertBiome(anchor, biomeHalfLength);
+            }
         }
 
         /// <summary>
@@ -193,12 +197,21 @@ namespace Game.CityMap
         }
 
         /// <summary>
-        /// updates the beach biome by growing the biome further beach tiles
+        /// updates the beach biome by growing the biome further with beach tiles
         /// </summary>
         private void addBeachBiome(int[] anchor, int curBiomHalfLength)
         {
             int beachBiomeHalfLength = curBiomHalfLength + 3;
             growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Beach);
+        }
+
+        /// <summary>
+        /// updates the dessert biome by growing the biome further with dessert tiles
+        /// </summary>
+        private void addDessertBiome(int[] anchor, int curBiomHalfLength)
+        {
+            int dessertBiomeHalfLength = curBiomHalfLength + 3;
+            growBoime(anchor, dessertBiomeHalfLength, Terrain.TerrainTypes.Desert);
         }
 
         /// <summary>
@@ -276,7 +289,7 @@ namespace Game.CityMap
         {
             int[,] adjPos = new int[6, 2];
             // when y coordinate is even
-            if (pos[1] % 2 == 1)
+            if (pos[1] % 2 == 0)
             {
                 // 1 o'clock position
                 adjPos[0, 0] = pos[0];

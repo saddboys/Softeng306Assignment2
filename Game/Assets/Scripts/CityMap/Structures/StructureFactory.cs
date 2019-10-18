@@ -8,7 +8,7 @@ namespace Game.CityMap
 {
     public abstract class StructureFactory : InfoBoxSource
     {
-        // TODO: Could store the picture associated with the structure (for the toolbar) in here.
+        protected AudioClip buildSound;
 
         /// <summary>
         /// Assume that all structures have a cost, as it is useful to display it to the user.
@@ -36,6 +36,7 @@ namespace Game.CityMap
         protected StructureFactory(City city)
         {
             City = city;
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Build");
         }
 
         /// <summary>
@@ -131,6 +132,8 @@ namespace Game.CityMap
                 City.Stats.Wealth -= Cost;
                 City.Stats.Population -= Population;
             }
+
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(buildSound);
         }
 
         public Structure CreateGhost()

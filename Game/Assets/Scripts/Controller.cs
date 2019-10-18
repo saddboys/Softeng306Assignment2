@@ -8,6 +8,8 @@ namespace Game
 {
     public class Controller : MonoBehaviour
     {
+        private AudioManager audio;
+
         [SerializeField]
         private GameObject menu;
 
@@ -45,6 +47,7 @@ namespace Game
 #if UNITY_WEBGL
             Screen.fullScreen = true;
 #endif
+            audio = new AudioManager();
         }
 
         private void Update()

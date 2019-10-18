@@ -19,7 +19,10 @@ namespace Game.CityMap
                 return 100;
             }
         }
-        public DemolishFactory(City city) : base(city) { }
+        public DemolishFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Demolish");
+        }
         public DemolishFactory() : base() { }
 
         public override Sprite Sprite { get; } =

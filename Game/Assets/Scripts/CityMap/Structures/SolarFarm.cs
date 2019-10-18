@@ -52,7 +52,10 @@ namespace Game.CityMap
 
     public class SolarFarmFactory : StructureFactory
     {
-        public SolarFarmFactory(City city) : base(city) { }
+        public SolarFarmFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/PowerPlant");
+        }
         public SolarFarmFactory() : base() { }
         public override int Cost
         {

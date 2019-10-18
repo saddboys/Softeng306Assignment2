@@ -142,7 +142,10 @@ namespace Game.CityMap
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/FactoryNew");
-        public FactoryFactory(City city) : base(city) { }
+        public FactoryFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Factory");
+        }
         public FactoryFactory() : base() { }
 
         protected override Structure Create()

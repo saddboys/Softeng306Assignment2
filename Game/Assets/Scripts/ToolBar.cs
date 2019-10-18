@@ -17,6 +17,8 @@ namespace Game
 
         private InfoBox infoBox;
 
+        private AudioClip invalidSound;
+
         public StructureFactory CurrentFactory
         {
             get { return currentFactory; }
@@ -172,6 +174,8 @@ namespace Game
             popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             infoBox = new InfoBox(gameObject.transform.parent.gameObject);
+
+            invalidSound = Resources.Load<AudioClip>("SoundEffects/Invalid");
         }
 
         private void Update()
@@ -232,6 +236,7 @@ namespace Game
             if (!CurrentFactory.CanBuildOnto(tile, out string reason))
             {
                 ShowPopupInfo(reason);
+                GameObject.FindObjectOfType<AudioBehaviour>().Play(invalidSound);
                 return;
             }
             CurrentFactory.BuildOnto(tile);

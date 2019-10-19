@@ -7,6 +7,7 @@ namespace Game
 public class BarHandler : MonoBehaviour
 {   [SerializeField]
     public Slider slider;
+    public float speed = 1.2F;
     private double currentValue = 0.0;
     [SerializeField]
     private StatsBar stats;
@@ -22,7 +23,7 @@ public class BarHandler : MonoBehaviour
 }
 
 void Update(){
-    slider.value =(float)stats.Temperature;
+    slider.value =Mathf.Lerp(slider.value,(float)stats.Temperature,Time.deltaTime * speed);
 }
  
 }

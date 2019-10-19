@@ -137,11 +137,11 @@ namespace Game.Story
             // For testing an event
             if (city.Turn == 2)
             {
-                storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST);
+                storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
              //  storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
                 CreatePopUp();   
             }
-//
+
 //            if (city.Turn == storyQueue.Peek())
 //          {
 //              // Create new story event here
@@ -165,7 +165,7 @@ namespace Game.Story
 
         private void CreatePopUp()
         {
-           
+            FindObjectOfType<DialogueManager>().Finished -= CreatePopUp;
             EventPopUp popUp;
             if (storyEvent != null && !city.HasEnded)
             {
@@ -176,7 +176,9 @@ namespace Game.Story
                 canvas.transform.Find("Panel").gameObject.SetActive(true);
                 storyEvent.StoryManager = this;
                 popUp.StoryEvent = storyEvent;
+                
                 popUp.Create();
+                
             }
         }
 

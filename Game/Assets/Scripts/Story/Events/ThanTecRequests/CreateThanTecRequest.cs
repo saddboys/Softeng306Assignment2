@@ -65,12 +65,10 @@ namespace Game.Story.Events
         {
             // Mark result of event in route tracker
             StoryManager.StoryChoices.Add((int) EventFactory.StoryEvents.INITIAL_THANTEC, true);
-
-            //TODO: Allow the user to build the thanTec building
+            
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
-            // Placeholder building for now
             StoryManager.toolbar.CurrentFactory = new ThantecFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;

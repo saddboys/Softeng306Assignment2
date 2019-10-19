@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using Game.CityMap;
 using Game.Story;
 using Game.Story.Events;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Analytics;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using EventTrigger = UnityEngine.EventSystems.EventTrigger;
 
 public class EventPopUp : MonoBehaviour
 {
@@ -29,18 +24,16 @@ public class EventPopUp : MonoBehaviour
     void Start()
     {
         POP_UP_WIDTH =  Screen.currentResolution.width/2;
-        Debug.Log("WIDTH IS: " + POP_UP_WIDTH);
         POP_UP_HEIGHT = Screen.currentResolution.height/4;
     }
-
-
-    // Placeholder method to create the pop up. Used for testing purposes
-    // May call this function when the turn event is fired
-    // Maybe have an event fire whenever a create event is called
+    
     private const string POP_UP_NAME = "popup-panel";
-
     private Animator animator;
-
+    private GameObject panel;
+    
+    /// <summary>
+    /// Generate a popup depending on the EventType
+    /// </summary>
     public void Create()
     {
         if (StoryEvent.EventType == StoryEvent.EventTypes.Request)
@@ -52,27 +45,28 @@ public class EventPopUp : MonoBehaviour
             CreatePopUp(true);
         }
     }
-
-    private GameObject panel;
+    
+    /// <summary>
+    ///  Create the initial pop up.
+    /// </summary>
+    /// <param name="isEvent"></param>
     private void CreatePopUp(bool isEvent)
     {
-        
-        // Creating the panel 
+
         panel = new GameObject(POP_UP_NAME);
         panel.AddComponent<CanvasRenderer>();
         Image i = panel.AddComponent<Image>();
         i.sprite = StoryEvent.EventImage;
         panel.transform.SetParent(Canvas.transform, false);
+        // The initial size is 0,0. This is done to create the expanding effect
         panel.GetComponent<RectTransform>().sizeDelta = new Vector2(0,0);
         StartCoroutine(Popup(isEvent));
-
-
-       
-//       animator = panel.AddComponent<Animator>();
-//       animator.runtimeAnimatorController = Resources.Load("Animations/popup-panel") as RuntimeAnimatorController;;
-//       animator.SetBool("IsOpen", true);
     }
 
+    /// <summary>
+    /// Once the panel has fully expanded, add the components which are
+    /// applicable to every popup. These are the titles and descriptions
+    /// </summary>
     private void CreateDefaultElements()
     {
         // Creating the title
@@ -100,7 +94,7 @@ public class EventPopUp : MonoBehaviour
         Text descriptionText = descriptionTextObject.AddComponent<Text>();
         descriptionText.text = StoryEvent.Description;
        // descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-       descriptionText.font = Resources.Load<Font>("Fonts/Electronic");
+        descriptionText.font = Resources.Load<Font>("Fonts/Electronic");
         descriptionText.color = Color.black;
         descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
         descriptionText.alignment = TextAnchor.MiddleCenter;
@@ -195,15 +189,6 @@ public class EventPopUp : MonoBehaviour
 
         Image buttonImage = buttonObj.AddComponent<Image>();
         buttonImage.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
-        
-//        Image buttonImage = buttonObj.AddComponent<Image>();
-//        buttonImage.sprite = Resources.LoadAll<Sprite>("Textures/Structures")[0];
-//        Text text = buttonObj.AddComponent<Text>();
-//        text.text = "Yes";
-//        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-//        text.color = Color.black;
-//        text.fontSize = DESCRIPTION_FONT_SIZE;
-
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-POP_UP_LIMIT_WIDTH/4,-POP_UP_HEIGHT/2.4f);
         
@@ -215,9 +200,6 @@ public class EventPopUp : MonoBehaviour
         buttonObj2.transform.SetParent(panel.transform,false);
         noButton.onClick.AddListener(DestroyPanel);
         noButton.onClick.AddListener(storyRequest.OnNoClick);
-        
-//        Image noButtonImage = buttonObj2.AddComponent<Image>();
-//        noButtonImage.sprite = Resources.LoadAll<Sprite>("Textures/Structures")[1];
         GameObject textContainer2 = new GameObject();
         textContainer2.transform.SetParent(buttonObj2.transform);
         Text text2 = textContainer2.AddComponent<Text>();
@@ -229,14 +211,17 @@ public class EventPopUp : MonoBehaviour
         textContainer2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         textContainer2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
 
-
         Image buttonImage2 = buttonObj2.AddComponent<Image>();
         buttonImage2.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
-
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_LIMIT_WIDTH/4,-POP_UP_HEIGHT/2.4f);
     }
 
+    /// <summary>
+    /// Generates the expanding effect
+    /// </summary>
+    /// <param name="isEvent"></param>
+    /// <returns></returns>
     IEnumerator Popup(bool isEvent)
     {
 

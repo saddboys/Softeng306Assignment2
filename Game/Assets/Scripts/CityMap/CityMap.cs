@@ -264,6 +264,10 @@ namespace Game.CityMap
 
             // Start off at an angle to further enhance 2.5D effect.
             Rotate(true);
+
+            // Reset camera for new maps.
+            camera.GetComponent<CameraDrag>().PanTo(new Vector3(0, 0, 0));
+            camera.GetComponent<CameraZoom>().ResetZoom();
         }
         
         /// <summary>

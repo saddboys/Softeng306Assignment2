@@ -94,6 +94,25 @@ namespace Game.CityMap
                     }
                 }
             }
+
+            // creates a river
+            createRiver();
+        }
+
+        /// <summary>
+        /// creates a river 
+        /// <summary>
+        private void createRiver()
+        {
+            int[] anchor = new int[2];
+            anchor[0] = random.Next(0, WIDTH);
+            anchor[1] = random.Next(0, HEIGHT);
+
+            int[] centre = new int[2];
+            centre[0] = WIDTH / 2;
+            centre[1] = HEIGHT / 2;
+
+            float gradient = (anchor[1] - centre[1]) / (anchor[0] - centre[0]);
         }
 
         /// <summar>
@@ -102,11 +121,12 @@ namespace Game.CityMap
         /// this is so that later when other anchors are creatd they are not created too closely towards the centre.
         /// ultimate it should preserve the player's starting structures for game balancing reasons.
         /// </summary>
-        private List<int[]> newBiomeAnchorList() {
+        private List<int[]> newBiomeAnchorList()
+        {
             List<int[]> anchorList = new List<int[]>();
             int[] dummyCentreAnchor = new int[2];
-            dummyCentreAnchor[0] = 0;
-            dummyCentreAnchor[1] = 0;
+            dummyCentreAnchor[0] = WIDTH / 2;
+            dummyCentreAnchor[1] = HEIGHT / 2;
             anchorList.Add(dummyCentreAnchor);
             return anchorList;
         }

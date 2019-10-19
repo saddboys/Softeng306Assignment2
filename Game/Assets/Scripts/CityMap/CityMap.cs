@@ -149,7 +149,6 @@ namespace Game.CityMap
         /// </summary>
         private void Generate()
         {
-            Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
 
             if (terrainMap == null)
             {
@@ -286,7 +285,6 @@ namespace Game.CityMap
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
-            Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -447,7 +445,6 @@ namespace Game.CityMap
 
         public void Rotate(bool clockwise)
         {
-            Debug.Log("CAMERA : " + map.cellBounds);
             // Find tile location that camera is currently centred at.
             var cameraFocus = map.WorldToCell(camera.transform.position);
             var cameraZPos = camera.transform.position.z;
@@ -471,11 +468,7 @@ namespace Game.CityMap
             {
                 i++;
                 SetTileTo(RotateCellPosition(pos, clockwise), tile);
-                var position = RotateCellPosition(pos, clockwise);
-                Debug.Log("shithssss: " + position.x + " , " + position.y + " , " + position.z);
             }
-            Debug.Log("total is: " + i);
-            Debug.Log("size is: " + tiles.Count);
 
             // Shrink bounds to where tiles exist.
             map.CompressBounds();

@@ -90,20 +90,19 @@ namespace Game.Story.Events
             GameObject helpPanel = new GameObject("help");
             helpPanel.AddComponent<CanvasRenderer>();
             Image i = helpPanel.AddComponent<Image>();
-            i.color = Color.white;
+            i.sprite = Resources.Load<Sprite>("EventSprites/Thaleah_DemoBackground");
             helpPanel.transform.SetParent(StoryManager.canvas.transform, false);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
-            helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
-            
+
             GameObject helpDescription = new GameObject("Title");
             Text titleText = helpDescription.AddComponent<Text>();
-            titleText.text = "Place the building";
-            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.color = Color.black;
-            titleText.fontSize = 10;
+            titleText.text = "Place the giant cooler!";
+            titleText.font = Resources.Load<Font>("Fonts/Electronic");
+            titleText.color = new Color32(219, 219, 219,255);
+            titleText.fontSize = 15;
             titleText.alignment = TextAnchor.MiddleCenter;
             helpDescription.transform.SetParent(helpPanel.transform,false);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
+            helpDescription.GetComponent<RectTransform>().sizeDelta = new Vector2(200,100);
+            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(200,50);
             helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,80);
         }
     }

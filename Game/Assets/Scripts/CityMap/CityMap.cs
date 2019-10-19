@@ -455,7 +455,6 @@ namespace Game.CityMap
             centre.x /= 2;
             centre.y /= 2;
             centre.z = 0;
-            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
             List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
@@ -465,16 +464,10 @@ namespace Game.CityMap
                 map.SetTile(pos, null);
             }
 
-            int i = 0;
             foreach (var (pos, tile) in tiles)
             {
-                i++;
                 SetTileTo(RotateCellPosition(pos, clockwise), tile);
-                var position = RotateCellPosition(pos, clockwise);
-                Debug.Log("shithssss: " + position.x + " , " + position.y + " , " + position.z);
             }
-            Debug.Log("total is: " + i);
-            Debug.Log("size is: " + tiles.Count);
 
             // Shrink bounds to where tiles exist.
             map.CompressBounds();

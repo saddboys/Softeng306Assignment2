@@ -27,12 +27,21 @@ namespace Game.CityMap
             map = m;
             parent = p;
             occupiedBiomSpots = obs;
-            biomeAnchors = new List<int[]>();
+
+            // instantiate biomeAnchors so that there is always one anchor at (0, 0) to reserve
+            // the cnetral area for the player's initial structures. This is purely for game 
+            // balancing reasons
+            biomeAnchors = newBiomeAnchorList();
 
             // create biomes
-            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 15;
+            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 20;
             Debug.Log("Creating biomes");
             
+            // ocean
+            for (int i = 0; i < numBiomes; i++)
+            {
+                createBiome(Terrain.TerrainTypes.Ocean);
+            }
             // desert
             for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
             {
@@ -42,11 +51,6 @@ namespace Game.CityMap
             for (int i = 0; i < numBiomes; i++)
             {
                 createBiome(Terrain.TerrainTypes.GrassHill);
-            }
-            // ocean
-            for (int i = 0; i < numBiomes; i++)
-            {
-                createBiome(Terrain.TerrainTypes.Ocean);
             }
             // Mountains
             createBiome(Terrain.TerrainTypes.Grass);
@@ -92,15 +96,30 @@ namespace Game.CityMap
             }
         }
 
+        /// <summar>
+        /// creates a new List<int[]> for the biomeAnchor list.
+        /// it will be instantiated with 1 anchor with position (0, 0).
+        /// this is so that later when other anchors are creatd they are not created too closely towards the centre.
+        /// ultimate it should preserve the player's starting structures for game balancing reasons.
+        /// </summary>
+        private List<int[]> newBiomeAnchorList() {
+            List<int[]> anchorList = new List<int[]>();
+            int[] dummyCentreAnchor = new int[2];
+            dummyCentreAnchor[0] = 0;
+            dummyCentreAnchor[1] = 0;
+            anchorList.Add(dummyCentreAnchor);
+            return anchorList;
+        }
+
         /// <summary>
         /// checks if the anchor is too close to another anchor point
         /// </summary>
-        private Boolean biomeAnchorTooClose(int[] anchor, int biomeHalfLength)
+        private Boolean biomeAnchorTooClose(int[] anchor, int length)
         {
             foreach (int[] a in biomeAnchors)
             {
                 float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - a[0], 2) + Mathf.Pow(anchor[1] - a[1], 2));
-                if (dist < biomeHalfLength)
+                if (dist < length * 1.5)
                 {
                     return true;
                 }
@@ -115,7 +134,7 @@ namespace Game.CityMap
         {   
             // calculate biome half length proportional to the map size
             int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
-            int biomeHalfLength = random.Next(biomeLenghtValue - 4, biomeLenghtValue + 4);
+            int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome
             // index 0 for x and 1 and y coordinate
@@ -123,7 +142,7 @@ namespace Game.CityMap
             anchor[0] = random.Next(0, WIDTH);
             anchor[1] = random.Next(0, HEIGHT);
             
-            while (biomeAnchorTooClose(anchor, biomeHalfLength))
+            while (biomeAnchorTooClose(anchor, biomeLenghtValue))
             {
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
@@ -304,7 +323,7 @@ namespace Game.CityMap
                 int[] curPos = new int[2];
                 curPos[0] = adjPos[i, 0];
                 curPos[1] = adjPos[i, 1];
-                if (!getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Desert) || !getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Beach))
+                if (!getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Desert) || !getTileTerrain(curPos).Equals(Terrain.TerrainTypes.DesertHill))
                 {
                     return false;
                 }

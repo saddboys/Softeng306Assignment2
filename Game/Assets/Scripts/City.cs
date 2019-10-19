@@ -1,6 +1,7 @@
 using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.Story;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -69,6 +70,8 @@ namespace Game
         public event Action NextTurnEvent;
         
         public event Action EndGameEvent;
+        public event Action RestartGameEvent;
+
         private Weather weather;
         // Start is called before the first frame update
         void Start()
@@ -102,7 +105,7 @@ namespace Game
             Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             CheckEndGame();
-//            NextTurnEvent?.Invoke();
+       //     NextTurnEvent?.Invoke();
         }
 
         /// <summary>
@@ -131,8 +134,11 @@ namespace Game
             hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
+            
             Stats.Restart();
             Map.Regenerate();
+
+            RestartGameEvent?.Invoke();
         }
     }
 }

@@ -17,7 +17,11 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return DESCRIPTION; }
         }
 
-        public override Sprite EventImage { get; }
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/pushingharder"); }
+        }
+
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }

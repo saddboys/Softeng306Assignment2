@@ -61,9 +61,9 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
-            City.NextTurnEvent += StopDemolish;
+            //City.NextTurnEvent += StopDemolish;
             City?.StartCoroutine(GenerateDestructionParticles(tile));
-            // Test(tile);
+             //Test(tile);
             // Note: Get structure before it is demolished.
             if (City != null)
             {
@@ -83,22 +83,32 @@ namespace Game.CityMap
             customParticleSystem.transform.position = copyOfGameObject.transform.position;
             ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
             Particles.InitParticleSystem(particles);
-            particles.transform.localPosition  = new Vector3(0,-0.64f,0);
+            particles.transform.localPosition  = new Vector3(0,0,0);
             
 
             ParticleSystem.MainModule mainModule = particles.main;
             //mainModule.startColor = new ParticleSystem.MinMaxGradient(new Color32(194,194,194,255));
             mainModule.startColor =  new ParticleSystem.MinMaxGradient(new Color32(194,194,194,255)
                 , new Color32(120,120,120,255));
-            mainModule.startSize = new ParticleSystem.MinMaxCurve(0.3f,0.5f);
-            mainModule.maxParticles = 50;
+            mainModule.startLifetime = 0.2f;
+            mainModule.startSize = new ParticleSystem.MinMaxCurve(0.7f,0.8f);
+            mainModule.maxParticles = 20;
+            mainModule.startSpeed = 0;
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
-            shapeModule.shapeType = ParticleSystemShapeType.Box;
+            shapeModule.shapeType = ParticleSystemShapeType.Cone;
+            shapeModule.angle = 25;
+            shapeModule.radius = 0.8f;
             shapeModule.scale = new Vector3(1,0.5f,1);
 
+            ParticleSystem.TextureSheetAnimationModule textureSheetAnimationModule = particles.textureSheetAnimation;
+            textureSheetAnimationModule.enabled = true;
+            textureSheetAnimationModule.mode = ParticleSystemAnimationMode.Sprites;
+            textureSheetAnimationModule.SetSprite(0,Resources.Load<Sprite>("Textures/CloudParticle"));
+
             Renderer renderer = particles.GetComponent<Renderer>();
-            renderer.sortingLayerName = "Terrain";
+            renderer.sortingLayerName = "Structure";
+            renderer.sortingOrder = 100;
             yield return new WaitForSeconds(3);
             
             GameObject.Destroy(copyOfGameObject);
@@ -114,22 +124,32 @@ namespace Game.CityMap
             customParticleSystem.transform.position = copyOfGameObject.transform.position;
             ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
             Particles.InitParticleSystem(particles);
-            particles.transform.localPosition  = new Vector3(0,-0.64f,0);
+            particles.transform.localPosition  = new Vector3(0,0,0);
             
 
             ParticleSystem.MainModule mainModule = particles.main;
             //mainModule.startColor = new ParticleSystem.MinMaxGradient(new Color32(194,194,194,255));
             mainModule.startColor =  new ParticleSystem.MinMaxGradient(new Color32(194,194,194,255)
                 , new Color32(120,120,120,255));
-            mainModule.startSize = new ParticleSystem.MinMaxCurve(0.3f,0.5f);
-            mainModule.maxParticles = 50;
+            mainModule.startLifetime = 0.2f;
+            mainModule.startSize = new ParticleSystem.MinMaxCurve(0.7f,0.8f);
+            mainModule.maxParticles = 20;
+            mainModule.startSpeed = 0;
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
-            shapeModule.shapeType = ParticleSystemShapeType.Box;
+            shapeModule.shapeType = ParticleSystemShapeType.Cone;
+            shapeModule.angle = 25;
+            shapeModule.radius = 0.8f;
             shapeModule.scale = new Vector3(1,0.5f,1);
 
+            ParticleSystem.TextureSheetAnimationModule textureSheetAnimationModule = particles.textureSheetAnimation;
+            textureSheetAnimationModule.enabled = true;
+            textureSheetAnimationModule.mode = ParticleSystemAnimationMode.Sprites;
+            textureSheetAnimationModule.SetSprite(0,Resources.Load<Sprite>("Textures/CloudParticle"));
+
             Renderer renderer = particles.GetComponent<Renderer>();
-            renderer.sortingLayerName = "Terrain";
+            renderer.sortingLayerName = "Structure";
+            renderer.sortingOrder = 100;
         }
 
         private void StopDemolish()

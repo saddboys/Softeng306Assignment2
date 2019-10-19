@@ -178,6 +178,10 @@ namespace Game
 
             invalidSound = Resources.Load<AudioClip>("SoundEffects/Invalid");
             keyboardSelectSound = Resources.Load<AudioClip>("SoundEffects/Click");
+
+            // Clear current factory when game has restarted.
+            // Don't let them build stuff in the start screen.
+            city.RestartGameEvent += () => CurrentFactory = null;
         }
 
         private void Update()
@@ -271,6 +275,15 @@ namespace Game
         {
             GameObject.FindObjectOfType<AudioBehaviour>().Play(invalidSound);
             popupInfo.GetComponentInChildren<Text>().text = text;
+
+            // Pivot popup/tooltip on the side towards the centre of the screen
+            // to prevent clipping.
+            popupInfo.GetComponent<RectTransform>().pivot = new Vector2
+            {
+                x = Input.mousePosition.x < Screen.width / 2 ? 0 : 1,
+                y = Input.mousePosition.y < Screen.height / 2 ? 0 : 1,
+            };
+
             popupInfo.transform.position = Input.mousePosition;
             popupInfo.SetActive(true);
             Invoke("HidePopupInfo", 2);

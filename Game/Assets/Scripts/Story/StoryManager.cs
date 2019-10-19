@@ -76,6 +76,7 @@ namespace Game.Story
         {
             // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
+            StoryChoices  = new Dictionary<int, bool>();
             NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
         }
         private void HandleCO2ChangeEvent()
@@ -137,43 +138,43 @@ namespace Game.Story
 //            For testing an event
 //            if (city.Turn == 2)
 //            {
-//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-//               CreatePopUp();   
+//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+//           //  storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
+//                CreatePopUp();   
 //            }
 
-          if (city.Turn == storyQueue.Peek())
-          {
-              // Create new story event here
-              storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-              storyEvent.StoryManager = this;
+            if (city.Turn == storyQueue.Peek())
+            {
+                // Create new story event here
+                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+                storyEvent.StoryManager = this;
 
-              if (!storyEvent.ConditionMet())
-              {
-                  StoryRequest storyRequest = (StoryRequest) storyEvent;
-                  storyRequest.OnNoClick();
-                  storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-              }
+                if (!storyEvent.ConditionMet())
+                {
+                    StoryRequest storyRequest = (StoryRequest) storyEvent;
+                    storyRequest.OnNoClick();
+                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+                }
 
-              // Get rid of the first thing in the queue
-              storyQueue.Dequeue();
-              CreateDialog();
-          }
-          else
-          {
-              // Events have a 10% chance of popping up
-              if (random.Next(0, 10) == 1)
-              {
-                  EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-                  // Randomly spawn events from the event pool
-                  storyEvent = factory.CreateRandomEvent(randomEvent);
-                  CreatePopUp();
-              }
-          }
+                // Get rid of the first thing in the queue
+                storyQueue.Dequeue();
+                CreateDialog();
+            }
+            else
+            {
+                // Events have a 10% chance of popping up
+                if (random.Next(0, 10) == 1)
+                {
+                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+                    // Randomly spawn events from the event pool
+                    storyEvent = factory.CreateRandomEvent(randomEvent);
+                    CreatePopUp();
+                }
+            }
         }
 
         private void CreatePopUp()
         {
-           
             EventPopUp popUp;
             if (storyEvent != null && !city.HasEnded)
             {

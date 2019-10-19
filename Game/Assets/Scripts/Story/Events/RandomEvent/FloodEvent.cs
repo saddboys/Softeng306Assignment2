@@ -24,7 +24,7 @@ namespace Game.Story.Events.RandomEvent
 
         public override Sprite EventImage
         {
-            get { return Resources.LoadAll<Sprite>("EventSprites/rain")[0]; }
+            get { return Resources.Load<Sprite>("EventSprites/flood"); }
         }
 
         public override Queue<string> Dialogues { get; }
@@ -38,15 +38,19 @@ namespace Game.Story.Events.RandomEvent
         public override void OnYesClick()
         {
             StoryManager.city.NextTurnEvent += DecreaseWater;
+            StoryManager.city.EndGameEvent += StopAtEnd;
             random = new Random();
             GenerateFloodPositions();
-            Destroy(StoryManager.storyManagerGameObject.GetComponent<CircusEvent>());
         }
-
+        
+        /// <summary>
+        /// Recursively generates the position of water tiles
+        /// </summary>
         private void GenerateFloodPositions()
         {
-            int height = 30;
-            int width = 40;
+
+            int height = StoryManager.city.Map.HEIGHT;
+            int width = StoryManager.city.Map.WIDTH;
             Tilemap map = StoryManager.city.Map.map;
 
             if (tempFloodTiles == null)
@@ -58,20 +62,21 @@ namespace Game.Story.Events.RandomEvent
 
             for (int i = 0; i < numberOfPatches; i++)
             {
-                int x = random.Next(-width/2  + 1, width/2 + 1);
-                int y = random.Next(-height/2 + 1, height/2 + 1);
+                int x = random.Next(-width/2+1, width/2 + 1);
+                int y = random.Next(-height/2+1, height/2+ 1);
                 Vector3Int position = new Vector3Int(x, y, 0);
-                
-                var tile = map.GetTile<MapTile>(position);
+                Vector3Int rotateCellPosition = StoryManager.city.Map.RotateCellPosition(position, true);
+                var tile = map.GetTile<MapTile>(rotateCellPosition);
                 tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                 tile.Structure = null;
                 Stack<Vector3Int> newStack = new Stack<Vector3Int>();
-                newStack.Push(position);
+                newStack.Push(rotateCellPosition);
                 tempFloodTiles.Add(newStack);
-                
                 GenerateSurroundingWater(100,i);
             }
         }
+        
+        
 
         private void GenerateSurroundingWater(int probabilityToIncrease, int listPosition)
         {
@@ -80,8 +85,7 @@ namespace Game.Story.Events.RandomEvent
             if (generatedValue < probabilityToIncrease)
             {
                 Tilemap map = StoryManager.city.Map.map;
-                Sprite[] sprites = Resources.LoadAll<Sprite>("Textures/terrain");
-                
+
                 // Generate next position
                 probabilityToIncrease -= 1;
                 Stack<Vector3Int> current = tempFloodTiles[listPosition];
@@ -92,26 +96,15 @@ namespace Game.Story.Events.RandomEvent
                 int nextX = topPosition.x + addX;
                 int nextY = topPosition.y + addY;
 
-                int height = StoryManager.city.Map.HEIGHT;
-                int width = StoryManager.city.Map.WIDTH;
-
-
-                if (nextX < -width / 2 + 1 || nextX > width / 2 + 1)
-                {
-                    return;
-                }
-
-                if (nextY < -height / 2 + 1 || nextY > height / 2 + 1)
-                {
-                    return;
-                }
-                
                 Vector3Int position = new Vector3Int(nextX,nextY , 0);
                 
                 var tile = map.GetTile<MapTile>(position);
-                tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
-                tile.Structure = null;
-                current.Push(position);
+                if (tile != null)
+                {
+                    tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+                    tile.Structure = null;
+                    current.Push(position);
+                }
                 GenerateSurroundingWater(probabilityToIncrease, listPosition);
             }
         }
@@ -140,6 +133,12 @@ namespace Game.Story.Events.RandomEvent
                 }
             }
         }
+        
+        private void StopAtEnd()
+        {
+            StoryManager.city.NextTurnEvent -= StopRain;
+            StoryManager.city.EndGameEvent -= StopAtEnd;
+        }
 
         public override void GenerateScene(GameObject canvas)
         {
@@ -166,7 +165,7 @@ namespace Game.Story.Events.RandomEvent
                 particles.textureSheetAnimation;
             textureSheet.enabled = true;
             textureSheet.mode = ParticleSystemAnimationMode.Sprites;
-            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/park2"));
+            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/rainparticle"));
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
             shapeModule.shapeType = ParticleSystemShapeType.SingleSidedEdge;
@@ -176,6 +175,7 @@ namespace Game.Story.Events.RandomEvent
 
         private void StopRain()
         {
+            StoryManager.city.NextTurnEvent -= StopRain;
             ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem")
                 .GetComponent<ParticleSystem>();
             particles.Stop();
@@ -186,6 +186,8 @@ namespace Game.Story.Events.RandomEvent
         {
             yield return new WaitForSeconds(2);
             Destroy(StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem").gameObject);
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<FloodEvent>());
+            
         }
     }
 }

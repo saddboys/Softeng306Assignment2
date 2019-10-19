@@ -70,6 +70,7 @@ namespace Game.CityMap
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
             MapTile currentTile = map.GetTile<MapTile>(position);
+            
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 currentTile = null;
@@ -82,6 +83,7 @@ namespace Game.CityMap
                 }
                 if (currentTile != null)
                 {
+                    //Debug.Log("position of tile is: " + position.x + ", " + position.y + ", " + position.z);
                     TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
                 }
             }
@@ -208,7 +210,8 @@ namespace Game.CityMap
                     // Debug.Log("Screen: " + mappedVector);
                     
                     tile.ScreenPosition = mappedVector;
-                    tile.name = "j: " + j + " i: " + i;
+                    tile.name = "i: " + vector.x + " j: " + vector.y + "z: " + vector.z;
+                   // Debug.Log("NAME IS: " + tile.name);
                     tile.Canvas = parent;
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
@@ -261,6 +264,10 @@ namespace Game.CityMap
 
             // Start off at an angle to further enhance 2.5D effect.
             Rotate(true);
+
+            // Reset camera for new maps.
+            camera.GetComponent<CameraDrag>().PanTo(new Vector3(0, 0, 0));
+            camera.GetComponent<CameraZoom>().ResetZoom();
         }
         
         /// <summary>
@@ -452,7 +459,9 @@ namespace Game.CityMap
             centre.x /= 2;
             centre.y /= 2;
             centre.z = 0;
-            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+
+            // Perform the swapping in two stages. Can't be done in a single pass.
+
             List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
@@ -461,6 +470,7 @@ namespace Game.CityMap
                 // Remove the tile at the old position.
                 map.SetTile(pos, null);
             }
+
             foreach (var (pos, tile) in tiles)
             {
                 SetTileTo(RotateCellPosition(pos, clockwise), tile);
@@ -478,7 +488,7 @@ namespace Game.CityMap
             GameObject.FindObjectOfType<AudioBehaviour>().Play(rotateSound);
         }
 
-        private Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
+        public Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
         {
             // Transform into hexagonal coordinate system.
             var hexCoords = new Vector3Int

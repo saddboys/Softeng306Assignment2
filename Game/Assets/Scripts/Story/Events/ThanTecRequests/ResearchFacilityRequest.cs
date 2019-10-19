@@ -19,7 +19,7 @@ namespace Game.Story.Events
         
                 
         private const string TITLE = "Research Facility";
-        private const string DESCRIPTION = "Build a power plant for ThanTec to investigate climate solutions?";
+        private const string DESCRIPTION = "Build ThanTec's research facility?\n$3000k, 10 Electricity";
 
         public override Sprite EventImage
         {
@@ -41,17 +41,19 @@ namespace Game.Story.Events
         }
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
             "Mayor, we have another request from ThanTec.", 
-            "They want us to build them a power plant to power their new research facility.",
+            "They want us to build them a new research facility.",
             "They say it’s for their climate solution project.",
             "What do you think we should do?"}); 
 
         public override bool ConditionMet() {
-            if (StoryManager.city.Stats.Wealth > 1500) return true;
+            if (StoryManager.city.Stats.Wealth > 3000) return true;
             else return false;
         }
 
         private void OnBuild()
         {
+            storyManager.city.Stats.Wealth -= 3000;
+            storyManager.city.Stats.ElectricCapacity -=10;
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;

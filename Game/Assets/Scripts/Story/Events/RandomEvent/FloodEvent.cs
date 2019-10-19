@@ -40,23 +40,7 @@ namespace Game.Story.Events.RandomEvent
             StoryManager.city.NextTurnEvent += DecreaseWater;
             random = new Random();
             GenerateFloodPositions();
-            Destroy(StoryManager.storyManagerGameObject.GetComponent<CircusEvent>());
-        }
-
-        private void PrintStuff(Vector3Int tile)
-        {
-            MapTile[] tiles = StoryManager.city.Map.Tiles;
-            foreach (var v in tiles)
-            {
-                if (v != null)
-                {
-                    if (v.name.Contains(tile.x.ToString()) && v.name.Contains(tile.y.ToString()))
-                    {
-                        Debug.Log("Name is" + v.name); 
-                    }
-                    
-                }
-            }
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<FloodEvent>());
         }
         private void GenerateFloodPositions()
         {
@@ -88,31 +72,6 @@ namespace Game.Story.Events.RandomEvent
                 tempFloodTiles.Add(newStack);
                 
                 GenerateSurroundingWater(100,i);
-            }
-        }
-
-        private void Test(TileBase[] bases,Vector3Int a, Tilemap map)
-        {
-            foreach (var v in bases)
-            {
-                if (v != null)
-                {
-                    if (v.name.Contains(a.x.ToString()) && v.name.Contains(a.y.ToString()))
-                    {
-                        Debug.Log("yes man: " + v.name);
-                        MapTile tile = map.GetTile<MapTile>(a);
-                        if (tile == null)
-                        {
-                            Debug.Log("A: " + a.x + ", " + a.y + " and " + a.z);
-                        }
-                        else
-                        {
-                            Debug.Log("manman");
-                            Debug.Log(tile.name);
-                        }
-                    }  
-                }
-
             }
         }
 

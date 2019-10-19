@@ -49,7 +49,6 @@ namespace Game.Story.Events
             set
             {
                 storyManager = value;
-                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
 
@@ -68,6 +67,7 @@ namespace Game.Story.Events
         }
         public override void OnYesClick()
         {
+            storyManager.toolbar.BuiltEvent += OnBuild;
             // Mark result of event in route tracker
             StoryManager.StoryChoices.Add((int) EventFactory.StoryEvents.INITIAL_THANTEC, true);
             
@@ -82,7 +82,6 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
-            StoryManager.toolbar.BuiltEvent -= OnBuild;
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CreateThanTecRequest>());
         }

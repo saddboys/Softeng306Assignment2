@@ -43,7 +43,6 @@ namespace Game.Story.Events
             set
             {
                 storyManager = value;
-                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
         private StoryManager storyManager;
@@ -58,6 +57,7 @@ namespace Game.Story.Events
             {
                 StoryManager.city.Stats.Temperature = 0;
             }
+            storyManager.toolbar.BuiltEvent += OnBuild;
 
             // Go to tech ending
             StoryManager.StoryEnding = (int) StoryManager.StoryEndings.TECH_ENDING;
@@ -72,7 +72,6 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
-            StoryManager.toolbar.BuiltEvent -= OnBuild;
             // Go to non-tech ending
             StoryManager.StoryEnding = (int) StoryManager.StoryEndings.REVISIONIST_ENDING;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<GiantCoolerRequest>());

@@ -33,7 +33,6 @@ namespace Game.Story.Events
             set
             {
                 storyManager = value;
-                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
         public override Queue<string> Dialogues
@@ -62,6 +61,7 @@ namespace Game.Story.Events
         
         public override void OnYesClick()
         {
+            storyManager.toolbar.BuiltEvent += OnBuild;
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
 
@@ -74,7 +74,6 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
-            StoryManager.toolbar.BuiltEvent -= OnBuild;
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<ResearchFacilityRequest>());
         }

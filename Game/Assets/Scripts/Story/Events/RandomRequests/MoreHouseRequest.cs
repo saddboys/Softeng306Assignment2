@@ -31,7 +31,6 @@ namespace Game.Story.Events
             set
             {
                 storyManager = value;
-                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
 
@@ -40,6 +39,7 @@ namespace Game.Story.Events
         private const string DESCRIPTION = "You are rich. Please build more houses.";
         public override void OnYesClick()
         {
+            storyManager.toolbar.BuiltEvent += OnBuild;
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
@@ -61,7 +61,6 @@ namespace Game.Story.Events
         public override void OnNoClick()
         {
             StoryManager.city.Stats.Reputation -= 0.5;
-            StoryManager.toolbar.BuiltEvent -= OnBuild;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
         

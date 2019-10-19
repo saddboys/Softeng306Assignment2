@@ -17,6 +17,9 @@ namespace Game
 
         private InfoBox infoBox;
 
+        private AudioClip invalidSound;
+        private AudioClip keyboardSelectSound;
+
         public StructureFactory CurrentFactory
         {
             get { return currentFactory; }
@@ -172,6 +175,9 @@ namespace Game
             popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             infoBox = new InfoBox(gameObject.transform.parent.gameObject);
+
+            invalidSound = Resources.Load<AudioClip>("SoundEffects/Invalid");
+            keyboardSelectSound = Resources.Load<AudioClip>("SoundEffects/Click");
         }
 
         private void Update()
@@ -182,8 +188,16 @@ namespace Game
                 char c = Input.inputString[0];
                 int x = c - '1';
                 if (x < 0 || x >= factories.Length) return;
-                CurrentFactory = factories[x];
-                toggles[x].isOn = true;
+                if (!factories[x].CanBuild(out string reason))
+                {
+                    ShowPopupInfo(reason);
+                }
+                else
+                {
+                    GameObject.FindObjectOfType<AudioBehaviour>().Play(keyboardSelectSound);
+                    CurrentFactory = factories[x];
+                    toggles[x].isOn = true;
+                }
             }
         }
 
@@ -219,8 +233,18 @@ namespace Game
             var exitEntry = new EventTrigger.Entry();
             exitEntry.eventID = EventTriggerType.PointerExit;
             exitEntry.callback.AddListener((data) => infoBox.SetInfo(currentFactory));
+            var clickEntry = new EventTrigger.Entry();
+            clickEntry.eventID = EventTriggerType.PointerClick;
+            clickEntry.callback.AddListener((data) =>
+            {
+                if (!factory.CanBuild(out string reason))
+                {
+                    ShowPopupInfo(reason);
+                }
+            });
             trigger.triggers.Add(enterEntry);
             trigger.triggers.Add(exitEntry);
+            trigger.triggers.Add(clickEntry);
         }
 
         void OnNotify(MapTile tile) {
@@ -245,6 +269,7 @@ namespace Game
 
         void ShowPopupInfo(string text)
         {
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(invalidSound);
             popupInfo.GetComponentInChildren<Text>().text = text;
             popupInfo.transform.position = Input.mousePosition;
             popupInfo.SetActive(true);

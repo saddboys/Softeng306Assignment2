@@ -26,7 +26,12 @@ namespace Game.Story.Events
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
             "ThanTec wants $8,000 for their climate research.",
             "Personally, I’m not so sure if it’s a good investment.",
-            "Your thoughts?"}); 
+            "Your thoughts?"});
+
+        public override bool ConditionMet() {
+            if (StoryManager.city.Stats.Wealth > 8000) return true;
+            else return false;
+        }
 
         public override void OnYesClick()
         {

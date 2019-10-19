@@ -64,7 +64,9 @@ namespace Game
             stats.SetActive(true);
             toolbar.SetActive(true);
             Finished?.Invoke();
-            GameObject.Find("IntroStory").SetActive(false);
+           //TODO:Uncomment this line if you merge to master game scene! 
+           GameObject.Find("IntroStory").SetActive(false);
+        //GameObject.Find("DialogueCanvas").SetActive(false);
         }
 
 

@@ -145,6 +145,14 @@ namespace Game.Story
           {
               // Create new story event here
               storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+              storyEvent.StoryManager = this;
+
+              if (!storyEvent.ConditionMet())
+              {
+                  StoryRequest storyRequest = (StoryRequest) storyEvent;
+                  storyRequest.OnNoClick();
+                  storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+              }
 
               // Get rid of the first thing in the queue
               storyQueue.Dequeue();
@@ -174,9 +182,10 @@ namespace Game.Story
                 popUp.Canvas = canvas;
                 popUp.CityMap = city.Map;
                 canvas.transform.Find("Panel").gameObject.SetActive(true);
-                storyEvent.StoryManager = this;
                 popUp.StoryEvent = storyEvent;
+                storyEvent.StoryManager = this;
                 popUp.Create();
+                FindObjectOfType<DialogueManager>().Finished -= CreatePopUp;
             }
         }
 

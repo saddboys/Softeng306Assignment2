@@ -27,11 +27,19 @@ namespace Game.Story.Events
             "Excellent news!", 
             "ThanTec has informed me that all our investments has yielded a new technology to bring temperatures down in the area.",
             "Kind of like an ‘outdoors air conditioner’, they said.", 
-            "We just need to spend money to install them in the area."}); 
+            "We just need to install them in the area."}); 
 
         public override void OnYesClick()
         {
-            StoryManager.city.Stats.Temperature -= 0.5;
+            if (StoryManager.city.Stats.Temperature >= 0.5)
+            {
+                StoryManager.city.Stats.Temperature -= 0.5;
+            } 
+            else 
+            {
+                StoryManager.city.Stats.Temperature = 0;
+            }
+
             // Go to tech ending
             StoryManager.StoryEnding = (int) StoryManager.StoryEndings.TECH_ENDING;
         }

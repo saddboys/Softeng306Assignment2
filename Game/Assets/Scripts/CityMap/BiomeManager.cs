@@ -16,6 +16,7 @@ namespace Game.CityMap
         private Tilemap map;
         private GameObject parent;
         public Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots { get; }
+        public List<int[]> biomeAnchors { get; }
         Random random = new Random();
 
 
@@ -26,9 +27,10 @@ namespace Game.CityMap
             map = m;
             parent = p;
             occupiedBiomSpots = obs;
+            biomeAnchors = new List<int[]>();
 
             // create biomes
-            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
+            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 15;
             Debug.Log("Creating biomes");
             
             // desert
@@ -46,6 +48,12 @@ namespace Game.CityMap
             {
                 createBiome(Terrain.TerrainTypes.Ocean);
             }
+            // Mountains
+            createBiome(Terrain.TerrainTypes.Grass);
+            // for (int i = 0; i < numBiomes; i++)
+            // {
+            //     createBiome(Terrain.TerrainTypes.Grass);
+            // }
 
             // Populate none biom areas with grass
             Debug.Log("Creating non biomes");
@@ -85,6 +93,22 @@ namespace Game.CityMap
         }
 
         /// <summary>
+        /// checks if the anchor is too close to another anchor point
+        /// </summary>
+        private Boolean biomeAnchorTooClose(int[] anchor, int biomeHalfLength)
+        {
+            foreach (int[] a in biomeAnchors)
+            {
+                float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - a[0], 2) + Mathf.Pow(anchor[1] - a[1], 2));
+                if (dist < biomeHalfLength)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// creates a biome for a given type of terrain
         /// </summary>
         private void createBiome(Terrain.TerrainTypes terrain)
@@ -99,11 +123,12 @@ namespace Game.CityMap
             anchor[0] = random.Next(0, WIDTH);
             anchor[1] = random.Next(0, HEIGHT);
             
-            while (!getTileTerrain(anchor).Equals(Terrain.TerrainTypes.NotSet))
+            while (biomeAnchorTooClose(anchor, biomeHalfLength))
             {
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
+            biomeAnchors.Add(anchor);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -125,6 +150,10 @@ namespace Game.CityMap
             else if (terrain.Equals(Terrain.TerrainTypes.DesertHill))
             {
                 addDessertBiome(anchor, biomeHalfLength);
+            }
+            else if (terrain.Equals(Terrain.TerrainTypes.Grass))
+            {
+                addMountainBiome(anchor, biomeHalfLength);
             }
         }
 
@@ -187,6 +216,17 @@ namespace Game.CityMap
                                 occupiedBiomSpots[curPos] = terrain;
                                 tile.Terrain = new Terrain(terrain);
                                 SetTileTo(vector, tile);
+
+                                // add mountains if the biome is just grass
+                                if (terrain.Equals(Terrain.TerrainTypes.Grass))
+                                {
+                                    StructureFactory mountainFactory = new MountainFactory();
+                                    if (mountainFactory.CanBuildOnto(tile, out _))
+                                    {
+                                        mountainFactory.BuildOnto(tile);
+                                    }
+                                }
+
                                 // Refresh the tile whenever its sprite changes.
                                 tile.SpriteChange += () => map.RefreshTile(vector);
                             }
@@ -194,6 +234,16 @@ namespace Game.CityMap
                     } 
                 }
             }
+        }
+
+        /// <summary>
+        /// adds mountains as a biome, but uses different method since it is a structure and not terrain
+        ///</summary>
+        private void addMountainBiome(int[] anchor, int curBiomHalfLength)
+        {
+            int mountainBiomeHalfLength = curBiomHalfLength - 4;
+            growBoime(anchor, mountainBiomeHalfLength, Terrain.TerrainTypes.Grass);
+
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.Story;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -102,7 +103,7 @@ namespace Game
             Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             CheckEndGame();
-//            NextTurnEvent?.Invoke();
+       //     NextTurnEvent?.Invoke();
         }
 
         /// <summary>
@@ -131,6 +132,7 @@ namespace Game
             hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
+            
             Stats.Restart();
             Map.Regenerate();
         }

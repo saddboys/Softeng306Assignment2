@@ -22,7 +22,10 @@ namespace Game.Story.Events
             get { return DESCRIPTION; }
         }
 
-        public override Sprite EventImage { get; }
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/thantec"); }
+        }
 
         public override Queue<string> Dialogues
         {
@@ -46,7 +49,6 @@ namespace Game.Story.Events
             set
             {
                 storyManager = value;
-                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
 
@@ -65,15 +67,14 @@ namespace Game.Story.Events
         }
         public override void OnYesClick()
         {
+            storyManager.toolbar.BuiltEvent += OnBuild;
             // Mark result of event in route tracker
             StoryManager.StoryChoices.Add((int) EventFactory.StoryEvents.INITIAL_THANTEC, true);
-
-            //TODO: Allow the user to build the thanTec building
+            
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
-            // Placeholder building for now
-            StoryManager.toolbar.CurrentFactory = new HouseFactory();
+            StoryManager.toolbar.CurrentFactory = new ThantecFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CreateThanTecRequest>());

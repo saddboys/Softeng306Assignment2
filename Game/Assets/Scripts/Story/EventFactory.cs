@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace Game.Story
 {
+    /// <summary>
+    /// Factory class which allows for the dynamic creation of events
+    /// </summary>
     public class EventFactory
     {
         public enum RandomEvents {CONDITIONAL_REQUEST_HOUSE,FLOOD_EVENT, HEATWAVE_EVENT, HURRICANE_EVENT}
@@ -13,6 +16,11 @@ namespace Game.Story
                                 PUSHING_HARDER_REQUEST, BAN_THE_CARS_REQUEST, CALLING_ON_LIFESTYLE_REQUEST}
         private StoryEvent storyEvent;
         public GameObject ManagerObject { get; set; }
+        /// <summary>
+        /// The method which generates the story events
+        /// </summary>
+        /// <param name="storyEvents"></param>
+        /// <returns></returns>
         public StoryEvent CreateStoryEvent(StoryEvents storyEvents)
         {
             switch (storyEvents)
@@ -35,6 +43,11 @@ namespace Game.Story
             return null;
         }
 
+        /// <summary>
+        /// The method which generates the random events
+        /// </summary>
+        /// <param name="randomEvents"></param>
+        /// <returns></returns>
         public StoryEvent CreateRandomEvent(RandomEvents randomEvents)
         {
             switch (randomEvents)

@@ -20,7 +20,12 @@ namespace Game.Story.Events
                 
         private const string TITLE = "Research Facility";
         private const string DESCRIPTION = "Build a power plant for ThanTec to investigate climate solutions?";
-        public override Sprite EventImage { get; }
+
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/researchfacility"); }
+        }
+
         private StoryManager storyManager;
         public override StoryManager StoryManager 
         {
@@ -28,7 +33,6 @@ namespace Game.Story.Events
             set
             {
                 storyManager = value;
-                storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
         public override Queue<string> Dialogues
@@ -57,11 +61,11 @@ namespace Game.Story.Events
         
         public override void OnYesClick()
         {
+            storyManager.toolbar.BuiltEvent += OnBuild;
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
-            
-            // Build power plant
-            StoryManager.toolbar.CurrentFactory = new PowerPlantFactory();
+
+            StoryManager.toolbar.CurrentFactory = new ResearchFacilityFactory();
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
             

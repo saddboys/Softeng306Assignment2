@@ -23,7 +23,7 @@ namespace Story.Events.RandomEvent
 
         public override Sprite EventImage
         {
-            get { return Resources.LoadAll<Sprite>("EventSprites/hurricane")[0]; }
+            get { return Resources.Load<Sprite>("EventSprites/hurricane"); }
         }
 
         private Coroutine coroutine;
@@ -35,7 +35,7 @@ namespace Story.Events.RandomEvent
         public override void OnYesClick()
         {
             // Destroy random buildings
-           // coroutine = StartCoroutine(DestroyBuildings());
+            coroutine = StartCoroutine(DestroyBuildings());
             // Happiness goes down
             StoryManager.city.Stats.Reputation -= 10;
         }
@@ -43,16 +43,18 @@ namespace Story.Events.RandomEvent
         IEnumerator DestroyBuildings()
         {
             StoryManager.city.NextTurnEvent += StopHurricane;
+            StoryManager.city.EndGameEvent += StopOtherEvents;
             MapTile[] tiles = StoryManager.city.Map.Tiles;
             foreach (var tile in tiles)
             {
 
-                if (tile.Structure != null)
+                if (tile != null && tile.Structure != null)
                 {
-                   
-                    new DemolishFactory(StoryManager.city).BuildOnto(tile);
-                    yield return new WaitForSeconds(3);
-                    
+                    if (tile.Structure.GetType() != typeof(Mountain))
+                    {
+                        new DemolishFactory(StoryManager.city).BuildOnto(tile);
+                        yield return new WaitForSeconds(3);
+                    }
                 }
             }
         }
@@ -65,6 +67,14 @@ namespace Story.Events.RandomEvent
                 .GetComponent<ParticleSystem>();
              particles.Stop();
              Destroy(particles);
+        }
+
+
+        private void StopOtherEvents()
+        {
+            StoryManager.city.NextTurnEvent -= StopHurricane;
+            StoryManager.city.NextTurnEvent -= StopWind;
+            StoryManager.city.EndGameEvent -= StopOtherEvents;
         }
 
 
@@ -177,9 +187,13 @@ namespace Story.Events.RandomEvent
 
         private void StopWind()
         {
-            ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("HurricaneParticle")
-                .GetComponent<ParticleSystem>();
-            particles.Stop();
+            if (StoryManager.city.Map.Tiles.Length != 0)
+            {
+                ParticleSystem particles = StoryManager.city.Map.gameObject.transform.Find("HurricaneParticle")
+                    .GetComponent<ParticleSystem>();
+                particles.Stop();
+            }
+
             StoryManager.city.NextTurnEvent -= StopWind;
             StartCoroutine(StoppingWind());
         }

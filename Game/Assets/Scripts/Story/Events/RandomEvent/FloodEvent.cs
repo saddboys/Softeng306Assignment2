@@ -38,9 +38,9 @@ namespace Game.Story.Events.RandomEvent
         public override void OnYesClick()
         {
             StoryManager.city.NextTurnEvent += DecreaseWater;
+            StoryManager.city.EndGameEvent += StopAtEnd;
             random = new Random();
             GenerateFloodPositions();
-            Destroy(StoryManager.storyManagerGameObject.GetComponent<FloodEvent>());
         }
         private void GenerateFloodPositions()
         {
@@ -133,6 +133,12 @@ namespace Game.Story.Events.RandomEvent
                 }
             }
         }
+        
+        private void StopAtEnd()
+        {
+            StoryManager.city.NextTurnEvent -= StopRain;
+            StoryManager.city.EndGameEvent -= StopAtEnd;
+        }
 
         public override void GenerateScene(GameObject canvas)
         {
@@ -180,6 +186,8 @@ namespace Game.Story.Events.RandomEvent
         {
             yield return new WaitForSeconds(2);
             Destroy(StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem").gameObject);
+            Destroy(StoryManager.storyManagerGameObject.GetComponent<FloodEvent>());
+            
         }
     }
 }

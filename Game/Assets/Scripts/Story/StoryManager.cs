@@ -138,8 +138,8 @@ namespace Game.Story
 //            For testing an event
             if (city.Turn == 2)
             {
-             //   storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HEATWAVE_EVENT);
-             storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
+                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HEATWAVE_EVENT);
+           //  storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
                 CreatePopUp();   
             }
 //

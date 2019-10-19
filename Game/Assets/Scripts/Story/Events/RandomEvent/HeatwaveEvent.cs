@@ -34,6 +34,7 @@ namespace Story.Events.RandomEvent
             // Dry up water
             FindWaterTerrain();
             StoryManager.city.Stats.Reputation -= 5;
+            StoryManager.city.Stats.Temperature += 0.5;
         }
 
         private void FindWaterTerrain()

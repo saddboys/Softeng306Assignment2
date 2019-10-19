@@ -183,6 +183,7 @@ namespace Game.Story
                 popUp.CityMap = city.Map;
                 canvas.transform.Find("Panel").gameObject.SetActive(true);
                 popUp.StoryEvent = storyEvent;
+                storyEvent.StoryManager = this;
                 popUp.Create();
                 FindObjectOfType<DialogueManager>().Finished -= CreatePopUp;
             }

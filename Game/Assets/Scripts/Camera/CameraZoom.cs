@@ -32,10 +32,10 @@ public class CameraZoom : MonoBehaviour
         float scroll = Input.GetAxis ("Mouse ScrollWheel");
         if (scroll != 0.0f)
         {
-            targetZoom -= scroll * zoomSpeed;
+            targetZoom -= scroll * zoomSpeed / 4;
         }
         targetZoom = Mathf.Clamp(targetZoom, minZoom, maxZoom);
-        Camera.main.orthographicSize = Mathf.MoveTowards(Camera.main.orthographicSize, targetZoom, smoothSpeed * Time.deltaTime);
+        Camera.main.orthographicSize += (targetZoom - Camera.main.orthographicSize) * Time.deltaTime * 4;
 
     }
 }

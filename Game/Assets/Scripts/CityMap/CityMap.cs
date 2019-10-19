@@ -447,6 +447,7 @@ namespace Game.CityMap
 
         public void Rotate(bool clockwise)
         {
+            Debug.Log("CAMERA : " + map.cellBounds);
             // Find tile location that camera is currently centred at.
             var cameraFocus = map.WorldToCell(camera.transform.position);
             var cameraZPos = camera.transform.position.z;

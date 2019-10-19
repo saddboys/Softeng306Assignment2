@@ -76,6 +76,7 @@ namespace Game.Story
         {
             // Create a queue for turn number of the story events
             storyQueue = new Queue<int>(new[] {4,8,12,16,20 });
+            StoryChoices  = new Dictionary<int, bool>();
             NextStoryEvent = EventFactory.StoryEvents.INITIAL_THANTEC;
         }
         private void HandleCO2ChangeEvent()

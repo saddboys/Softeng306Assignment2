@@ -103,7 +103,7 @@ namespace Game
             Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             CheckEndGame();
-//            NextTurnEvent?.Invoke();
+       //     NextTurnEvent?.Invoke();
         }
 
         /// <summary>

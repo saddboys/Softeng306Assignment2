@@ -43,6 +43,7 @@ namespace Story.Events.RandomEvent
         IEnumerator DestroyBuildings()
         {
             StoryManager.city.NextTurnEvent += StopHurricane;
+            StoryManager.city.EndGameEvent += StopOtherEvents;
             MapTile[] tiles = StoryManager.city.Map.Tiles;
             foreach (var tile in tiles)
             {
@@ -61,11 +62,19 @@ namespace Story.Events.RandomEvent
         private void StopHurricane()
         {
             StoryManager.city.NextTurnEvent -= StopHurricane;
+            StoryManager.city.EndGameEvent -= StopOtherEvents;
             StopCoroutine(coroutine);
             ParticleSystem particles = StoryManager.city.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle").gameObject
                 .GetComponent<ParticleSystem>();
              particles.Stop();
              Destroy(particles);
+        }
+
+
+        private void StopOtherEvents()
+        {
+            StoryManager.city.NextTurnEvent -= StopHurricane;
+            StoryManager.city.NextTurnEvent -= StopWind;
         }
 
 
@@ -182,6 +191,7 @@ namespace Story.Events.RandomEvent
                 .GetComponent<ParticleSystem>();
             particles.Stop();
             StoryManager.city.NextTurnEvent -= StopWind;
+            StoryManager.city.EndGameEvent -= StopOtherEvents;
             StartCoroutine(StoppingWind());
         }
 

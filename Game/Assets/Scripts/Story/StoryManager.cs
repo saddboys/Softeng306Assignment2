@@ -177,6 +177,7 @@ namespace Game.Story
                 storyEvent.StoryManager = this;
                 popUp.StoryEvent = storyEvent;
                 popUp.Create();
+                FindObjectOfType<DialogueManager>().Finished -= CreatePopUp;
             }
         }
 

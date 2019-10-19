@@ -65,7 +65,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
-            StoryManager.toolbar.CurrentFactory = new GiantCoolerFactory();
+            StoryManager.toolbar.CurrentFactory = new GiantCoolerFactory(StoryManager.city);
             CreateHelpPopup();
             Destroy(StoryManager.storyManagerGameObject.GetComponent<GiantCoolerRequest>());
         }

@@ -44,7 +44,7 @@ namespace Game.Story.Events
             StoryManager.endTurnButton.interactable = false;
             
             CreateHelpPopup();
-            StoryManager.toolbar.CurrentFactory = new HouseFactory();
+            StoryManager.toolbar.CurrentFactory = new HouseFactory(StoryManager.city);
             Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
         

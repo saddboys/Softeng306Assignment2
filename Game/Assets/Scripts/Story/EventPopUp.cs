@@ -232,6 +232,8 @@ public class EventPopUp : MonoBehaviour
             currentSize.x += 27;
             currentSize.y += 25;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
+//            Quaternion currentRotation = panel.GetComponent<RectTransform>().rotation;
+//            panel.GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, currentRotation.z + 100);
             yield return null;
         }
         POP_UP_LIMIT_HEIGHT = currentSize.y;

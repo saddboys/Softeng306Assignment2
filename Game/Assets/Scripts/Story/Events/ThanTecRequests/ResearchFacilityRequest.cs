@@ -65,7 +65,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
 
-            StoryManager.toolbar.CurrentFactory = new ResearchFacilityFactory();
+            StoryManager.toolbar.CurrentFactory = new ResearchFacilityFactory(StoryManager.city);
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
             

@@ -74,7 +74,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
-            StoryManager.toolbar.CurrentFactory = new ThantecFactory();
+            StoryManager.toolbar.CurrentFactory = new ThantecFactory(StoryManager.city);
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.RESEARCH_FACILITY_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CreateThanTecRequest>());

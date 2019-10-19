@@ -178,6 +178,10 @@ namespace Game
 
             invalidSound = Resources.Load<AudioClip>("SoundEffects/Invalid");
             keyboardSelectSound = Resources.Load<AudioClip>("SoundEffects/Click");
+
+            // Clear current factory when game has restarted.
+            // Don't let them build stuff in the start screen.
+            city.RestartGameEvent += () => CurrentFactory = null;
         }
 
         private void Update()

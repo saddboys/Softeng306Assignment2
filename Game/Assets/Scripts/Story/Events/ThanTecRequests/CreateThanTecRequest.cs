@@ -77,6 +77,7 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
+            StoryManager.toolbar.BuiltEvent -= OnBuild;
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CreateThanTecRequest>());
         }

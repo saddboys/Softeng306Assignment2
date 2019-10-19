@@ -64,6 +64,7 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
+            StoryManager.toolbar.BuiltEvent -= OnBuild;
             // Go to non-tech ending
             StoryManager.StoryEnding = (int) StoryManager.StoryEndings.REVISIONIST_ENDING;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<GiantCoolerRequest>());

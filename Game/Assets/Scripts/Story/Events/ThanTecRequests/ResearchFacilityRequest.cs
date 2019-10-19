@@ -69,6 +69,7 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
+            StoryManager.toolbar.BuiltEvent -= OnBuild;
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<ResearchFacilityRequest>());
         }

@@ -46,6 +46,11 @@ namespace Game.Story.Events
             "They say it’s for their climate solution project.",
             "What do you think we should do?"}); 
 
+        public override bool ConditionMet() {
+            if (StoryManager.city.Stats.Wealth > 1500) return true;
+            else return false;
+        }
+
         private void OnBuild()
         {
             StoryManager.toolbar.gameObject.SetActive(true);

@@ -30,7 +30,14 @@ namespace Game.Story
         {
             return;
         }
-        
+
+        /// <summary>
+        /// Checks if the event's conditions are met.
+        /// </summary>
+        public virtual bool ConditionMet() 
+        {
+            return true;
+        }
         
         
         /// <summary>

@@ -34,7 +34,7 @@ namespace Game.Story.Events
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
             "Excellent news!", 
             "ThanTec has informed me that all our investments has yielded a new technology to bring temperatures down in the area.",
-            "Kind of like an ‘outdoors air conditioner’, they said.", 
+            "Kind of like an ‘outdoors air conditioner’, they said.",
             "We just need to spend money to install them in the area."}); 
         
         public override StoryManager StoryManager 
@@ -50,7 +50,15 @@ namespace Game.Story.Events
 
         public override void OnYesClick()
         {
-            StoryManager.city.Stats.Temperature -= 0.5;
+            if (StoryManager.city.Stats.Temperature >= 0.5)
+            {
+                StoryManager.city.Stats.Temperature -= 0.5;
+            } 
+            else 
+            {
+                StoryManager.city.Stats.Temperature = 0;
+            }
+
             // Go to tech ending
             StoryManager.StoryEnding = (int) StoryManager.StoryEndings.TECH_ENDING;
             

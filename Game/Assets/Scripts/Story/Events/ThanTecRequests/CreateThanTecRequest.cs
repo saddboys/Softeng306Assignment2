@@ -49,6 +49,11 @@ namespace Game.Story.Events
                 storyManager.toolbar.BuiltEvent += OnBuild;
             }
         }
+
+        public override bool ConditionMet() {
+            if (storyManager.city.Stats.Wealth > 250 && storyManager.city.Stats.ElectricCapacity > 0) return true;
+            else return false;
+        }
         
         private void OnBuild()
         {

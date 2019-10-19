@@ -48,7 +48,7 @@ namespace Game.Story.Events.RandomEvent
         /// </summary>
         private void GenerateFloodPositions()
         {
-            
+
             int height = StoryManager.city.Map.HEIGHT;
             int width = StoryManager.city.Map.WIDTH;
             Tilemap map = StoryManager.city.Map.map;
@@ -75,6 +75,8 @@ namespace Game.Story.Events.RandomEvent
                 GenerateSurroundingWater(100,i);
             }
         }
+        
+        
 
         private void GenerateSurroundingWater(int probabilityToIncrease, int listPosition)
         {
@@ -94,9 +96,6 @@ namespace Game.Story.Events.RandomEvent
                 int nextX = topPosition.x + addX;
                 int nextY = topPosition.y + addY;
 
-                int height = StoryManager.city.Map.HEIGHT;
-                int width = StoryManager.city.Map.WIDTH;
-                
                 Vector3Int position = new Vector3Int(nextX,nextY , 0);
                 
                 var tile = map.GetTile<MapTile>(position);

@@ -61,7 +61,7 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
-            City.NextTurnEvent += StopDemolish;
+            //City.NextTurnEvent += StopDemolish;
             City?.StartCoroutine(GenerateDestructionParticles(tile));
              //Test(tile);
             // Note: Get structure before it is demolished.

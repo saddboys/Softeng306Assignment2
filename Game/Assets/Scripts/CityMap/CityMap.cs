@@ -455,6 +455,9 @@ namespace Game.CityMap
             centre.x /= 2;
             centre.y /= 2;
             centre.z = 0;
+
+            // Perform the swapping in two stages. Can't be done in a single pass.
+
             List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {

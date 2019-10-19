@@ -70,6 +70,8 @@ namespace Game
         public event Action NextTurnEvent;
         
         public event Action EndGameEvent;
+        public event Action RestartGameEvent;
+
         private Weather weather;
         // Start is called before the first frame update
         void Start()
@@ -135,6 +137,8 @@ namespace Game
             
             Stats.Restart();
             Map.Regenerate();
+
+            RestartGameEvent?.Invoke();
         }
     }
 }

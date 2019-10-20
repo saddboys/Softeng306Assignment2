@@ -64,6 +64,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(true);
             Destroy(StoryManager.canvas.transform.Find("help").gameObject);
             StoryManager.toolbar.BuiltEvent -= OnBuild;
         }
@@ -74,6 +75,7 @@ namespace Game.Story.Events
             StoryManager.StoryChoices.Add((int) EventFactory.StoryEvents.INITIAL_THANTEC, true);
             
             StoryManager.toolbar.gameObject.SetActive(false);
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
             
             StoryManager.toolbar.CurrentFactory = new ThantecFactory(StoryManager.city);

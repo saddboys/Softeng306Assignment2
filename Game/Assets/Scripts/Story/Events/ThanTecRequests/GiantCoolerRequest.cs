@@ -64,7 +64,7 @@ namespace Game.Story.Events
             
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
-            
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(false);
             StoryManager.toolbar.CurrentFactory = new GiantCoolerFactory(StoryManager.city);
             CreateHelpPopup();
             Destroy(StoryManager.storyManagerGameObject.GetComponent<GiantCoolerRequest>());
@@ -82,6 +82,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(true);
             Destroy(StoryManager.canvas.transform.Find("help").gameObject);
             StoryManager.toolbar.BuiltEvent -= OnBuild;
         }

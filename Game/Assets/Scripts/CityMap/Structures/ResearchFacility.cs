@@ -102,7 +102,7 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
+                City.Stats.ElectricCapacity -= 10;
                 City.Stats.Population += 4;
                 City.Stats.Reputation -= 1;
             }

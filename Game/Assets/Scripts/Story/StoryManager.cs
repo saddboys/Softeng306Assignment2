@@ -52,6 +52,7 @@ namespace Game.Story
 
         void Start()
         {
+            city.RestartGameEvent += ResetStory;
             factory = new EventFactory();
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
@@ -72,6 +73,9 @@ namespace Game.Story
 //            city.EndGameEvent += ResetStory;
         }
 
+        /// <summary>
+        /// When the game restarts, reset the necessary parameters
+        /// </summary>
         private void ResetStory()
         {
             // Create a queue for turn number of the story events
@@ -133,50 +137,53 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Listener for each turn count.
+        /// This will check if its time to show a story event
+        /// or it will generate a random event
+        /// </summary>
         private void HandleTurnEvent()
         {
 //            For testing an event
-//            if (city.Turn == 2)
+            if (city.Turn == 2)
+            {
+                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
+                CreatePopUp();   
+            }
+//
+//            if (city.Turn == storyQueue.Peek())
 //            {
-//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
-//           //  storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
-//                CreatePopUp();   
+//                // Create new story event here
+//                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+//                storyEvent.StoryManager = this;
+//                
+//                if (!storyEvent.ConditionMet())
+//                {
+//                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+//                }
+//
+//                // Get rid of the first thing in the queue
+//                storyQueue.Dequeue();
+//                CreateDialog();
 //            }
-
-            if (city.Turn == storyQueue.Peek())
-            {
-                // Create new story event here
-                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-                storyEvent.StoryManager = this;
-
-                if (!storyEvent.ConditionMet())
-                {
-                    // check if this is the first event
-                    if (city.Turn == 4) return;
-
-                    // swap event to the alternate event
-                    StoryRequest storyRequest = (StoryRequest) storyEvent;
-                    storyRequest.OnNoClick();
-                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-                }
-
-                // Get rid of the first thing in the queue
-                storyQueue.Dequeue();
-                CreateDialog();
-            }
-            else
-            {
-                // Events have a 10% chance of popping up
-                if (random.Next(0, 10) == 1)
-                {
-                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-                    // Randomly spawn events from the event pool
-                    storyEvent = factory.CreateRandomEvent(randomEvent);
-                    CreatePopUp();
-                }
-            }
+//            else
+//            {
+//                // Events have a 10% chance of popping up
+//                // Check for penultimate turn to prevent buggy behaviour
+//                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
+//                {
+//                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+//                    // Randomly spawn events from the event pool
+//                    storyEvent = factory.CreateRandomEvent(randomEvent);
+//                    CreatePopUp();
+//                }
+//            }
         }
 
+        /// <summary>
+        /// Creates the popup for when an event occurs
+        /// </summary>
         private void CreatePopUp()
         {
             EventPopUp popUp;

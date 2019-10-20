@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// A story request which requests the user to spend money on thantec investments
+    /// </summary>
     public class GimmeMoneyRequest : StoryRequest
     {
         public override string Title
@@ -36,7 +39,11 @@ namespace Game.Story.Events
 
         public override bool ConditionMet() {
             if (StoryManager.city.Stats.Wealth > 8000) return true;
-            else return false;
+            else
+            {
+                StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
+                return false;
+            }
         }
 
         public override void OnYesClick()

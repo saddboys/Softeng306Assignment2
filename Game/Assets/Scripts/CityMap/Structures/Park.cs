@@ -51,8 +51,13 @@ namespace Game.CityMap
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Park";
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A park";
+            meta = "Cost: $" + Park.StructCost + "k" + "\t\t" +
+                   "CO2: " + Park.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Park.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -Park.StructUpkeep + "k";
+            details = "Add a park to your town. Make it a wonderful town to live in. Click on a tile to build a park.";
         }
     }
 

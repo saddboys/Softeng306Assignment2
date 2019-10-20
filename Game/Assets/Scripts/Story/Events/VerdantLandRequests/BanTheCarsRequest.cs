@@ -42,7 +42,14 @@ namespace Game.Story.Events.VerdantLandRequests
             // Decrease happiness, reduce carbon emissions and also affects money 
             StoryManager.city.Stats.Reputation -= 10;
             StoryManager.city.Stats.CO2 -= 25;
-            StoryManager.city.Stats.Wealth -= 5000;
+            if (StoryManager.city.Stats.Wealth >= 2000) 
+            {
+                StoryManager.city.Stats.Wealth -= 2000;
+            } 
+            else
+            {
+                StoryManager.city.Stats.Wealth = 0;
+            }
 
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
             

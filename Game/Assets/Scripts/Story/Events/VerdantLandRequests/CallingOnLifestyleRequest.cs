@@ -18,7 +18,7 @@ namespace Game.Story.Events.VerdantLandRequests
         
                 
         private const string TITLE = "Calling on Lifestyle";
-        private const string DESCRIPTION = "Limit resident's energy usage? This will make happiness go down.";
+        private const string DESCRIPTION = "Limit energy usage?\nHouses use 1 less energy and produce 1 less CO2.";
 
         public override Sprite EventImage
         {
@@ -35,8 +35,6 @@ namespace Game.Story.Events.VerdantLandRequests
 
         public override void OnYesClick()
         {
-            // ending goes here
-
             // Decrease happiness, decrease population
             StoryManager.city.Stats.Reputation -= 20;
             StoryManager.city.Stats.Population -= 10;
@@ -44,6 +42,9 @@ namespace Game.Story.Events.VerdantLandRequests
             // Decrease energy usage and reduce carbon emissions of houses
             House.StructElectricity += 1;
             House.StructCO2 -= 1;
+
+            // Go to non-tech ending
+            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.REVISIONIST_ENDING;
 
             Destroy(StoryManager.storyManagerGameObject.GetComponent<CallingOnLifestyleRequest>());
         }

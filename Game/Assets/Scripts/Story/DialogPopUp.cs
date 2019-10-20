@@ -51,6 +51,7 @@ namespace Game.Story
             GameObject nextButton = new GameObject("NextButton");
             Button button = nextButton.AddComponent<Button>();
             button.onClick.AddListener(OnNextClick);
+            GameObject.FindObjectOfType<Game.AudioBehaviour>().AttachButton(button);
             Text text = nextButton.AddComponent<Text>();
             text.text = "NEXT >>";
             text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");

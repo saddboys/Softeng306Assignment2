@@ -46,7 +46,7 @@ namespace Game.Story.Events
             "What do you think we should do?"}); 
 
         public override bool ConditionMet() {
-            if (StoryManager.city.Stats.Wealth > 3000) return true;
+            if (StoryManager.city.Stats.Wealth > 3000 && storyManager.city.Stats.ElectricCapacity >= 10) return true;
             else return false;
         }
 

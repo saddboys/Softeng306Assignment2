@@ -39,21 +39,23 @@ namespace Game
         {
             foreach (var obj in Resources.FindObjectsOfTypeAll(typeof(Button)))
             {
-                var button = (Button)obj;
-                var effects = button.gameObject.AddComponent<ButtonSoundEffects>();
-                effects.Audio = Audio;
+                AttachButton((Selectable)obj);
             }
             foreach (var obj in Resources.FindObjectsOfTypeAll(typeof(Toggle)))
             {
-                var toggle = (Toggle)obj;
-                var effects = toggle.gameObject.AddComponent<ButtonSoundEffects>();
-                effects.Audio = Audio;
+                AttachButton((Selectable)obj);
             }
         }
 
         public void Play(AudioClip clip)
         {
             Audio.Play(clip);
+        }
+
+        public void AttachButton(Selectable button)
+        {
+            var effects = button.gameObject.AddComponent<ButtonSoundEffects>();
+            effects.Audio = Audio;
         }
     }
 

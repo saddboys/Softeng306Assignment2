@@ -151,6 +151,10 @@ namespace Game.Story
 
                 if (!storyEvent.ConditionMet())
                 {
+                    // check if this is the first event
+                    if (city.Turn == 4) return;
+
+                    // swap event to the alternate event
                     StoryRequest storyRequest = (StoryRequest) storyEvent;
                     storyRequest.OnNoClick();
                     storyEvent = factory.CreateStoryEvent(NextStoryEvent);
@@ -229,7 +233,7 @@ namespace Game.Story
                             "You did it! The town’s temperature stayed below the threshold. Perhaps climate change can be managed after all, though it required sacrificing some modern comforts. The people aren’t the happiest about that, but they’re not too unhappy. At least their planet is still there.";
                         break;
                     case (int) StoryEndings.NEUTRAL_ENDING:
-                        reason = "Undecided ending";
+                        reason = "Congratulations! You managed to keep the temperature under the threshold! And you didn’t make too many drastic changes! By doing what this one city did, perhaps climate change has been averted… right?\nAre these actions enough? Or are they just postponing the inevitable? Without drastic action, is it possible to stop temperatures from rising?";
                         break;
                         
                 }

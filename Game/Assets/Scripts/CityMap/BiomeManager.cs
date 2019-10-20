@@ -214,9 +214,18 @@ namespace Game.CityMap
                         // get tile with smallest gradient change to be next current position
                         if (Mathf.Abs(riverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
                         {
-                            gradientDifference = Mathf.Abs(riverGradient - gradient);
-                            curPos[0] = temp[0];
-                            curPos[1] = temp[1];
+                            // make sure the river does not get too close to other biomes
+                            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
+                            int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
+                            if (!riverTileTooCloseToBiome(temp, biomeHalfLength))
+                            {
+                                gradientDifference = Mathf.Abs(riverGradient - gradient);
+                                curPos[0] = temp[0];
+                                curPos[1] = temp[1];
+                            }
+                            // gradientDifference = Mathf.Abs(riverGradient - gradient);
+                            // curPos[0] = temp[0];
+                            // curPos[1] = temp[1];
                         }
 
                         // set tile to River
@@ -266,6 +275,25 @@ namespace Game.CityMap
         }
 
         /// <summary>
+        /// checks if the current position is too close to another anchor that is not an ocean for the river biome
+        /// </summary>
+        private Boolean riverTileTooCloseToBiome(int[] curPos, int length)
+        {
+            foreach (int[] a in biomeAnchors.Keys)
+            {
+                if (!biomeAnchors[a].Equals(Terrain.TerrainTypes.Ocean))
+                {
+                    float dist = Mathf.Sqrt(Mathf.Pow(curPos[0] - a[0], 2) + Mathf.Pow(curPos[1] - a[1], 2));
+                    if (dist < length * 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// checks if the anchor is too close to another anchor point
         /// </summary>
         private Boolean biomeAnchorTooClose(int[] anchor, int length)
@@ -273,7 +301,7 @@ namespace Game.CityMap
             foreach (int[] a in biomeAnchors.Keys)
             {
                 float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - a[0], 2) + Mathf.Pow(anchor[1] - a[1], 2));
-                if (dist < length * 1.5)
+                if (dist < length * 2)
                 {
                     return true;
                 }

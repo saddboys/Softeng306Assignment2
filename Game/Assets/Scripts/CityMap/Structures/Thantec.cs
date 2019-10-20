@@ -9,8 +9,8 @@ namespace Game.CityMap
             return new Stats
             {
                 
-                Wealth = 50,
-                CO2 = 1,
+                Wealth = 100,
+                CO2 = 2,
             };
         }
 
@@ -55,7 +55,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 250; }
+            get { return 300; }
         }
 
         public override Sprite Sprite { get; } =
@@ -72,7 +72,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 1)
+            if (City?.Stats.ElectricCapacity < 2)
             {
                 reason = "Not enough electric capacity";
                 return false;

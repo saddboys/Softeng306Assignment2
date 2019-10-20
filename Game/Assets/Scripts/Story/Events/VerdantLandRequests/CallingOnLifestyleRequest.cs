@@ -18,7 +18,7 @@ namespace Game.Story.Events.VerdantLandRequests
         
                 
         private const string TITLE = "Calling on Lifestyle";
-        private const string DESCRIPTION = "Limit resident's energy usage? This will make happiness go down.";
+        private const string DESCRIPTION = "Limit energy usage?\nHouses use 1 less energy and produce 1 less CO2.";
 
         public override Sprite EventImage
         {

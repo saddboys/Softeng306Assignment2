@@ -22,7 +22,8 @@ namespace Game
 
         public InfoBox(GameObject canvas)
         {
-            var font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            var font = Resources.Load<Font>("Fonts/visitor1");
+            var fontMaterial = Resources.Load<Material>("Fonts/visitor1");
             var boxObject = new GameObject();
             var transform = boxObject.AddComponent<RectTransform>();
             transform.SetParent(canvas.transform);
@@ -49,9 +50,12 @@ namespace Game
             title = titleObject.AddComponent<Text>();
             title.text = "Title";
             title.font = font;
+            title.material = fontMaterial;
             title.fontSize = 14;
             title.color = Color.white;
             title.alignment = TextAnchor.MiddleLeft;
+            Shadow shadow = titleObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
 
             var metaObject = new GameObject();
             transform = metaObject.AddComponent<RectTransform>();
@@ -63,7 +67,7 @@ namespace Game
             transform.offsetMax = new Vector2(PAD + TITLE_WIDTH, -PAD - HEADER_HEIGHT * 0.4f);
             meta = metaObject.AddComponent<Text>();
             meta.text = "Cost";
-            meta.font = font;
+            meta.font = Resources.GetBuiltinResource<Font>("Arial.ttf"); 
             meta.fontSize = 10;
             meta.color = Color.white;
             meta.alignment = TextAnchor.MiddleLeft;
@@ -89,7 +93,7 @@ namespace Game
             transform.offsetMax = new Vector2(-PAD, HEIGHT - HEADER_HEIGHT - PAD - PAD);
             details = detailsObject.AddComponent<Text>();
             details.text = "Details";
-            details.font = font;
+            details.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             details.fontSize = 12;
             details.color = Color.white;
 

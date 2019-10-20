@@ -17,7 +17,7 @@ namespace Game
         ForecastableStat popStat;
         ForecastableStat elecStat;
         ForecastableStat repStat;
-        ForecastableStat scoreStat;
+        AnimatedStat scoreStat;
         ForecastableStat wealthStat;
         public double CO2 { get => co2Stat.Value; set => co2Stat.Value = value; }
         public double Temperature { get => tempStat.Value; set => tempStat.Value = value; }
@@ -53,12 +53,33 @@ namespace Game
 
         private void Start()
         {
+            // Monkeypatch fix. Don't want to touch game scene.
+            var moneyLabel = moneyValueText.rectTransform.parent.gameObject.GetComponent<RectTransform>();
+            moneyLabel.position = new Vector3
+            {
+                x = moneyLabel.position.x - 30,
+                y = moneyLabel.position.y,
+                z = moneyLabel.position.z,
+            };
+            var moneyTransform = moneyValueText.rectTransform;
+            moneyTransform.position = new Vector3
+            {
+                x = moneyTransform.position.x + 20,
+                y = moneyTransform.position.y,
+                z = moneyTransform.position.z,
+            };
+            var scoreLabel = scoreValueText.rectTransform.parent.gameObject.GetComponent<Text>();
+            scoreLabel.font = Resources.Load<Font>("Fonts/visitor1");
+            scoreLabel.material = Resources.Load<Material>("Fonts/visitor1");
+            Shadow shadow = scoreLabel.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+
             co2Stat = new ForecastableStat(tooltipQueue, co2ValueText, "F0", " MT", " CO2", 2, 0.5f);
-            tempStat = new ForecastableStat(tooltipQueue, temperatureValueText, "F2", "°C", " Change", 0.01f, 0.001f);
+            tempStat = new ForecastableStat(tooltipQueue, temperatureValueText, "F2", "°C", " Change", 0.01f, 0.001f, false);
             popStat = new ForecastableStat(tooltipQueue, populationValueText, "F1", "k", " Population", 1, 0.1f);
             elecStat = new ForecastableStat(tooltipQueue, electricCapacityValueText, "F0", "", " Electricity", 1, 0.1f);
             repStat = new ForecastableStat(tooltipQueue, reputationValueText, "F0", "%", " Reputation", 2, 0.5f);
-            scoreStat = new ForecastableStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, 50);
+            scoreStat = new AnimatedStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, false, false);
             wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5);
             co2Stat.ChangeEvent += OnChange;
             co2Stat.ChangeEvent += CO2ChangeEvent.Invoke;
@@ -73,7 +94,6 @@ namespace Game
             scoreStat.ChangeEvent += OnChange;
             wealthStat.ChangeEvent += OnChange;
             wealthStat.ChangeEvent += WealthChangeEvent.Invoke;
-            
 
             tooltipCanvas = new GameObject();
             Canvas canvas = tooltipCanvas.AddComponent<Canvas>();
@@ -115,7 +135,6 @@ namespace Game
             popStat.Forecast.Value = stats.Population;
             elecStat.Forecast.Value = stats.ElectricCapacity;
             repStat.Forecast.Value = stats.Reputation;
-            scoreStat.Forecast.Value = stats.Score;
             wealthStat.Forecast.Value = stats.Wealth;
         }
 
@@ -192,9 +211,10 @@ namespace Game
             group.childControlHeight = true;
             group.childControlWidth = true;
             Text text = gameObject.AddComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.font = Resources.Load<Font>("Fonts/visitor1");
+            text.material = Resources.Load<Material>("Fonts/visitor1");
             text.text = textContent;
-            text.fontSize = 10;
+            text.fontSize = 12;
             Shadow shadow = gameObject.AddComponent<Shadow>();
             shadow.effectColor = new Color(0, 0, 0);
         }
@@ -223,21 +243,20 @@ namespace Game
     {
         public AnimatedStat Forecast { get; private set; }
 
-        public ForecastableStat(List<String> tooltipQueue, Text text, string format, string suffix, string explainer, float step, float forecastStep)
-            : base(tooltipQueue, text, format, suffix, explainer, step)
+        public ForecastableStat(List<String> tooltipQueue, Text text, string format, string suffix, string explainer, float step, float forecastStep, bool fixAnchor = true)
+            : base(tooltipQueue, text, format, suffix, explainer, step, false, fixAnchor)
         {
+            text.alignment = TextAnchor.UpperCenter;
             GameObject forecastObject = new GameObject();
-            Shadow shadow = forecastObject.AddComponent<Shadow>();
-            shadow.effectColor = new Color(0, 0, 0);
             Text forecastText = forecastObject.AddComponent<Text>();
-            forecastText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            forecastText.font = Resources.Load<Font>("Fonts/visitor1");
+            forecastText.material = Resources.Load<Material>("Fonts/visitor1");
             forecastText.color = new Color(1, 1, 1);
             forecastText.fontSize = 10;
             forecastText.rectTransform.anchorMin = new Vector2(0.5f, 0);
             forecastText.rectTransform.anchorMax = new Vector2(0.5f, 0);
             forecastText.rectTransform.pivot = new Vector2(0.5f, 0);
             forecastText.rectTransform.SetParent(text.transform);
-            forecastText.rectTransform.localPosition = new Vector3(0, -50);
             ContentSizeFitter fitter = forecastObject.AddComponent<ContentSizeFitter>();
             fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -319,7 +338,8 @@ namespace Game
             string suffix,
             string explainer,
             float step,
-            bool isRelative = false)
+            bool isRelative = false,
+            bool fixAnchor = true)
         {
             this.tooltipQueue = tooltipQueue;
             this.text = text;
@@ -328,6 +348,24 @@ namespace Game
             this.explainer = explainer;
             this.step = step;
             this.isRelative = isRelative;
+
+            text.font = Resources.Load<Font>("Fonts/visitor1");
+            text.material = Resources.Load<Material>("Fonts/visitor1");
+            if (fixAnchor)
+            {
+                text.rectTransform.anchorMin = new Vector2(1, 0);
+                text.rectTransform.anchorMax = new Vector2(1, 1);
+                text.rectTransform.offsetMin = new Vector2(text.rectTransform.offsetMin.x, 0);
+                text.rectTransform.offsetMax = new Vector2(text.rectTransform.offsetMax.x, 0);
+            }
+            Shadow shadow = text.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+            ContentSizeFitter fitter = text.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            HorizontalLayoutGroup group =
+                text.gameObject.GetComponent<HorizontalLayoutGroup>() ?? text.gameObject.AddComponent<HorizontalLayoutGroup>();
+            group.childControlWidth = true;
+
         }
 
         public virtual void Update()

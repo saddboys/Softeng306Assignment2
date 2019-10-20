@@ -34,6 +34,7 @@ namespace Game
             var background = boxObject.AddComponent<Image>();
             background.sprite = canvas.GetComponentInChildren<Image>().sprite;
             background.type = Image.Type.Sliced;
+            background.color = new Color(0,0,0,(float) 0.60);
 
             const float TITLE_WIDTH = WIDTH - PAD - PAD - PAD - HEADER_HEIGHT;
 
@@ -49,7 +50,7 @@ namespace Game
             title.text = "Title";
             title.font = font;
             title.fontSize = 14;
-            title.color = Color.black;
+            title.color = Color.white;
             title.alignment = TextAnchor.MiddleLeft;
 
             var metaObject = new GameObject();
@@ -64,7 +65,7 @@ namespace Game
             meta.text = "Cost";
             meta.font = font;
             meta.fontSize = 10;
-            meta.color = Color.black;
+            meta.color = Color.white;
             meta.alignment = TextAnchor.MiddleLeft;
 
             var imageObject = new GameObject();
@@ -90,7 +91,7 @@ namespace Game
             details.text = "Details";
             details.font = font;
             details.fontSize = 12;
-            details.color = Color.black;
+            details.color = Color.white;
 
             SetInfo(null);
         }

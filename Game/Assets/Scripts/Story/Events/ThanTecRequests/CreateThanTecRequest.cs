@@ -35,11 +35,11 @@ namespace Game.Story.Events
             }
         } 
         private const string TITLE = "ThanTec";
-        private const string DESCRIPTION = "ThanTec wishes you to build their office. \nDo you accept?";
+        private const string DESCRIPTION = "ThanTec wishes you to build their office.\nDo you accept?\n$300k, 2 Electricity";
         [TextArea(3,10)]
         private Queue<string> dialogMessages = new Queue<string>(new[] { 
             "You have a request from the company ThanTec for a new office.",
-            "ThanTec! Imagine how much better off we would be if such a company was here.",
+            "Imagine how much better off we would be if such a company was here.",
             "What should we do?"}); 
         
         private StoryManager storyManager;
@@ -53,12 +53,14 @@ namespace Game.Story.Events
         }
 
         public override bool ConditionMet() {
-            if (storyManager.city.Stats.Wealth > 250 && storyManager.city.Stats.ElectricCapacity > 0) return true;
+            if (storyManager.city.Stats.Wealth > 300 && storyManager.city.Stats.ElectricCapacity > 1) return true;
             else return false;
         }
         
         private void OnBuild()
         {
+            storyManager.city.Stats.Wealth -= 300;
+            storyManager.city.Stats.ElectricCapacity -=2;
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;

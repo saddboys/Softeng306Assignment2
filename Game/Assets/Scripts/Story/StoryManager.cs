@@ -269,7 +269,7 @@ namespace Game.Story
 
             if (thanTechExists && StoryEnding != (int) StoryEndings.TECH_ENDING)
             {
-                storyEnding = (int) StoryEndings.REVISIONIST_ENDING;
+                // storyEnding = (int) StoryEndings.REVISIONIST_ENDING;
             }
         }
 

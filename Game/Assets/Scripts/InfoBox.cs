@@ -69,7 +69,7 @@ namespace Game
             meta.text = "Cost";
             meta.font = Resources.GetBuiltinResource<Font>("Arial.ttf"); 
             meta.fontSize = 10;
-            meta.color = Color.white;
+            meta.color = Color.green;
             meta.alignment = TextAnchor.MiddleLeft;
 
             var imageObject = new GameObject();

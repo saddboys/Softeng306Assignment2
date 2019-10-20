@@ -42,13 +42,13 @@ namespace Game.CityMap
             
         }
 
-        
-
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Giant Cooler";
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A giant cooler";
+            details = "Thantec has developed a new machine to cool down the town!";
         }
+        
     }
     
     public class GiantCoolerFactory : StructureFactory

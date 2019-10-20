@@ -119,7 +119,7 @@ namespace Game.CityMap
             Debug.Log("centre: X: " + centre[0] + ", Y: " + centre[1]);
 
             // 2) calculate radius related value of circle around origin
-            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 10;
+            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 5;
             int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 20);
             Debug.Log("radiusBaseValue: " + radiusBaseValue);
             Debug.Log("radiusNonce: " + radiusNonce);
@@ -155,9 +155,9 @@ namespace Game.CityMap
             }
             Debug.Log("river gradient: " + riverGradient);
 
-            // 5) expand river 
+            // 5) expand river in bidirectionally
             extendRiverBiome(anchor, riverGradient);
-            extendRiverBiome(anchor, riverGradient);
+            // extendRiverBiome(anchor, riverGradient);
             
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
             occupiedBiomSpots[anchor] = Terrain.TerrainTypes.Ocean;
@@ -177,7 +177,8 @@ namespace Game.CityMap
             Debug.Log("river iteration");
 
             // main iteration
-            while (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
+            // continue as long as river tiles are within map
+            while (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] <= HEIGHT && curPos[1] >= 0)
             {
                 Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
                 // get neighbouring tiles to current and iterate through them
@@ -186,15 +187,20 @@ namespace Game.CityMap
                 int[] prevPos = new int[2];
                 prevPos[0] = curPos[0];
                 prevPos[1] = curPos[1];
+                // iterate through the neighbouring tiles
                 for (int i = 0; i < adjPos.GetLength(0); i++)
                 {
                     int[] temp = new int[2];
                     temp[0] = adjPos[i, 0];
                     temp[1] = adjPos[i, 1];
+                    Debug.Log("temp: X: " + temp[0] + ", Y: " + temp[1]);
+                    // if the neighbouring tile is within the map
+                    // set the tile to river
                     if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0)
                     {
                         float gradient;
 
+                        // calculate gradient of the adjPos to anchor
                         try
                         {
                             gradient  = (anchor[1] - temp[1]) / (anchor[0] - temp[0]);
@@ -203,17 +209,16 @@ namespace Game.CityMap
                         {
                             gradient = 1000; // some large number of signify inifinity
                         }
-                        
-                        // get tile with smallest gradient change
-                        if (Mathf.Abs(riverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.Ocean))
+
+                        // get tile with smallest gradient change to be next current position
+                        if (Mathf.Abs(riverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
                         {
-                            Debug.Log("setting new curpos: X: " + curPos[0] + ", Y: " + curPos[1]);
                             gradientDifference = Mathf.Abs(riverGradient - gradient);
                             curPos[0] = temp[0];
                             curPos[1] = temp[1];
                         }
 
-                        // set tile to Ocean
+                        // set tile to River
                         MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                         // A vector used for hex position
                         Vector3Int vector = new Vector3Int(-temp[0] + WIDTH / 2, -temp[1] + HEIGHT / 2, 0);

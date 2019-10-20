@@ -34,30 +34,21 @@ namespace Game.CityMap
             biomeAnchors = newBiomeAnchorList();
 
             // create biomes
-            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 20;
+            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 30;
             Debug.Log("Creating biomes");
             
             // ocean
             for (int i = 0; i < numBiomes; i++)
             {
+                // Ocean
                 createBiome(Terrain.TerrainTypes.Ocean);
-            }
-            // desert
-            for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
-            {
+                // Desert
                 createBiome(Terrain.TerrainTypes.DesertHill);
-            }
-            // grass hills
-            for (int i = 0; i < numBiomes; i++)
-            {
+                // GrassHill
                 createBiome(Terrain.TerrainTypes.GrassHill);
+                // Mountain
+                createBiome(Terrain.TerrainTypes.Grass);
             }
-            // Mountains
-            createBiome(Terrain.TerrainTypes.Grass);
-            // for (int i = 0; i < numBiomes; i++)
-            // {
-            //     createBiome(Terrain.TerrainTypes.Grass);
-            // }
 
             // Populate none biom areas with grass
             Debug.Log("Creating non biomes");
@@ -119,7 +110,7 @@ namespace Game.CityMap
             Debug.Log("centre: X: " + centre[0] + ", Y: " + centre[1]);
 
             // 2) calculate radius related value of circle around origin
-            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 5;
+            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 4;
             int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 20);
             Debug.Log("radiusBaseValue: " + radiusBaseValue);
             Debug.Log("radiusNonce: " + radiusNonce);
@@ -162,7 +153,7 @@ namespace Game.CityMap
             extendRiverBiome(anchor, riverGradient);
             
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
-            occupiedBiomSpots[anchor] = Terrain.TerrainTypes.Ocean;
+            occupiedBiomSpots[anchor] = Terrain.TerrainTypes.River;
         }
 
         /// <summary>
@@ -177,7 +168,7 @@ namespace Game.CityMap
             curPos[1] = anchor[1];
 
             // this is to make the river a bit more wavy
-            float riverGradientBuffer = 0.5f;
+            float riverGradientBuffer = 1f;
             int counter = 0;
             Boolean negativeGradientBuffer = true;
 
@@ -192,7 +183,7 @@ namespace Game.CityMap
                 Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
                 // get neighbouring tiles to current and iterate through them
                 int[,] adjPos = getNeighbouringTiles(curPos);
-                float gradientDifference = 1000;
+                float gradientDifference = WIDTH * HEIGHT * 100;
                 int[] prevPos = new int[2];
                 prevPos[0] = curPos[0];
                 prevPos[1] = curPos[1];
@@ -204,7 +195,7 @@ namespace Game.CityMap
                     temp[1] = adjPos[i, 1];
 
                     // give river gradient a bit of buffer variance
-                    if (counter % 5 == 0)
+                    if (counter % 3 == 0)
                     {
                         if (negativeGradientBuffer)
                         {
@@ -231,20 +222,21 @@ namespace Game.CityMap
                         }
                         catch (DivideByZeroException)
                         {
-                            gradient = 1000; // some large number of signify inifinity
+                            gradient = WIDTH * HEIGHT * 100; // some large number of signify inifinity
                         }
 
                         // get tile with smallest gradient change to be next current position
                         if (Mathf.Abs(overallRiverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
                         {
                             // make sure the river does not get too close to other biomes
-                            int biomeLengthValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
+                            int biomeLengthValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 5);
                             // int biomeHalfLength = random.Next(biomeLengthValue - 2, biomeLengthValue + 2);
                             if (!riverTileTooCloseToBiome(temp, biomeLengthValue))
                             {
                                 float gradientToClosestBiome = getGradientOfClosestBiomeTile(curPos, biomeLengthValue);
                                 overallRiverGradient = -1f/gradientToClosestBiome;
                             }
+
                             gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
                             curPos[0] = temp[0];
                             curPos[1] = temp[1];
@@ -361,7 +353,7 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain)
         {   
             // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 10);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 5);
             int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome

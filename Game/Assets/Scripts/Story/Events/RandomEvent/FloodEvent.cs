@@ -39,6 +39,7 @@ namespace Game.Story.Events.RandomEvent
         {
             StoryManager.city.NextTurnEvent += DecreaseWater;
             StoryManager.city.EndGameEvent += StopAtEnd;
+            StoryManager.city.RestartGameEvent += StopAtEnd;
             random = new Random();
             GenerateFloodPositions();
         }
@@ -151,6 +152,7 @@ namespace Game.Story.Events.RandomEvent
         {
             StoryManager.city.NextTurnEvent -= StopRain;
             StoryManager.city.EndGameEvent -= StopAtEnd;
+            StoryManager.city.RestartGameEvent -= StopAtEnd;
         }
 
         /// <summary>

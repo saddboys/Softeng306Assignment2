@@ -37,27 +37,27 @@ namespace Game.CityMap
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 20;
             Debug.Log("Creating biomes");
             
-            // // ocean
+            // ocean
+            for (int i = 0; i < numBiomes; i++)
+            {
+                createBiome(Terrain.TerrainTypes.Ocean);
+            }
+            // desert
+            for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
+            {
+                createBiome(Terrain.TerrainTypes.DesertHill);
+            }
+            // grass hills
+            for (int i = 0; i < numBiomes; i++)
+            {
+                createBiome(Terrain.TerrainTypes.GrassHill);
+            }
+            // Mountains
+            createBiome(Terrain.TerrainTypes.Grass);
             // for (int i = 0; i < numBiomes; i++)
             // {
-            //     createBiome(Terrain.TerrainTypes.Ocean);
+            //     createBiome(Terrain.TerrainTypes.Grass);
             // }
-            // // desert
-            // for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
-            // {
-            //     createBiome(Terrain.TerrainTypes.DesertHill);
-            // }
-            // // grass hills
-            // for (int i = 0; i < numBiomes; i++)
-            // {
-            //     createBiome(Terrain.TerrainTypes.GrassHill);
-            // }
-            // // Mountains
-            // createBiome(Terrain.TerrainTypes.Grass);
-            // // for (int i = 0; i < numBiomes; i++)
-            // // {
-            // //     createBiome(Terrain.TerrainTypes.Grass);
-            // // }
 
             // Populate none biom areas with grass
             Debug.Log("Creating non biomes");
@@ -136,6 +136,8 @@ namespace Game.CityMap
             Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
             Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
 
+            Debug.Log("anchor Vector: X: " + (-anchor[0] + WIDTH / 2) + ", Y: " + (-anchor[1] + HEIGHT / 2));
+
             anchorTile.Canvas = parent;
             anchorTile.ScreenPosition = anchorMappedVector;
 
@@ -157,7 +159,7 @@ namespace Game.CityMap
 
             // 5) expand river in bidirectionally
             extendRiverBiome(anchor, riverGradient);
-            // extendRiverBiome(anchor, riverGradient);
+            extendRiverBiome(anchor, riverGradient);
             
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
             occupiedBiomSpots[anchor] = Terrain.TerrainTypes.Ocean;
@@ -193,7 +195,6 @@ namespace Game.CityMap
                     int[] temp = new int[2];
                     temp[0] = adjPos[i, 0];
                     temp[1] = adjPos[i, 1];
-                    Debug.Log("temp: X: " + temp[0] + ", Y: " + temp[1]);
                     // if the neighbouring tile is within the map
                     // set the tile to river
                     if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0)
@@ -286,7 +287,7 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain)
         {   
             // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
             int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome
@@ -300,7 +301,6 @@ namespace Game.CityMap
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
-            biomeAnchors[anchor] = terrain;
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -311,7 +311,7 @@ namespace Game.CityMap
             anchorTile.ScreenPosition = anchorMappedVector;
 
             biomeAnchors[anchor] = terrain;
-            occupiedBiomSpots[anchor] = terrain;
+            // occupiedBiomSpots[anchor] = terrain;
 
             anchorTile.Terrain = new Terrain(terrain);
 
@@ -556,7 +556,6 @@ namespace Game.CityMap
                 adjPos[5, 0] = pos[0];
                 adjPos[5, 1] = pos[1] + 1;
             }
-            
 
             return adjPos;
         }

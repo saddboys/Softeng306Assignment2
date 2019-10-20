@@ -96,7 +96,7 @@ namespace Game.Story.Events
             GameObject helpDescription = new GameObject("Title");
             Text titleText = helpDescription.AddComponent<Text>();
             titleText.text = "Place the giant cooler!";
-            titleText.font = Resources.Load<Font>("Fonts/Electronic");
+            titleText.font = Resources.Load<Font>("Fonts/visitor1");
             titleText.color = new Color32(219, 219, 219,255);
             titleText.fontSize = 15;
             titleText.alignment = TextAnchor.MiddleCenter;

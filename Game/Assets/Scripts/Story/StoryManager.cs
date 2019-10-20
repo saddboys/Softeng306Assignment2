@@ -52,6 +52,7 @@ namespace Game.Story
 
         void Start()
         {
+            city.RestartGameEvent += ResetStory;
             factory = new EventFactory();
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();

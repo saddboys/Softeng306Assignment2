@@ -68,7 +68,8 @@ namespace Game
         /// E.g. Some structures take 3 turns to build, etc.
         /// </summary>
         public event Action NextTurnEvent;
-        
+
+        public event Action RestartGameEvent;
         public event Action EndGameEvent;
         private Weather weather;
         // Start is called before the first frame update
@@ -129,10 +130,11 @@ namespace Game
         /// </summary>
         public void Restart()
         {
+            
             hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
-            
+            RestartGameEvent?.Invoke();
             Stats.Restart();
             Map.Regenerate();
         }

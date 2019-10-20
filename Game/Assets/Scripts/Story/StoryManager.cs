@@ -137,47 +137,41 @@ namespace Game.Story
         private void HandleTurnEvent()
         {
 //            For testing an event
-            if (city.Turn == 2)
-            {
-                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
-             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.INITIAL_THANTEC);
-                CreatePopUp();   
-            }
-
-            if (city.Turn == 3)
-            {
-                StoryEnding =(int)StoryEndings.TECH_ENDING;
-                HandleEndGame();
-            }
-
-//            if (city.Turn == storyQueue.Peek())
+//            if (city.Turn == 2)
 //            {
-//                // Create new story event here
-//                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-//                storyEvent.StoryManager = this;
-//
-//                if (!storyEvent.ConditionMet())
-//                {
-//                    StoryRequest storyRequest = (StoryRequest) storyEvent;
-//                    storyRequest.OnNoClick();
-//                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-//                }
-//
-//                // Get rid of the first thing in the queue
-//                storyQueue.Dequeue();
-//                CreateDialog();
+//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+//             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.INITIAL_THANTEC);
+//                CreatePopUp();   
 //            }
-//            else
-//            {
-//                // Events have a 10% chance of popping up
-//                if (random.Next(0, 10) == 1)
-//                {
-//                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-//                    // Randomly spawn events from the event pool
-//                    storyEvent = factory.CreateRandomEvent(randomEvent);
-//                    CreatePopUp();
-//                }
-//            }
+
+            if (city.Turn == storyQueue.Peek())
+            {
+                // Create new story event here
+                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+                storyEvent.StoryManager = this;
+
+                if (!storyEvent.ConditionMet())
+                {
+                    StoryRequest storyRequest = (StoryRequest) storyEvent;
+                    storyRequest.OnNoClick();
+                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+                }
+
+                // Get rid of the first thing in the queue
+                storyQueue.Dequeue();
+                CreateDialog();
+            }
+            else
+            {
+                // Events have a 10% chance of popping up
+                if (random.Next(0, 10) == 1)
+                {
+                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+                    // Randomly spawn events from the event pool
+                    storyEvent = factory.CreateRandomEvent(randomEvent);
+                    CreatePopUp();
+                }
+            }
         }
 
         private void CreatePopUp()

@@ -23,7 +23,7 @@ namespace Game
         }
         private int turn;
 
-        private readonly int maxTurns = 3;
+        private readonly int maxTurns = 20;
         public int MaxTurns => maxTurns;
 
         [SerializeField]
@@ -134,9 +134,18 @@ namespace Game
             hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
+            DestroyExistingParticles();
             RestartGameEvent?.Invoke();
             Stats.Restart();
             Map.Regenerate();
+        }
+
+        private void DestroyExistingParticles()
+        {
+            foreach (Transform child in map.gameObject.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 }

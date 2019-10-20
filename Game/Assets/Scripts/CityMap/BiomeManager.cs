@@ -151,14 +151,14 @@ namespace Game.CityMap
             {
                 riverGradient = -(anchor[0] - centre[0]) / (anchor[1] - centre[1]);
             }
-            catch (DivideByZeroException e)
+            catch (DivideByZeroException)
             {
                 riverGradient = 1000; // some large number to signify infinity
             }
+
             Debug.Log("river gradient: " + riverGradient);
 
             // 5) expand river in bidirectionally
-            extendRiverBiome(anchor, riverGradient);
             extendRiverBiome(anchor, riverGradient);
             
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
@@ -179,8 +179,9 @@ namespace Game.CityMap
             // this is to make the river a bit more wavy
             float riverGradientBuffer = 0.5f;
             int counter = 0;
-            float overallRiverGradient = riverGradient - riverGradientBuffer;
             Boolean negativeGradientBuffer = true;
+
+            float overallRiverGradient = riverGradient - riverGradientBuffer;
 
             Debug.Log("river iteration");
 
@@ -228,7 +229,7 @@ namespace Game.CityMap
                         {
                             gradient  = (anchor[1] - temp[1]) / (anchor[0] - temp[0]);
                         }
-                        catch (DivideByZeroException e)
+                        catch (DivideByZeroException)
                         {
                             gradient = 1000; // some large number of signify inifinity
                         }
@@ -237,14 +238,13 @@ namespace Game.CityMap
                         if (Mathf.Abs(overallRiverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
                         {
                             // make sure the river does not get too close to other biomes
-                            // int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
-                            // int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
-                            // if (!riverTileTooCloseToBiome(temp, biomeHalfLength))
-                            // {
-                            //     gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
-                            //     curPos[0] = temp[0];
-                            //     curPos[1] = temp[1];
-                            // }
+                            int biomeLengthValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
+                            // int biomeHalfLength = random.Next(biomeLengthValue - 2, biomeLengthValue + 2);
+                            if (!riverTileTooCloseToBiome(temp, biomeLengthValue))
+                            {
+                                float gradientToClosestBiome = getGradientOfClosestBiomeTile(curPos, biomeLengthValue);
+                                overallRiverGradient = -1f/gradientToClosestBiome;
+                            }
                             gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
                             curPos[0] = temp[0];
                             curPos[1] = temp[1];
@@ -282,6 +282,28 @@ namespace Game.CityMap
         }
 
         /// <summary>
+        /// retrieves the gradient of the closest biome anchor tile and the current position
+        /// used for when creating the river to make sure the river does not cut through the biome
+        /// </summary>
+        private float getGradientOfClosestBiomeTile(int[] curPos, int length)
+        {
+            int[] closestBiometile = new int[2];
+            float shortestDist = WIDTH * HEIGHT;
+            foreach (int[] a in biomeAnchors.Keys)
+            {
+                float curDist = Mathf.Sqrt(Mathf.Pow(curPos[0] - a[0], 2) + Mathf.Pow(curPos[1] - a[1], 2));
+                if (curDist < shortestDist)
+                {
+                    shortestDist = curDist;
+                    closestBiometile[0] = a[0];
+                    closestBiometile[1] = a[1];
+                }
+            }
+            float gradient = (curPos[1] - closestBiometile[1]) / (curPos[0] - closestBiometile[0]);
+            return gradient;
+        }
+
+        /// <summary>
         /// creates a new List<int[]> for the biomeAnchor list.
         /// it will be instantiated with 1 anchor with position (0, 0).
         /// this is so that later when other anchors are creatd they are not created too closely towards the centre.
@@ -300,6 +322,7 @@ namespace Game.CityMap
         /// <summary>
         /// checks if the current position is too close to another anchor that is not an ocean for the river biome
         /// </summary>
+        /// <return> true if it is too close to a tile
         private Boolean riverTileTooCloseToBiome(int[] curPos, int length)
         {
             foreach (int[] a in biomeAnchors.Keys)

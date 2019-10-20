@@ -49,14 +49,17 @@ namespace Game.CityMap
             {
                 reason = "Cannot demolish a Thantec building";
                 return false;
-            } 
-            if (tile.Structure.GetType() == typeof(House) && City.Stats.Population < 5)
+            }
+
+            int popRequirement = -tile.Structure.GetStatsChangeOnDemolish().Population;
+            if (City.Stats.Population < popRequirement)
             {
-                reason = "Cannot demolish a house when you have less than 5k people";
+                reason = String.Format("Cannot demolish when you have less than {1}k people", popRequirement);
                 return false;
             }
 
-            if (tile.Structure.StructElectricity > City.Stats.ElectricCapacity)
+            double elecRequirement = -tile.Structure.GetStatsChangeOnDemolish().ElectricCapacity;
+            if (City.Stats.ElectricCapacity < elecRequirement)
             {
                 reason = "Demolishing this will create an electricity shortage";
                 return false;

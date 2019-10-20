@@ -226,14 +226,24 @@ namespace Game.Story
                 switch (StoryEnding)
                 {
                     case (int) StoryEndings.TECH_ENDING:
-                        reason = "You keep the town’s temperature under the threshold! People are happy and can keep living like they do, but outside the town, the world continues to heat and go chaotic. However, with technology, we can survive through it. If only everyone in the world had access to the technology…";
+                        reason = "You keep the town\'s temperature under the threshold!\n" +
+                                 " People are happy and can keep living like they do, but outside the town, the world " +
+                                 "continues to heat and go chaotic.\n However, with technology, we can survive " +
+                                 "through it.\n If only everyone in the world had access to the technology...";
                         break;
                     case (int) StoryEndings.REVISIONIST_ENDING:
                         reason =
-                            "You did it! The town’s temperature stayed below the threshold. Perhaps climate change can be managed after all, though it required sacrificing some modern comforts. The people aren’t the happiest about that, but they’re not too unhappy. At least their planet is still there.";
+                            "You did it!\n The town\'s temperature stayed below the threshold.\n" +
+                            " Perhaps climate change can be managed after all, though it required sacrificing some " +
+                            "modern comforts.\n The people aren\'t the happiest about that, but they\'re not too " +
+                            "unhappy.\n At least their planet is still there.";
                         break;
                     case (int) StoryEndings.NEUTRAL_ENDING:
-                        reason = "Congratulations! You managed to keep the temperature under the threshold! And you didn’t make too many drastic changes! By doing what this one city did, perhaps climate change has been averted… right?\nAre these actions enough? Or are they just postponing the inevitable? Without drastic action, is it possible to stop temperatures from rising?";
+                        reason = "Congratulations!\n You managed to keep the temperature under the threshold!\n" +
+                                 " And you didn\'t make too many drastic changes! By doing what this one city did, " +
+                                 "perhaps climate change has been averted... right?\nAre these actions enough?" +
+                                 " Or are they just postponing the inevitable?\n Without drastic action, is it possible" +
+                                 " to stop temperatures from rising?";
                         break;
                         
                 }

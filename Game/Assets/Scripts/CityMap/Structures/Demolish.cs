@@ -43,9 +43,22 @@ namespace Game.CityMap
                 reason = "Nothing to demolish here";
                 return false;
             } 
+            if (tile.Structure.GetType() == typeof(Thantec) || 
+                tile.Structure.GetType() == typeof(ResearchFacility) || 
+                tile.Structure.GetType() == typeof(GiantCooler))
+            {
+                reason = "Cannot demolish a Thantec building";
+                return false;
+            } 
             if (tile.Structure.GetType() == typeof(House) && City.Stats.Population < 5)
             {
                 reason = "Cannot demolish a house when you have less than 5k people";
+                return false;
+            }
+
+            if (tile.Structure.StructElectricity > City.Stats.ElectricCapacity)
+            {
+                reason = "Demolishing this will create an electricity shortage";
                 return false;
             } 
             

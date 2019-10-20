@@ -14,6 +14,12 @@ namespace Game
         private AudioSource audioSource;
         private AudioClip mainLoop;
 
+        public float Volume
+        {
+            get { return audioSource.volume; }
+            set { audioSource.volume = value; }
+        }
+
         public AudioManager()
         {
             var obj = new GameObject("AudioManager");

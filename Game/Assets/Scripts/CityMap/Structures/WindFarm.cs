@@ -15,6 +15,18 @@ namespace Game.CityMap
         public static int StructPopulation = -3;
         public static int StructElectricity = 20;
         
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A wind farm";
+            meta = "Cost: $" + WindFarm.StructCost + "k" + "\t\t" +
+                   "CO2: " + WindFarm.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + WindFarm.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -WindFarm.StructUpkeep + "k";
+            details = "Requires 3k workers. " +
+                      "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
+        }
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
@@ -39,12 +51,6 @@ namespace Game.CityMap
             Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
             RenderOntoSprite(canvas, positionNew, "Textures/structures/windmill", new Vector2(1, 1.5f));
             
-        }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Wind farm";
         }
     }
 

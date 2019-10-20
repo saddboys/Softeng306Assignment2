@@ -54,8 +54,15 @@ namespace Game.CityMap
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "House";
+            base.GetInfoBoxData(out _, out _, out sprite, out _);
+            title = "A house";
+            meta = "Cost: $" + House.StructCost + "k" + "\t\t" +
+                   "CO2: " + House.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + House.StructElectricity + "\t\t" +
+                   "Income: $" + House.StructUpkeep + "k";
+            details = "Provides 5k workers." +
+                      "They will pay you tax, but use some electricity and generate some pollution. " +
+                      "Building too many without parks will make your city unhappy";
         }
     }
 

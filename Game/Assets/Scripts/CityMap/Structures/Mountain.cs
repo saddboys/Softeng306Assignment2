@@ -6,6 +6,14 @@ namespace Game.CityMap
 {
     public class Mountain : Structure
     {
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Mountain";
+            details = "A tall mountain which cannot be used for anything";
+        }
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
@@ -24,12 +32,6 @@ namespace Game.CityMap
         {
             Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
             RenderOntoSprite(canvas, positionNew, "Textures/structures/mountain", new Vector2(1, 1.5f));
-        }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Mountain";
         }
     }
 

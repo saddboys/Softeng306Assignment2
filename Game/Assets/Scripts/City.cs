@@ -25,7 +25,8 @@ namespace Game
 
         [SerializeField]
         private StatsBar stats;
-
+        
+        
         public StatsBar Stats
         {
             get { return stats; }
@@ -61,11 +62,14 @@ namespace Game
 
         [SerializeField]
         private GameSceneController controller;
+        
 
         public GameSceneController Controller
         {
             get { return controller; }
         }
+
+        public GameObject dialogueManager;
         
         /// <summary>
         /// Fires at the beginning of each new turn.
@@ -165,6 +169,7 @@ namespace Game
             Turn = 1;
             Stats.Restart();
             Map.Regenerate();
+           // dialogueManager.Counter = 0;
         }
     }
 }

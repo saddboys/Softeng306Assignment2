@@ -149,11 +149,9 @@ namespace Game.Story
                 // Create new story event here
                 storyEvent = factory.CreateStoryEvent(NextStoryEvent);
                 storyEvent.StoryManager = this;
-
+                
                 if (!storyEvent.ConditionMet())
                 {
-                    StoryRequest storyRequest = (StoryRequest) storyEvent;
-                    storyRequest.OnNoClick();
                     storyEvent = factory.CreateStoryEvent(NextStoryEvent);
                 }
 

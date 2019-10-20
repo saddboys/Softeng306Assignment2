@@ -46,6 +46,16 @@ namespace Game.Story.Events
             }
         }
         private StoryManager storyManager;
+        
+        public override bool ConditionMet() {
+            if (storyManager.city.Stats.Wealth > 300 && storyManager.city.Stats.ElectricCapacity > 1) return true;
+            else
+            {
+                // When the requirements are not met
+                StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
+                return false;
+            }
+        }
 
         public override void OnYesClick()
         {

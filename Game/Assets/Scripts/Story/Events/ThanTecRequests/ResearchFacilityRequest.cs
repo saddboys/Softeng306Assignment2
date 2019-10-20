@@ -47,7 +47,11 @@ namespace Game.Story.Events
 
         public override bool ConditionMet() {
             if (StoryManager.city.Stats.Wealth > 3000) return true;
-            else return false;
+            else
+            {
+                StoryManager.NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
+                return false;
+            }
         }
 
         private void OnBuild()

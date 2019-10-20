@@ -54,7 +54,12 @@ namespace Game.Story.Events
 
         public override bool ConditionMet() {
             if (storyManager.city.Stats.Wealth > 300 && storyManager.city.Stats.ElectricCapacity > 1) return true;
-            else return false;
+            else
+            {
+                // When the requirements are not met
+                StoryManager.NextStoryEvent = EventFactory.StoryEvents.MISSED_OPPORTUNITY;
+                return false;
+            }
         }
         
         private void OnBuild()

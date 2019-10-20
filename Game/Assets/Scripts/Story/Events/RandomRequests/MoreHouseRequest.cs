@@ -49,7 +49,10 @@ namespace Game.Story.Events
             Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
         
-        
+        public override bool ConditionMet() {
+            if (storyManager.city.Stats.Wealth > 250 && storyManager.city.Stats.ElectricCapacity > 1) return true;
+            else return false;
+        }
 
         private void OnBuild()
         {

@@ -36,7 +36,11 @@ namespace Game.Story.Events
 
         public override bool ConditionMet() {
             if (StoryManager.city.Stats.Wealth > 8000) return true;
-            else return false;
+            else
+            {
+                StoryManager.NextStoryEvent = EventFactory.StoryEvents.BAN_THE_CARS_REQUEST;
+                return false;
+            }
         }
 
         public override void OnYesClick()

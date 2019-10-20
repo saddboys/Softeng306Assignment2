@@ -61,6 +61,7 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
+           // City.RestartGameEvent += StopDemolish;
             //City.NextTurnEvent += StopDemolish;
             City?.StartCoroutine(GenerateDestructionParticles(tile));
              //Test(tile);
@@ -154,11 +155,13 @@ namespace Game.CityMap
 
         private void StopDemolish()
         {
-
-            ParticleSystem particles = City.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle")
-                .gameObject
-                .GetComponent<ParticleSystem>();
-            particles.Stop();
+            if (City.Map.parent.transform.Find("CopyStructures") != null)
+            {
+                ParticleSystem particles = City.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle")
+                    .gameObject
+                    .GetComponent<ParticleSystem>();
+                particles.Stop();
+            }
             City.NextTurnEvent -= StopDemolish;
         }
 

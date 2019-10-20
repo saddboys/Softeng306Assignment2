@@ -23,7 +23,7 @@ namespace Game
         }
         private int turn;
 
-        private readonly int maxTurns = 20;
+        private readonly int maxTurns = 3;
         public int MaxTurns => maxTurns;
 
         [SerializeField]

@@ -439,8 +439,16 @@ namespace Game.CityMap
             }
 
             occupiedBiomSpots.Clear();
-
+            DestroyRest();
             Generate();
+        }
+
+        private void DestroyRest()
+        {
+            foreach (Transform child in parent.transform)
+            { 
+                Destroy(child.gameObject);
+            }
         }
 
         public void Rotate(bool clockwise)

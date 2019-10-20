@@ -37,30 +37,27 @@ namespace Game.CityMap
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 20;
             Debug.Log("Creating biomes");
             
-            // ocean
-            for (int i = 0; i < numBiomes; i++)
-            {
-                createBiome(Terrain.TerrainTypes.Ocean);
-            }
-            // desert
-            for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
-            {
-                createBiome(Terrain.TerrainTypes.DesertHill);
-            }
-            // grass hills
-            for (int i = 0; i < numBiomes; i++)
-            {
-                createBiome(Terrain.TerrainTypes.GrassHill);
-            }
-            // Mountains
-            createBiome(Terrain.TerrainTypes.Grass);
+            // // ocean
             // for (int i = 0; i < numBiomes; i++)
             // {
-            //     createBiome(Terrain.TerrainTypes.Grass);
+            //     createBiome(Terrain.TerrainTypes.Ocean);
             // }
-
-            // creates a river
-            createRiver();
+            // // desert
+            // for (int i = 0; i < Mathf.FloorToInt(numBiomes / 2); i++)
+            // {
+            //     createBiome(Terrain.TerrainTypes.DesertHill);
+            // }
+            // // grass hills
+            // for (int i = 0; i < numBiomes; i++)
+            // {
+            //     createBiome(Terrain.TerrainTypes.GrassHill);
+            // }
+            // // Mountains
+            // createBiome(Terrain.TerrainTypes.Grass);
+            // // for (int i = 0; i < numBiomes; i++)
+            // // {
+            // //     createBiome(Terrain.TerrainTypes.Grass);
+            // // }
 
             // Populate none biom areas with grass
             Debug.Log("Creating non biomes");
@@ -97,8 +94,9 @@ namespace Game.CityMap
                     }
                 }
             }
-
-            Debug.Log("Finished creating non biomes");
+            
+            // creates a river
+            createRiver();
         }
 
         /// <summary>
@@ -121,13 +119,15 @@ namespace Game.CityMap
             Debug.Log("centre: X: " + centre[0] + ", Y: " + centre[1]);
 
             // 2) calculate radius related value of circle around origin
-            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 5;
-            int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 10);
+            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 10;
+            int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 20);
+            Debug.Log("radiusBaseValue: " + radiusBaseValue);
+            Debug.Log("radiusNonce: " + radiusNonce);
 
             // 3) anchor of the river
             int[] anchor = new int[2];
-            anchor[0] = random.Next(radiusBaseValue - radiusNonce, radiusBaseValue + radiusNonce);
-            anchor[1] = random.Next(radiusBaseValue - radiusNonce, radiusBaseValue + radiusNonce);
+            anchor[0] = random.Next(centre[0] - (radiusBaseValue + radiusNonce), centre[0] + (radiusBaseValue + radiusNonce));
+            anchor[1] = random.Next(centre[1] - (radiusBaseValue + radiusNonce), centre[1] + (radiusBaseValue + radiusNonce));
 
             Debug.Log("anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
@@ -140,6 +140,8 @@ namespace Game.CityMap
             anchorTile.ScreenPosition = anchorMappedVector;
 
             anchorTile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+
+            biomeAnchors[anchor] = Terrain.TerrainTypes.Ocean;
 
             // 4) calculate gradient of the river
             float riverGradient;
@@ -159,57 +161,74 @@ namespace Game.CityMap
             int[] curPos = new int[2];
             curPos[0] = anchor[0];
             curPos[1] = anchor[1];
+            int[] prevPos = new int[2];
+            prevPos[0] = -1;
+            prevPos[1] = -1;
 
             Debug.Log("river iteration");
             // main iteration
-            // for (int i = 0; i < Mathf.Max(WIDTH, HEIGHT) / 2; i++)
-            // {
-            //     try {
-            //         // get neighbouring tiles to current and iterate through them
-            //         int[,] adjPos = getNeighbouringTiles(curPos);
-            //         float gradientDifference = Mathf.Infinity;
-            //         for (int j = 0; j < adjPos.GetLength(0); i++)
-            //         {
-            //             float gradient;
-            //             try
-            //             {
-            //                 gradient  = (anchor[1] - adjPos[j, 0]) / (anchor[0] - adjPos[j, 1]);
-            //             }
-            //             catch (DivideByZeroException e)
-            //             {
-            //                 gradient = 1000; // some large number of signify inifinity
-            //             }
-            //             // get tile with smallest gradient change
-            //             // TODO: change so that there is a slight variance in the gradient
-            //             if (Mathf.Abs(riverGradient - gradient) < gradientDifference)
-            //             {
-            //                 gradientDifference = riverGradient - gradient;
-            //                 curPos[0] = adjPos[j, 0];
-            //                 curPos[1] = adjPos[j, 1];
-            //             }
+            while (!getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Ocean))
+            {
+                if (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
+                {
+                    // get neighbouring tiles to current and iterate through them
+                    int[,] adjPos = getNeighbouringTiles(curPos);
+                    float gradientDifference = Mathf.Infinity;
+                    for (int i = 0; i < adjPos.GetLength(0); i++)
+                    {
+                        if (!prevPos[0].Equals(adjPos[i, 0]) && !prevPos[1].Equals(adjPos[i, 1]))
+                        {
+                            float gradient;
+                            int[] temp = new int[2];
+                            temp[0] = curPos[0];
+                            temp[1] = curPos[1];
+                            try
+                            {
+                                gradient  = (anchor[1] - adjPos[i, 0]) / (anchor[0] - adjPos[i, 1]);
+                            }
+                            catch (DivideByZeroException e)
+                            {
+                                gradient = 1000; // some large number of signify inifinity
+                            }
+                            // get tile with smallest gradient change
+                            // TODO: change so that there is a slight variance in the gradient
+                            if (Mathf.Abs(riverGradient - gradient) <= gradientDifference)
+                            {
+                                gradientDifference = riverGradient - gradient;
+                                curPos[0] = adjPos[i, 0];
+                                curPos[1] = adjPos[i, 1];
+                            }
 
-            //             // set tile to Ocean
-            //             MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-            //             // A vector used for hex position
-            //             Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
-            //             // Find the real position (the position on the screen)
-            //             Vector3 mappedVector = map.CellToWorld(vector);
+                            Debug.Log("setting tile: X: " + curPos[0] + ", Y: " + curPos[1] + " to ocean");
 
-            //             tile.Canvas = parent;
-            //             tile.ScreenPosition = mappedVector;
-            //             tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
-            //             SetTileTo(vector, tile);
-            //             // Refresh the tile whenever its sprite changes.
-            //             tile.SpriteChange += () => map.RefreshTile(vector);
-            //         }
-            //     } 
-            //     catch
-            //     {
-            //         // out of map so break while loop
-            //         break;
-            //     }
-                
-            // }
+                            prevPos[0] = temp[0];
+                            prevPos[1] = temp[1];
+
+                            // set tile to Ocean
+                            MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+                            // A vector used for hex position
+                            Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
+                            // Find the real position (the position on the screen)
+                            Vector3 mappedVector = map.CellToWorld(vector);
+
+                            tile.Canvas = parent;
+                            tile.ScreenPosition = mappedVector;
+                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+
+                            occupiedBiomSpots[curPos] = Terrain.TerrainTypes.Ocean;
+                            SetTileTo(vector, tile);
+                            // Refresh the tile whenever its sprite changes.
+                            tile.SpriteChange += () => map.RefreshTile(vector);
+                        }
+                    }
+                }
+                else
+                {
+                    break;
+                }
+            }
+            // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
+            occupiedBiomSpots[anchor] = Terrain.TerrainTypes.Ocean;
         }
 
         /// <summar>
@@ -273,6 +292,9 @@ namespace Game.CityMap
 
             anchorTile.Canvas = parent;
             anchorTile.ScreenPosition = anchorMappedVector;
+
+            biomeAnchors[anchor] = terrain;
+            occupiedBiomSpots[anchor] = terrain;
 
             anchorTile.Terrain = new Terrain(terrain);
 

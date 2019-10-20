@@ -28,7 +28,10 @@ namespace Game
             Debug.Log("start conversation!"+ dialogue.name);
             nameText.text = dialogue.name;
             sentences.Clear();
-
+            if(GameObject.Find("ToolbarCanvas")!=null){
+   GameObject.Find("ToolbarCanvas").SetActive(false);
+            }
+          
             foreach (string sentence in dialogue.sentences)
             {
                 sentences.Enqueue(sentence);
@@ -66,6 +69,7 @@ namespace Game
             Finished?.Invoke();
            //TODO:Uncomment this line if you merge to master game scene! 
            GameObject.Find("IntroStory").SetActive(false);
+           GameObject.Find("ToolbarCanvas").SetActive(true);
         //GameObject.Find("DialogueCanvas").SetActive(false);
         }
 

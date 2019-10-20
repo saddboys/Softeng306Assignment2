@@ -16,7 +16,7 @@ namespace Game.CityMap
         private Tilemap map;
         private GameObject parent;
         public Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots { get; }
-        public List<int[]> biomeAnchors { get; }
+        public Dictionary<int[], Terrain.TerrainTypes> biomeAnchors { get; }
         Random random = new Random();
 
 
@@ -59,6 +59,9 @@ namespace Game.CityMap
             //     createBiome(Terrain.TerrainTypes.Grass);
             // }
 
+            // creates a river
+            createRiver();
+
             // Populate none biom areas with grass
             Debug.Log("Creating non biomes");
             for (int i = 0; i < WIDTH; i++)
@@ -95,24 +98,118 @@ namespace Game.CityMap
                 }
             }
 
-            // creates a river
-            createRiver();
+            Debug.Log("Finished creating non biomes");
         }
 
         /// <summary>
-        /// creates a river 
+        /// creates a river
+        /// 1) first the centre is determined
+        /// 2) radius of the circle around origin related values are calculated, ie the base value which is proportional to map dimensions, 
+        ///       a random nonce that dictates the possible range of the radius 
+        /// 3) anchor on the circumference of the circle is randomly made
+        /// 4) gradient of the river is calculated, it will be tangential to the circle, ie gradient of river = -1/(gradient of line origin to anchor)
+        /// 5) get neighbouring tiles of current position and set tile with gradient of river as water, repeat until next tile is water or out of map
         /// <summary>
         private void createRiver()
         {
-            int[] anchor = new int[2];
-            anchor[0] = random.Next(0, WIDTH);
-            anchor[1] = random.Next(0, HEIGHT);
+            Debug.Log("creating river");
 
+            // 1) get coordinate of origin
             int[] centre = new int[2];
             centre[0] = WIDTH / 2;
             centre[1] = HEIGHT / 2;
+            Debug.Log("centre: X: " + centre[0] + ", Y: " + centre[1]);
 
-            float gradient = (anchor[1] - centre[1]) / (anchor[0] - centre[0]);
+            // 2) calculate radius related value of circle around origin
+            int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 5;
+            int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 10);
+
+            // 3) anchor of the river
+            int[] anchor = new int[2];
+            anchor[0] = random.Next(radiusBaseValue - radiusNonce, radiusBaseValue + radiusNonce);
+            anchor[1] = random.Next(radiusBaseValue - radiusNonce, radiusBaseValue + radiusNonce);
+
+            Debug.Log("anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
+
+            // adding anchor to screen
+            MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
+            Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
+            Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
+
+            anchorTile.Canvas = parent;
+            anchorTile.ScreenPosition = anchorMappedVector;
+
+            anchorTile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+
+            // 4) calculate gradient of the river
+            float riverGradient;
+            try
+            {
+                riverGradient = -(anchor[0] - centre[0]) / (anchor[1] - centre[1]);
+            }
+            catch (DivideByZeroException e)
+            {
+                riverGradient = 1000; // some large number to signify infinity
+            }
+            Debug.Log("river gradient: " + riverGradient);
+
+            // 5) expand river
+
+            // 5a) initialise variables
+            int[] curPos = new int[2];
+            curPos[0] = anchor[0];
+            curPos[1] = anchor[1];
+
+            Debug.Log("river iteration");
+            // main iteration
+            // for (int i = 0; i < Mathf.Max(WIDTH, HEIGHT) / 2; i++)
+            // {
+            //     try {
+            //         // get neighbouring tiles to current and iterate through them
+            //         int[,] adjPos = getNeighbouringTiles(curPos);
+            //         float gradientDifference = Mathf.Infinity;
+            //         for (int j = 0; j < adjPos.GetLength(0); i++)
+            //         {
+            //             float gradient;
+            //             try
+            //             {
+            //                 gradient  = (anchor[1] - adjPos[j, 0]) / (anchor[0] - adjPos[j, 1]);
+            //             }
+            //             catch (DivideByZeroException e)
+            //             {
+            //                 gradient = 1000; // some large number of signify inifinity
+            //             }
+            //             // get tile with smallest gradient change
+            //             // TODO: change so that there is a slight variance in the gradient
+            //             if (Mathf.Abs(riverGradient - gradient) < gradientDifference)
+            //             {
+            //                 gradientDifference = riverGradient - gradient;
+            //                 curPos[0] = adjPos[j, 0];
+            //                 curPos[1] = adjPos[j, 1];
+            //             }
+
+            //             // set tile to Ocean
+            //             MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+            //             // A vector used for hex position
+            //             Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
+            //             // Find the real position (the position on the screen)
+            //             Vector3 mappedVector = map.CellToWorld(vector);
+
+            //             tile.Canvas = parent;
+            //             tile.ScreenPosition = mappedVector;
+            //             tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+            //             SetTileTo(vector, tile);
+            //             // Refresh the tile whenever its sprite changes.
+            //             tile.SpriteChange += () => map.RefreshTile(vector);
+            //         }
+            //     } 
+            //     catch
+            //     {
+            //         // out of map so break while loop
+            //         break;
+            //     }
+                
+            // }
         }
 
         /// <summar>
@@ -121,13 +218,13 @@ namespace Game.CityMap
         /// this is so that later when other anchors are creatd they are not created too closely towards the centre.
         /// ultimate it should preserve the player's starting structures for game balancing reasons.
         /// </summary>
-        private List<int[]> newBiomeAnchorList()
+        private Dictionary<int[], Terrain.TerrainTypes> newBiomeAnchorList()
         {
-            List<int[]> anchorList = new List<int[]>();
+            Dictionary<int[], Terrain.TerrainTypes> anchorList = new Dictionary<int[], Terrain.TerrainTypes>();
             int[] dummyCentreAnchor = new int[2];
             dummyCentreAnchor[0] = WIDTH / 2;
             dummyCentreAnchor[1] = HEIGHT / 2;
-            anchorList.Add(dummyCentreAnchor);
+            anchorList[dummyCentreAnchor] = Terrain.TerrainTypes.NotSet;
             return anchorList;
         }
 
@@ -136,7 +233,7 @@ namespace Game.CityMap
         /// </summary>
         private Boolean biomeAnchorTooClose(int[] anchor, int length)
         {
-            foreach (int[] a in biomeAnchors)
+            foreach (int[] a in biomeAnchors.Keys)
             {
                 float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - a[0], 2) + Mathf.Pow(anchor[1] - a[1], 2));
                 if (dist < length * 1.5)
@@ -167,7 +264,7 @@ namespace Game.CityMap
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
-            biomeAnchors.Add(anchor);
+            biomeAnchors[anchor] = terrain;
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();

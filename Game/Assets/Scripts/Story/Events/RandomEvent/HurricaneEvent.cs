@@ -70,10 +70,10 @@ namespace Story.Events.RandomEvent
         {
             StoryManager.city.NextTurnEvent -= StopHurricane;
             StopCoroutine(coroutine);
-            ParticleSystem particles = StoryManager.city.Map.parent.transform.Find("CopyStructures").Find("CustomDemolishParticle").gameObject
-                .GetComponent<ParticleSystem>();
-             particles.Stop();
-             Destroy(particles);
+//            ParticleSystem particles = StoryManager.city.Map.transform.Find("CopyStructures").Find("CustomDemolishParticle").gameObject
+//                .GetComponent<ParticleSystem>();
+//             particles.Stop();
+//             Destroy(particles);
         }
         
         /// <summary>

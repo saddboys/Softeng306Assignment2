@@ -145,40 +145,40 @@ namespace Game.Story
         private void HandleTurnEvent()
         {
 //            For testing an event
-//            if (city.Turn == 2)
+            if (city.Turn == 2)
+            {
+                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
+             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
+                CreatePopUp();   
+            }
+
+//            if (city.Turn == storyQueue.Peek())
 //            {
-//               // storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
-//              storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
-//                CreatePopUp();   
+//                // Create new story event here
+//                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+//                storyEvent.StoryManager = this;
+//                
+//                if (!storyEvent.ConditionMet())
+//                {
+//                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
+//                }
+//
+//                // Get rid of the first thing in the queue
+//                storyQueue.Dequeue();
+//                CreateDialog();
 //            }
-
-            if (city.Turn == storyQueue.Peek())
-            {
-                // Create new story event here
-                storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-                storyEvent.StoryManager = this;
-                
-                if (!storyEvent.ConditionMet())
-                {
-                    storyEvent = factory.CreateStoryEvent(NextStoryEvent);
-                }
-
-                // Get rid of the first thing in the queue
-                storyQueue.Dequeue();
-                CreateDialog();
-            }
-            else
-            {
-                // Events have a 10% chance of popping up
-                // Check for penultimate turn to prevent buggy behaviour
-                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
-                {
-                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
-                    // Randomly spawn events from the event pool
-                    storyEvent = factory.CreateRandomEvent(randomEvent);
-                    CreatePopUp();
-                }
-            }
+//            else
+//            {
+//                // Events have a 10% chance of popping up
+//                // Check for penultimate turn to prevent buggy behaviour
+//                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
+//                {
+//                    EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
+//                    // Randomly spawn events from the event pool
+//                    storyEvent = factory.CreateRandomEvent(randomEvent);
+//                    CreatePopUp();
+//                }
+//            }
         }
 
         /// <summary>

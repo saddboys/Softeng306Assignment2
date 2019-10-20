@@ -176,44 +176,6 @@ namespace Game.CityMap
             GameObject.Destroy(customParticleSystem);
         }
 
-        private void Test(MapTile tile)
-        {
-            GameObject copyOfGameObject = GameObject.Instantiate(tile.Structure.GameObject);
-            copyOfGameObject.name = "CopyStructures";
-            copyOfGameObject.transform.SetParent(tile.Structure.GameObject.transform.parent.gameObject.transform);
-            GameObject customParticleSystem = new GameObject("CustomDemolishParticle");
-            customParticleSystem.transform.SetParent(copyOfGameObject.transform,false);
-            customParticleSystem.transform.position = copyOfGameObject.transform.position;
-            ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
-            Particles.InitParticleSystem(particles);
-            particles.transform.localPosition  = new Vector3(0,0,0);
-            
-
-            ParticleSystem.MainModule mainModule = particles.main;
-            //mainModule.startColor = new ParticleSystem.MinMaxGradient(new Color32(194,194,194,255));
-            mainModule.startColor =  new ParticleSystem.MinMaxGradient(new Color32(194,194,194,255)
-                , new Color32(120,120,120,255));
-            mainModule.startLifetime = 0.2f;
-            mainModule.startSize = new ParticleSystem.MinMaxCurve(0.7f,0.8f);
-            mainModule.maxParticles = 20;
-            mainModule.startSpeed = 0;
-
-            ParticleSystem.ShapeModule shapeModule = particles.shape;
-            shapeModule.shapeType = ParticleSystemShapeType.Cone;
-            shapeModule.angle = 25;
-            shapeModule.radius = 0.8f;
-            shapeModule.scale = new Vector3(1,0.5f,1);
-
-            ParticleSystem.TextureSheetAnimationModule textureSheetAnimationModule = particles.textureSheetAnimation;
-            textureSheetAnimationModule.enabled = true;
-            textureSheetAnimationModule.mode = ParticleSystemAnimationMode.Sprites;
-            textureSheetAnimationModule.SetSprite(0,Resources.Load<Sprite>("Textures/CloudParticle"));
-
-            Renderer renderer = particles.GetComponent<Renderer>();
-            renderer.sortingLayerName = "Structure";
-            renderer.sortingOrder = 100;
-        }
-
         private void StopDemolish()
         {
             if (City.Map.parent.transform.Find("CopyStructures") != null)

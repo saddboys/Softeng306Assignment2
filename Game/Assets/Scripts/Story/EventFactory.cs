@@ -12,7 +12,7 @@ namespace Game.Story
     public class EventFactory
     {
         public enum RandomEvents {CONDITIONAL_REQUEST_HOUSE,FLOOD_EVENT, HEATWAVE_EVENT, HURRICANE_EVENT}
-        public enum StoryEvents {INITIAL_THANTEC, RESEARCH_FACILITY_REQUEST,GIMME_MONEY_REQUEST, GIANT_COOLER_REQUEST,
+        public enum StoryEvents {MISSED_OPPORTUNITY,INITIAL_THANTEC, RESEARCH_FACILITY_REQUEST,GIMME_MONEY_REQUEST, GIANT_COOLER_REQUEST,
                                 PUSHING_HARDER_REQUEST, BAN_THE_CARS_REQUEST, CALLING_ON_LIFESTYLE_REQUEST}
         private StoryEvent storyEvent;
         public GameObject ManagerObject { get; set; }
@@ -25,6 +25,8 @@ namespace Game.Story
         {
             switch (storyEvents)
             {
+                case StoryEvents.MISSED_OPPORTUNITY:
+                    return ManagerObject.AddComponent<MissedOpportunityEvent>();
                 case StoryEvents.INITIAL_THANTEC:
                     return ManagerObject.AddComponent<CreateThanTecRequest>();
                 case StoryEvents.RESEARCH_FACILITY_REQUEST:

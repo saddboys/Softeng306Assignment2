@@ -68,9 +68,9 @@ namespace Game
         /// E.g. Some structures take 3 turns to build, etc.
         /// </summary>
         public event Action NextTurnEvent;
-        
-        public event Action EndGameEvent;
+
         public event Action RestartGameEvent;
+        public event Action EndGameEvent;
 
         private Weather weather;
         // Start is called before the first frame update
@@ -151,11 +151,18 @@ namespace Game
             hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
-            
+            DestroyExistingParticles();
+            RestartGameEvent?.Invoke();
             Stats.Restart();
             Map.Regenerate();
+        }
 
-            RestartGameEvent?.Invoke();
+        private void DestroyExistingParticles()
+        {
+            foreach (Transform child in map.gameObject.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 }

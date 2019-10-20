@@ -109,7 +109,7 @@ namespace Game.CityMap
             meta = "Cost: $" + WindFarm.StructCost + "k" + "\t\t" +
                    "CO2: " + WindFarm.StructCO2 + "MT" + "\n" +
                    "Electricity: " + WindFarm.StructElectricity + "\t\t" +
-                   "Income: $" + WindFarm.StructUpkeep + "k";
+                   "Upkeep: $" + -WindFarm.StructUpkeep + "k";
             details = "Requires 3k workers. " +
                       "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
         }

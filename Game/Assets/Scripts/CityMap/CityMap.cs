@@ -19,7 +19,7 @@ namespace Game.CityMap
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
         public event EventHandler<TileClickArgs> TileMouseEnterEvent;
-        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent; 
         private MapTile previousHoveredTile;
 
         // Camera to reposition after rotation.

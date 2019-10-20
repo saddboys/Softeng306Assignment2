@@ -31,7 +31,8 @@ namespace Game.Story.Events.RandomEvent
 
         private const string TITLE = "FLOOD";
         private const string DESCRIPTION = "Flooding happened bad luck :(";
-        private List<Stack<Vector3Int>> tempFloodTiles;
+        private List<Stack<MapTile>> tempFloodTiles;
+        private List<Stack<Vector3Int>> tempFloodPosition;
        // private Stack<Vector3Int> tempFloodTilePositions;
         private Random random;
 
@@ -43,6 +44,7 @@ namespace Game.Story.Events.RandomEvent
             random = new Random();
             GenerateFloodPositions();
         }
+        
         
         /// <summary>
         /// Creates the anchor points for where the flooding begins
@@ -57,7 +59,12 @@ namespace Game.Story.Events.RandomEvent
             int lowestY = bounds.position.y;
             if (tempFloodTiles == null)
             {
-                tempFloodTiles = new List<Stack<Vector3Int>>();
+                tempFloodTiles = new List<Stack<MapTile>>();
+            }
+
+            if (tempFloodPosition == null)
+            {
+                tempFloodPosition = new List<Stack<Vector3Int>>();
             }
             // Choose between 5-20 flood patches
             int numberOfPatches = random.Next(5, 20);
@@ -73,9 +80,12 @@ namespace Game.Story.Events.RandomEvent
                 {
                     tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                     tile.Structure = null;
-                    Stack<Vector3Int> newStack = new Stack<Vector3Int>();
-                    newStack.Push(position);
+                    Stack<MapTile> newStack = new Stack<MapTile>();
+                    newStack.Push(tile);
+                    Stack<Vector3Int> tilePosition = new Stack<Vector3Int>();
+                    tilePosition.Push(position);
                     tempFloodTiles.Add(newStack);
+                    tempFloodPosition.Add(tilePosition);
                     GenerateSurroundingWater(100);
                 }
             }
@@ -95,7 +105,8 @@ namespace Game.Story.Events.RandomEvent
 
                 // Generate next position
                 probabilityToIncrease -= 1;
-                Stack<Vector3Int> current = tempFloodTiles[tempFloodTiles.Count-1];
+                Stack<Vector3Int> current = tempFloodPosition[tempFloodTiles.Count-1];
+                Stack<MapTile> currentTile = tempFloodTiles[tempFloodTiles.Count-1];
                 Vector3Int topPosition = current.Peek();
                 // Get the next position for the surroundings
                 int addX = random.Next(-1,1);
@@ -111,6 +122,8 @@ namespace Game.Story.Events.RandomEvent
                     tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
                     tile.Structure = null;
                     current.Push(position);
+                    currentTile.Push(tile);
+                    
                 }
                 GenerateSurroundingWater(probabilityToIncrease);
             }
@@ -130,17 +143,17 @@ namespace Game.Story.Events.RandomEvent
             Tilemap map = StoryManager.city.Map.map;
             for (int i = 0; i < tempFloodTiles.Count; i++)
             {
-                Stack<Vector3Int> tempFloodTilePositions = tempFloodTiles[i];
+                Stack<MapTile> tempTiles = tempFloodTiles[i];
                 // Decrease 2 to 4 tiles at a time
                 int toDecrease = random.Next(2, 5);
                 for (int j = 0; j < toDecrease; j++)
                 {
-                    if (tempFloodTilePositions.Count != 0)
+                    if (tempTiles.Count != 0)
                     {
-                        var tile = map.GetTile<MapTile>(tempFloodTilePositions.Pop());
+                       // var tile = map.GetTile<MapTile>(tempFloodTilePositions.Pop());
+                       var tile = tempTiles.Pop();
                         tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
                     }
-                    
                 }
             }
         }

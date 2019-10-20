@@ -116,8 +116,8 @@ namespace Game.Story.Events
             titleText.fontSize = 15;
             titleText.alignment = TextAnchor.MiddleCenter;
             helpDescription.transform.SetParent(helpPanel.transform,false);
-            helpDescription.GetComponent<RectTransform>().sizeDelta = new Vector2(200,100);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(200,50);
+            helpDescription.GetComponent<RectTransform>().sizeDelta = new Vector2(250,100);
+            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(250,50);
             helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,80);
         }
     }

@@ -263,6 +263,10 @@ namespace Game.CityMap
 
             // Start off at an angle to further enhance 2.5D effect.
             Rotate(true);
+
+            // Reset camera for new maps.
+            camera.GetComponent<CameraDrag>().PanTo(new Vector3(0, 0, 0));
+            camera.GetComponent<CameraZoom>().ResetZoom();
         }
         
         /// <summary>
@@ -461,7 +465,9 @@ namespace Game.CityMap
             centre.x /= 2;
             centre.y /= 2;
             centre.z = 0;
-            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+
+            // Perform the swapping in two stages. Can't be done in a single pass.
+
             List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
@@ -471,10 +477,8 @@ namespace Game.CityMap
                 map.SetTile(pos, null);
             }
 
-            int i = 0;
             foreach (var (pos, tile) in tiles)
             {
-                i++;
                 SetTileTo(RotateCellPosition(pos, clockwise), tile);
             }
 

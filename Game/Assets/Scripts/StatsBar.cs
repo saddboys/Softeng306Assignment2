@@ -9,8 +9,8 @@ namespace Game
     public class StatsBar : MonoBehaviour
     {
         private readonly List<String> tooltipQueue = new List<string>();
-        private readonly List<GameObject> tooltips = new List<GameObject>();
         private GameObject tooltipCanvas;
+        public int RestartCount { get; private set; }
 
         ForecastableStat co2Stat;
         ForecastableStat tempStat;
@@ -97,48 +97,11 @@ namespace Game
             if (tooltipQueue.Count > 0)
             {
                 GameObject tooltip = new GameObject();
-                RectTransform rectTransform = tooltip.AddComponent<RectTransform>();
-                rectTransform.position = Input.mousePosition;
-                rectTransform.pivot = new Vector2(0, 0);
-                rectTransform.SetParent(tooltipCanvas.transform);
-                ContentSizeFitter fitter = tooltip.AddComponent<ContentSizeFitter>();
-                fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-                HorizontalLayoutGroup group = tooltip.AddComponent<HorizontalLayoutGroup>();
-                group.childControlHeight = true;
-                group.childControlWidth = true;
-                Text text = tooltip.AddComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-                text.text = String.Join("\n", tooltipQueue);
-                text.fontSize = 10;
-                Shadow shadow = tooltip.AddComponent<Shadow>();
-                shadow.effectColor = new Color(0, 0, 0);
+                var behaviour = tooltip.AddComponent<StatsChangeTooltip>();
+                behaviour.Init(String.Join("\n", tooltipQueue), this, tooltipCanvas.transform);
                 tooltipQueue.Clear();
-                tooltips.Add(tooltip);
             }
 
-            // Make change tooltips float upwards and fade out.
-            foreach (var tooltip in tooltips)
-            {
-                Text text = tooltip.GetComponent<Text>();
-                Color color = text.color;
-                Vector3 pos = tooltip.transform.position;
-                pos.y += color.a / 2.0f;
-                tooltip.transform.position = pos;
-                color.a -= 0.005f;
-                text.color = color;
-            }
-
-            // Remove tooltips that are no longer visible.
-            tooltips.RemoveAll(tooltip =>
-            {
-                if (tooltip.GetComponent<Text>().color.a < 0.0f)
-                {
-                    Destroy(tooltip);
-                    return true;
-                }
-                return false;
-            });
         }
 
         /// <summary>
@@ -194,11 +157,8 @@ namespace Game
             scoreStat.Reset(0);
             wealthStat.Reset(10000);
 
-            foreach (var tooltip in tooltips)
-            {
-                Destroy(tooltip);
-            }
-            tooltips.Clear();
+            // This will magically destroy all active tooltips.
+            RestartCount++;
         }
 
         private void OnChange()
@@ -209,6 +169,53 @@ namespace Game
         private static double CalculateTemperatureChange(double co2)
         {
             return co2 / 1000;
+        }
+    }
+
+    public class StatsChangeTooltip : MonoBehaviour
+    {
+        private StatsBar parentBar;
+        private int restartId;
+
+        public void Init(string textContent, StatsBar bar, Transform parent)
+        {
+            parentBar = bar;
+            restartId = bar.RestartCount;
+            RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
+            rectTransform.position = Input.mousePosition;
+            rectTransform.pivot = new Vector2(0, 0);
+            rectTransform.SetParent(parent);
+            ContentSizeFitter fitter = gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            HorizontalLayoutGroup group = gameObject.AddComponent<HorizontalLayoutGroup>();
+            group.childControlHeight = true;
+            group.childControlWidth = true;
+            Text text = gameObject.AddComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            text.text = textContent;
+            text.fontSize = 10;
+            Shadow shadow = gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+        }
+
+        private void Update()
+        {
+            // Make change tooltips float upwards and fade out.
+            Text text = GetComponent<Text>();
+            Color color = text.color;
+            Vector3 pos = transform.position;
+            pos.y += color.a / 2.0f;
+            transform.position = pos;
+            color.a -= 0.005f;
+            text.color = color;
+
+            // Remove tooltips that are no longer visible,
+            // or if stats bar has restarted.
+            if (GetComponent<Text>().color.a < 0.0f || restartId != parentBar.RestartCount)
+            {
+                Destroy(gameObject);
+            }
         }
     }
 

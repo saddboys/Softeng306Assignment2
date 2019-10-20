@@ -35,7 +35,7 @@ namespace Game.Story.Events
             "Excellent news!", 
             "ThanTec has informed me that all our investments has yielded a new technology to bring temperatures down in the area.",
             "Kind of like an ‘outdoors air conditioner’, they said.",
-            "We just need to spend money to install them in the area."}); 
+            "We just need to install them in the area."}); 
         
         public override StoryManager StoryManager 
         {
@@ -49,14 +49,6 @@ namespace Game.Story.Events
 
         public override void OnYesClick()
         {
-            if (StoryManager.city.Stats.Temperature >= 0.5)
-            {
-                StoryManager.city.Stats.Temperature -= 0.5;
-            } 
-            else 
-            {
-                StoryManager.city.Stats.Temperature = 0;
-            }
             storyManager.toolbar.BuiltEvent += OnBuild;
 
             // Go to tech ending
@@ -79,6 +71,15 @@ namespace Game.Story.Events
 
         private void OnBuild()
         {
+            if (StoryManager.city.Stats.Temperature >= 0.5)
+            {
+                StoryManager.city.Stats.Temperature -= 0.5;
+            } 
+            else
+            {
+                StoryManager.city.Stats.Temperature = 0;
+            }
+
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;

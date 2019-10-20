@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// Requests the user to build a research facility for thantec
+    /// </summary>
     public class ResearchFacilityRequest : StoryRequest
     {
         public override string Title

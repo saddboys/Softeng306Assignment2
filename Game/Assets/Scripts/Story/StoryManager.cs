@@ -73,6 +73,9 @@ namespace Game.Story
 //            city.EndGameEvent += ResetStory;
         }
 
+        /// <summary>
+        /// When the game restarts, reset the necessary parameters
+        /// </summary>
         private void ResetStory()
         {
             // Create a queue for turn number of the story events
@@ -134,13 +137,18 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Listener for each turn count.
+        /// This will check if its time to show a story event
+        /// or it will generate a random event
+        /// </summary>
         private void HandleTurnEvent()
         {
 //            For testing an event
 //            if (city.Turn == 2)
 //            {
-//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
-//             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.INITIAL_THANTEC);
+//               // storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+//              storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
 //                CreatePopUp();   
 //            }
 
@@ -162,7 +170,8 @@ namespace Game.Story
             else
             {
                 // Events have a 10% chance of popping up
-                if (random.Next(0, 10) == 1)
+                // Check for penultimate turn to prevent buggy behaviour
+                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool
@@ -172,6 +181,9 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Creates the popup for when an event occurs
+        /// </summary>
         private void CreatePopUp()
         {
             EventPopUp popUp;

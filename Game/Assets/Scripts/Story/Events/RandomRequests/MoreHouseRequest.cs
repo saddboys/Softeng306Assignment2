@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// A random story request which occurs when population is larg.
+    /// Tells the user to build more houses.
+    /// </summary>
     public class MoreHouseRequest : StoryRequest
     {
         public override string Title
@@ -48,7 +52,7 @@ namespace Game.Story.Events
             StoryManager.toolbar.CurrentFactory = new HouseFactory(StoryManager.city);
             Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
-        
+
         public override bool ConditionMet() {
             if (storyManager.city.Stats.Wealth > 250 && storyManager.city.Stats.ElectricCapacity > 1) return true;
             else return false;

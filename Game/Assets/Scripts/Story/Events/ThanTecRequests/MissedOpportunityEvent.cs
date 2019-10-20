@@ -3,6 +3,10 @@ using UnityEngine;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// This event occurs when the user has not met the necessary requirements for
+    /// the initial thantec event.
+    /// </summary>
     public class MissedOpportunityEvent : StoryEvent
     {
         public override string Title

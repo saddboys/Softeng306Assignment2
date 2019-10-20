@@ -38,6 +38,9 @@ namespace Story.Events.RandomEvent
             
         }
 
+        /// <summary>
+        /// Finds water terrains to remove 
+        /// </summary>
         private void FindWaterTerrain()
         {
             Random random = new Random();

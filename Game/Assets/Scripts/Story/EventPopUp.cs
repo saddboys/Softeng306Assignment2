@@ -135,25 +135,6 @@ public class EventPopUp : MonoBehaviour
         buttonObj.transform.SetParent(panel.transform,false);
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/2.4f);
-        
-//        EventTrigger eventTrigger = buttonObj.AddComponent<EventTrigger>();
-//        EventTrigger.Entry entry = new EventTrigger.Entry();
-//        entry.eventID = EventTriggerType.PointerEnter;
-//        entry.callback.AddListener((eventData) =>
-//        {
-//            buttonImage.color = new Color32(212,212,212,255);
-//        } );
-//        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
-//        exitEntry.eventID = EventTriggerType.PointerExit;
-//        exitEntry.callback.AddListener((eventData) =>
-//        {
-//            buttonImage.color = Color.white;
-//        } );
-//        
-//        
-//        
-//        eventTrigger.triggers.Add(entry);
-//        eventTrigger.triggers.Add(exitEntry);
     }
     
     
@@ -232,8 +213,6 @@ public class EventPopUp : MonoBehaviour
             currentSize.x += 27;
             currentSize.y += 25;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
-//            Quaternion currentRotation = panel.GetComponent<RectTransform>().rotation;
-//            panel.GetComponent<RectTransform>().rotation = Quaternion.Euler(0, 0, currentRotation.z + 100);
             yield return null;
         }
         POP_UP_LIMIT_HEIGHT = currentSize.y;

@@ -6,6 +6,9 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// The story request which allows the user to build a giant cooler
+    /// </summary>
     public class GiantCoolerRequest : StoryRequest
     {
         public override string Title

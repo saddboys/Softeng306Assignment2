@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// The story request for building the thantec building
+    /// This will tell the user to build the thantec building when accepted
+    /// </summary>
     [System.Serializable]
     public class CreateThanTecRequest : StoryRequest
     {
-        /// <summary>
-        /// The ThanTec request will need a thanTec object
-        /// </summary>
-        /// <param name="thanTec"></param>
         public override string Title
         {
             get { return TITLE; }

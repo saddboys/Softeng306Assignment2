@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
+    /// <summary>
+    /// A story request which asks the user to ban the cars
+    /// </summary>
     public class BanTheCarsRequest : StoryRequest
     {
         public override string Title

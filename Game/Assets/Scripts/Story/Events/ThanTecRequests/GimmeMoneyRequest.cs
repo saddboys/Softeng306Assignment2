@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// A story request which requests the user to spend money on thantec investments
+    /// </summary>
     public class GimmeMoneyRequest : StoryRequest
     {
         public override string Title

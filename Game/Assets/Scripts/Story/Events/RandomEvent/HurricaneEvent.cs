@@ -40,6 +40,10 @@ namespace Story.Events.RandomEvent
             StoryManager.city.Stats.Reputation -= 10;
         }
 
+        /// <summary>
+        /// Destroy the buildings slowly when the hurricane occurs
+        /// </summary>
+        /// <returns></returns>
         IEnumerator DestroyBuildings()
         {
             StoryManager.city.NextTurnEvent += StopHurricane;
@@ -59,6 +63,9 @@ namespace Story.Events.RandomEvent
             }
         }
 
+        /// <summary>
+        /// Stop the destruction and wind effects after a next turn event
+        /// </summary>
         private void StopHurricane()
         {
             StoryManager.city.NextTurnEvent -= StopHurricane;
@@ -68,8 +75,10 @@ namespace Story.Events.RandomEvent
              particles.Stop();
              Destroy(particles);
         }
-
-
+        
+        /// <summary>
+        /// Removes all events when restarting the game
+        /// </summary>
         private void StopOtherEvents()
         {
             StoryManager.city.NextTurnEvent -= StopHurricane;
@@ -78,6 +87,10 @@ namespace Story.Events.RandomEvent
         }
 
 
+        /// <summary>
+        /// Creates the wind particles 
+        /// </summary>
+        /// <param name="canvas"></param>
         public override void GenerateScene(GameObject canvas)
         {
             StoryManager.city.NextTurnEvent += StopWind;
@@ -89,14 +102,13 @@ namespace Story.Events.RandomEvent
             customParticleSystem.transform.rotation = quaternion;
             ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
             Particles.InitParticleSystem(particles);
-
+            
             ParticleSystem.MainModule mainParticle = particles.main;
             mainParticle.startLifetime = 2f;
             mainParticle.startSpeed = 0;
             mainParticle.startSize =  0.5f;
             mainParticle.maxParticles = 20;
-            
-            
+
             ParticleSystem.TrailModule trailMode = particles.trails;
             trailMode.enabled = true;
             trailMode.lifetime = new ParticleSystem.MinMaxCurve(0.6f);
@@ -111,17 +123,7 @@ namespace Story.Events.RandomEvent
             emissionModule.rateOverTime = 3;
             ParticleSystemRenderer particleRenderer =  particles.GetComponent<ParticleSystemRenderer>();
             particleRenderer.sortingLayerName = "Terrain";
-//            var material = Resources.Load<Material>("wind_head");
-//            material.shader =  Shader.Find("Particles/Alpha Blended Premultiply");
-//            particleRenderer.material = material;
-            
             particleRenderer.trailMaterial =  Resources.Load<Material>("Wind");
-            
-//            ParticleSystem.TextureSheetAnimationModule textureSheet =
-//                particles.textureSheetAnimation;
-//            textureSheet.enabled = true;
-//            textureSheet.mode = ParticleSystemAnimationMode.Sprites;
-//            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/circle"));
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
             shapeModule.shapeType = ParticleSystemShapeType.Cone;
@@ -131,6 +133,7 @@ namespace Story.Events.RandomEvent
             ParticleSystem.VelocityOverLifetimeModule velocityOverLifetimeModule = particles.velocityOverLifetime;
             velocityOverLifetimeModule.enabled = true;
 
+            // The below animation curves cause the loop effect
             AnimationCurve curveX = new AnimationCurve();
             curveX.AddKey(0, 10);
             curveX.AddKey(0.3f, 10);
@@ -149,8 +152,7 @@ namespace Story.Events.RandomEvent
             AnimationCurve curveZ = new AnimationCurve();
             curveZ.AddKey(0, 0);
             curveZ.AddKey(1.0f, 0);
-
-            //velocityOverLifetimeModule.space = ParticleSystemSimulationSpace.Local;
+            
             velocityOverLifetimeModule.x = new ParticleSystem.MinMaxCurve(1, curveX);
             velocityOverLifetimeModule.y = new ParticleSystem.MinMaxCurve(1, curveY);
             velocityOverLifetimeModule.z = new ParticleSystem.MinMaxCurve(0, curveZ);
@@ -185,6 +187,9 @@ namespace Story.Events.RandomEvent
             sizeOverLifetimeModule.z =  new ParticleSystem.MinMaxCurve(0, velocityCurveZ);
         }
 
+        /// <summary>
+        /// Stops the wind particles 
+        /// </summary>
         private void StopWind()
         {
             if (StoryManager.city.Map.Tiles.Length != 0)
@@ -198,6 +203,10 @@ namespace Story.Events.RandomEvent
             StartCoroutine(StoppingWind());
         }
 
+        /// <summary>
+        /// Stops the wind slowly to create a more realistic effect
+        /// </summary>
+        /// <returns></returns>
         IEnumerator StoppingWind()
         {
             yield return new WaitForSeconds(2);

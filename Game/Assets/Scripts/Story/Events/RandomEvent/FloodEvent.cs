@@ -44,13 +44,10 @@ namespace Game.Story.Events.RandomEvent
         }
         
         /// <summary>
-        /// Recursively generates the position of water tiles
+        /// Creates the anchor points for where the flooding begins
         /// </summary>
         private void GenerateFloodPositions()
         {
-            
-//            int height = StoryManager.city.Map.HEIGHT;
-//            int width = StoryManager.city.Map.WIDTH;
             Tilemap map = StoryManager.city.Map.map;
             BoundsInt bounds = map.cellBounds;
             int height = bounds.size.y;
@@ -61,16 +58,15 @@ namespace Game.Story.Events.RandomEvent
             {
                 tempFloodTiles = new List<Stack<Vector3Int>>();
             }
-            // Choose between 1-6 flood patches
+            // Choose between 5-20 flood patches
             int numberOfPatches = random.Next(5, 20);
-            Debug.Log("patches" + numberOfPatches);
             for (int i = 0; i < numberOfPatches; i++)
             {
+                // Choose a random location at the bounds of the cellmap
                 int x = random.Next(lowestX, lowestX+width);
                 int y = random.Next(lowestY, lowestY+height);
 
                 Vector3Int position = new Vector3Int(x, y, 0);
-              //  Vector3Int rotateCellPosition = StoryManager.city.Map.RotateCellPosition(position, true);
                 var tile = map.GetTile<MapTile>(position);
                 if (tile != null)
                 {
@@ -83,9 +79,11 @@ namespace Game.Story.Events.RandomEvent
                 }
             }
         }
-        
-        
 
+        /// <summary>
+        ///  Recursively generate the surrounding water tiles at those anchor points
+        /// </summary>
+        /// <param name="probabilityToIncrease"></param>
         private void GenerateSurroundingWater(int probabilityToIncrease)
         {
             
@@ -116,7 +114,11 @@ namespace Game.Story.Events.RandomEvent
                 GenerateSurroundingWater(probabilityToIncrease);
             }
         }
+        
 
+        /// <summary>
+        /// Decreases the flooded water amount after each turn
+        /// </summary>
         private void DecreaseWater()
         {
             if (tempFloodTiles != null && tempFloodTiles.Count == 0)
@@ -142,12 +144,19 @@ namespace Game.Story.Events.RandomEvent
             }
         }
         
+        /// <summary>
+        /// Stop the rain effects when the game ends
+        /// </summary>
         private void StopAtEnd()
         {
             StoryManager.city.NextTurnEvent -= StopRain;
             StoryManager.city.EndGameEvent -= StopAtEnd;
         }
 
+        /// <summary>
+        /// Generates the rain particles when a flood occurs. This stops at the next turn
+        /// </summary>
+        /// <param name="canvas"></param>
         public override void GenerateScene(GameObject canvas)
         {
             StoryManager.city.NextTurnEvent += StopRain;
@@ -181,6 +190,9 @@ namespace Game.Story.Events.RandomEvent
             shapeModule.rotation = new Vector3(0,0,180);
         }
 
+        /// <summary>
+        /// Stops the rain particles
+        /// </summary>
         private void StopRain()
         {
             StoryManager.city.NextTurnEvent -= StopRain;
@@ -190,6 +202,10 @@ namespace Game.Story.Events.RandomEvent
             StartCoroutine(StoppingRain());
         }
 
+        /// <summary>
+        /// Stop the rain iteratively to create a more realistic effect
+        /// </summary>
+        /// <returns></returns>
         IEnumerator StoppingRain()
         {
             yield return new WaitForSeconds(2);

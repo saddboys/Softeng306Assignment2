@@ -209,12 +209,12 @@ namespace Game.CityMap
                         if (negativeGradientBuffer)
                         {
                             negativeGradientBuffer = false;
-                            overallRiverGradient = riverGradient + riverGradientBuffer;
+                            overallRiverGradient += riverGradientBuffer;
                         }
                         else
                         {
                             negativeGradientBuffer = true;
-                            overallRiverGradient = riverGradient - riverGradientBuffer;
+                            overallRiverGradient -= riverGradientBuffer;
                         }
                     }
 
@@ -361,7 +361,7 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain)
         {   
             // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 10);
             int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome
@@ -369,11 +369,13 @@ namespace Game.CityMap
             int[] anchor = new int[2];
             anchor[0] = random.Next(0, WIDTH);
             anchor[1] = random.Next(0, HEIGHT);
-            
-            while (biomeAnchorTooClose(anchor, biomeLenghtValue))
+
+            int counter = 0;
+            while (biomeAnchorTooClose(anchor, biomeLenghtValue) && counter < 100)
             {
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
+                counter++;
             }
 
             // adding anchor to screen

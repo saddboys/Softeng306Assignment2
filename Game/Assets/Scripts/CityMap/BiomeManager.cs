@@ -139,9 +139,9 @@ namespace Game.CityMap
             anchorTile.Canvas = parent;
             anchorTile.ScreenPosition = anchorMappedVector;
 
-            anchorTile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
+            anchorTile.Terrain = new Terrain(Terrain.TerrainTypes.River);
 
-            biomeAnchors[anchor] = Terrain.TerrainTypes.Ocean;
+            biomeAnchors[anchor] = Terrain.TerrainTypes.River;
 
             // 4) calculate gradient of the river
             float riverGradient;
@@ -155,88 +155,95 @@ namespace Game.CityMap
             }
             Debug.Log("river gradient: " + riverGradient);
 
-            // 5) expand river
-
-            // 5a) initialise variables
-            int[] curPos = new int[2];
-            curPos[0] = anchor[0];
-            curPos[1] = anchor[1];
-            int[] prevPos = new int[2];
-            prevPos[0] = -1;
-            prevPos[1] = -1;
-
-            Debug.Log("river iteration");
-            // main iteration
-            while (!getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Ocean))
-            {
-                if (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
-                {
-                    Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
-                    int[] temp = new int[2];
-                    temp[0] = curPos[0];
-                    temp[1] = curPos[1];
-                    Debug.Log("temp: X: " + temp[0] + ", Y: " + temp[1]);
-                    // get neighbouring tiles to current and iterate through them
-                    int[,] adjPos = getNeighbouringTiles(curPos);
-                    float gradientDifference = Mathf.Infinity;
-                    for (int i = 0; i < adjPos.GetLength(0); i++)
-                    {
-                        if (!prevPos[0].Equals(adjPos[i, 0]) && !prevPos[1].Equals(adjPos[i, 1]))
-                        {
-                            Debug.Log("prevPos: X: " + prevPos[0] + ", Y: " + prevPos[1]);
-                            float gradient;
-
-                            try
-                            {
-                                gradient  = (anchor[1] - adjPos[i, 0]) / (anchor[0] - adjPos[i, 1]);
-                            }
-                            catch (DivideByZeroException e)
-                            {
-                                gradient = 1000; // some large number of signify inifinity
-                            }
-                            // get tile with smallest gradient change
-                            // TODO: change so that there is a slight variance in the gradient
-                            if (Mathf.Abs(riverGradient - gradient) <= gradientDifference)
-                            {
-                                gradientDifference = riverGradient - gradient;
-                                curPos[0] = adjPos[i, 0];
-                                curPos[1] = adjPos[i, 1];
-                            }
-
-                            Debug.Log("setting tile: X: " + curPos[0] + ", Y: " + curPos[1] + " to ocean");
-
-                            // set tile to Ocean
-                            MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-                            // A vector used for hex position
-                            Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
-                            // Find the real position (the position on the screen)
-                            Vector3 mappedVector = map.CellToWorld(vector);
-
-                            tile.Canvas = parent;
-                            tile.ScreenPosition = mappedVector;
-                            tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
-
-                            occupiedBiomSpots[curPos] = Terrain.TerrainTypes.Ocean;
-                            SetTileTo(vector, tile);
-                            // Refresh the tile whenever its sprite changes.
-                            tile.SpriteChange += () => map.RefreshTile(vector);
-                        }
-                    }
-                    Debug.Log("temp: X: " + temp[0] + ", Y: " + temp[1]);
-                    prevPos[0] = temp[0];
-                    prevPos[1] = temp[1];
-                }
-                else
-                {
-                    Debug.Log("CurPos out of map");
-                    break;
-                }
-            }
+            // 5) expand river 
+            extendRiverBiome(anchor, riverGradient);
+            extendRiverBiome(anchor, riverGradient);
+            
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
             occupiedBiomSpots[anchor] = Terrain.TerrainTypes.Ocean;
         }
 
-        /// <summar>
+        /// <summary>
+        /// main iteration for the river
+        /// should be called twice at same anchor 
+        /// </summary>
+        private void extendRiverBiome(int[] anchor, float riverGradient)
+        {
+            // 5a) initialise variables
+            int[] curPos = new int[2];
+            curPos[0] = anchor[0];
+            curPos[1] = anchor[1];
+
+            Debug.Log("river iteration");
+
+            // main iteration
+            while (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
+            {
+                Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
+                // get neighbouring tiles to current and iterate through them
+                int[,] adjPos = getNeighbouringTiles(curPos);
+                float gradientDifference = 1000;
+                int[] prevPos = new int[2];
+                prevPos[0] = curPos[0];
+                prevPos[1] = curPos[1];
+                for (int i = 0; i < adjPos.GetLength(0); i++)
+                {
+                    int[] temp = new int[2];
+                    temp[0] = adjPos[i, 0];
+                    temp[1] = adjPos[i, 1];
+                    if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0)
+                    {
+                        float gradient;
+
+                        try
+                        {
+                            gradient  = (anchor[1] - temp[1]) / (anchor[0] - temp[0]);
+                        }
+                        catch (DivideByZeroException e)
+                        {
+                            gradient = 1000; // some large number of signify inifinity
+                        }
+                        
+                        // get tile with smallest gradient change
+                        if (Mathf.Abs(riverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.Ocean))
+                        {
+                            Debug.Log("setting new curpos: X: " + curPos[0] + ", Y: " + curPos[1]);
+                            gradientDifference = Mathf.Abs(riverGradient - gradient);
+                            curPos[0] = temp[0];
+                            curPos[1] = temp[1];
+                        }
+
+                        // set tile to Ocean
+                        MapTile tile = ScriptableObject.CreateInstance<MapTile>();
+                        // A vector used for hex position
+                        Vector3Int vector = new Vector3Int(-temp[0] + WIDTH / 2, -temp[1] + HEIGHT / 2, 0);
+                        // Find the real position (the position on the screen)
+                        Vector3 mappedVector = map.CellToWorld(vector);
+
+                        tile.Canvas = parent;
+                        tile.ScreenPosition = mappedVector;
+                        tile.Terrain = new Terrain(Terrain.TerrainTypes.River);
+
+                        occupiedBiomSpots[temp] = Terrain.TerrainTypes.River;
+                        SetTileTo(vector, tile);
+                        // Refresh the tile whenever its sprite changes.
+                        tile.SpriteChange += () => map.RefreshTile(vector);
+                    }
+                }
+                if (getTileTerrain(curPos).Equals(Terrain.TerrainTypes.Ocean))
+                {
+                    // reached ocean
+                    break;
+                }
+                if (prevPos[0].Equals(curPos[0]) && prevPos[1].Equals(curPos[1]))
+                {
+                    // current position did not change so stop loop.
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
         /// creates a new List<int[]> for the biomeAnchor list.
         /// it will be instantiated with 1 anchor with position (0, 0).
         /// this is so that later when other anchors are creatd they are not created too closely towards the centre.

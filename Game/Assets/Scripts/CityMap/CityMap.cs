@@ -81,6 +81,7 @@ namespace Game.CityMap
                 if (currentTile != null)
                 {
                     TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
+                    // Debug.Log("pos: " + position);
                 }
             }
             previousHoveredTile = currentTile;

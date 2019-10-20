@@ -46,7 +46,7 @@ namespace Game.Story.Events
             "What do you think we should do?"}); 
 
         public override bool ConditionMet() {
-            if (StoryManager.city.Stats.Wealth > 3000) return true;
+            if (StoryManager.city.Stats.Wealth > 3000 && StoryManager.city.Stats.ElectricCapacity > 1) return true;
             else
             {
                 StoryManager.NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
@@ -56,8 +56,6 @@ namespace Game.Story.Events
 
         private void OnBuild()
         {
-            storyManager.city.Stats.Wealth -= 3000;
-            storyManager.city.Stats.ElectricCapacity -=10;
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;

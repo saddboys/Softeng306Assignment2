@@ -64,8 +64,6 @@ namespace Game.Story.Events
         
         private void OnBuild()
         {
-            storyManager.city.Stats.Wealth -= 300;
-            storyManager.city.Stats.ElectricCapacity -=2;
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;

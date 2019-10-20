@@ -74,13 +74,13 @@ namespace Game
             Shadow shadow = scoreLabel.gameObject.AddComponent<Shadow>();
             shadow.effectColor = new Color(0, 0, 0);
 
-            co2Stat = new ForecastableStat(tooltipQueue, co2ValueText, "F0", " MT", " CO2", 2, 0.5f);
-            tempStat = new ForecastableStat(tooltipQueue, temperatureValueText, "F2", "°C", " Change", 0.01f, 0.001f, false);
-            popStat = new ForecastableStat(tooltipQueue, populationValueText, "F1", "k", " Population", 1, 0.1f);
-            elecStat = new ForecastableStat(tooltipQueue, electricCapacityValueText, "F0", "", " Electricity", 1, 0.1f);
-            repStat = new ForecastableStat(tooltipQueue, reputationValueText, "F0", "%", " Reputation", 2, 0.5f);
-            scoreStat = new AnimatedStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, false, false);
-            wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5);
+            co2Stat = new ForecastableStat(tooltipQueue, co2ValueText, "F0", " MT", " CO2", 2, 0.5f, (500, Mathf.Infinity));
+            tempStat = new ForecastableStat(tooltipQueue, temperatureValueText, "F2", "°C", " Change", 0.01f, 0.001f, (1.5f, Mathf.Infinity), false);
+            popStat = new ForecastableStat(tooltipQueue, populationValueText, "F1", "k", " Population", 1, 0.1f, (5, Mathf.NegativeInfinity));
+            elecStat = new ForecastableStat(tooltipQueue, electricCapacityValueText, "F0", "", " Electricity", 1, 0.1f, (Mathf.NegativeInfinity, Mathf.NegativeInfinity));
+            repStat = new ForecastableStat(tooltipQueue, reputationValueText, "F0", "%", " Reputation", 2, 0.5f, (10, Mathf.NegativeInfinity));
+            scoreStat = new AnimatedStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, (Mathf.NegativeInfinity, Mathf.NegativeInfinity), false, false);
+            wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5, (500, Mathf.NegativeInfinity));
             co2Stat.ChangeEvent += OnChange;
             co2Stat.ChangeEvent += CO2ChangeEvent.Invoke;
             tempStat.ChangeEvent += OnChange;
@@ -243,8 +243,25 @@ namespace Game
     {
         public AnimatedStat Forecast { get; private set; }
 
-        public ForecastableStat(List<String> tooltipQueue, Text text, string format, string suffix, string explainer, float step, float forecastStep, bool fixAnchor = true)
-            : base(tooltipQueue, text, format, suffix, explainer, step, false, fixAnchor)
+        public ForecastableStat(
+            List<String> tooltipQueue,
+            Text text,
+            string format,
+            string suffix,
+            string explainer,
+            float step,
+            float forecastStep,
+            ValueTuple<float, float> warnRegion,
+            bool fixAnchor = true)
+            : base(tooltipQueue,
+                  text,
+                  format,
+                  suffix,
+                  explainer,
+                  step,
+                  warnRegion,
+                  false,
+                  fixAnchor)
         {
             text.alignment = TextAnchor.UpperCenter;
             GameObject forecastObject = new GameObject();
@@ -263,7 +280,7 @@ namespace Game
             HorizontalLayoutGroup group = forecastObject.AddComponent<HorizontalLayoutGroup>();
             group.childControlHeight = true;
             group.childControlWidth = true;
-            Forecast = new AnimatedStat(tooltipQueue: null, forecastText, format, suffix, explainer, forecastStep, true);
+            Forecast = new AnimatedStat(tooltipQueue: null, forecastText, format, suffix, explainer, forecastStep, (Mathf.NegativeInfinity, Mathf.NegativeInfinity), true);
         }
 
         public override void Update()
@@ -291,6 +308,7 @@ namespace Game
                     change *= -1;
                     tooltipQueue?.Add("-" + change.ToString(format) + suffix + explainer);
                 }
+                CheckWarn();
                 ChangeEvent?.Invoke();
             }
         }
@@ -328,6 +346,9 @@ namespace Game
         private readonly string explainer;
         private readonly float step;
         private readonly bool isRelative;
+        private readonly ValueTuple<float, float> warnRegion;
+
+        private bool warn = false;
 
         public event Action ChangeEvent;
 
@@ -338,6 +359,7 @@ namespace Game
             string suffix,
             string explainer,
             float step,
+            ValueTuple<float, float> warnRegion,
             bool isRelative = false,
             bool fixAnchor = true)
         {
@@ -348,6 +370,7 @@ namespace Game
             this.explainer = explainer;
             this.step = step;
             this.isRelative = isRelative;
+            this.warnRegion = warnRegion;
 
             text.font = Resources.Load<Font>("Fonts/visitor1");
             text.material = Resources.Load<Material>("Fonts/visitor1");
@@ -371,13 +394,34 @@ namespace Game
         public virtual void Update()
         {
             Shown += Mathf.Clamp((float)(Value - Shown), -step, step);
+            if (warn)
+            {
+                if ((Time.time * 2) % 2 < 1)
+                {
+                    text.color = Color.red;
+                } else
+                {
+                    text.color = Color.clear;
+                }
+            }
+            else
+            {
+                text.color = Color.white;
+            }
         }
 
         public void Reset(double value, double shown = 0)
         {
             this.value = value;
+            CheckWarn();
             Shown = shown;
             ChangeEvent?.Invoke();
+        }
+
+        private void CheckWarn()
+        {
+            warn = value >= warnRegion.Item1 && value <= warnRegion.Item2
+                || value >= warnRegion.Item2 && value <= warnRegion.Item1;
         }
     }
 }

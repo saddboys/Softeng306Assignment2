@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class GameUIButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     [SerializeField] private Text ButtonText;
     // Start is called before the first frame update
@@ -21,11 +21,12 @@ public class ButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        ButtonText.color = Color.white;
+//        ButtonText.color = new Color(38, 239, 95, 255);
+        ButtonText.color = Color.green;
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        ButtonText.color = Color.black;
+        ButtonText.color = Color.white;
     }
 }

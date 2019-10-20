@@ -7739,7 +7739,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   city: {fileID: 912060187}
   toolbar: {fileID: 623686491}
-  endTurnButton: {fileID: 0}
+  endTurnButton: {fileID: 1269593179}
   canvas: {fileID: 1235322262}
   storyManagerGameObject: {fileID: 1411043461}
   IntroStory: {fileID: 1223622121}

@@ -119,7 +119,8 @@ public class EventPopUp : MonoBehaviour
         button.onClick.AddListener(DestroyPanel);
         button.onClick.AddListener(StoryEvent.OnYesClick);
         button.name = "OK_button";
-        
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().AttachButton(button);
+
         GameObject textContainer = new GameObject();
         textContainer.transform.SetParent(buttonObj.transform);
         Text text = textContainer.AddComponent<Text>();
@@ -155,7 +156,8 @@ public class EventPopUp : MonoBehaviour
         Button button = buttonObj.AddComponent<Button>();
         button.onClick.AddListener(DestroyPanel);
         button.onClick.AddListener(storyRequest.OnYesClick);
-        
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().AttachButton(button);
+
         GameObject textContainer = new GameObject();
         textContainer.transform.SetParent(buttonObj.transform);
         Text text = textContainer.AddComponent<Text>();
@@ -181,6 +183,7 @@ public class EventPopUp : MonoBehaviour
         buttonObj2.transform.SetParent(panel.transform,false);
         noButton.onClick.AddListener(DestroyPanel);
         noButton.onClick.AddListener(storyRequest.OnNoClick);
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().AttachButton(noButton);
         GameObject textContainer2 = new GameObject();
         textContainer2.transform.SetParent(buttonObj2.transform);
         Text text2 = textContainer2.AddComponent<Text>();

@@ -88,7 +88,7 @@ namespace Game.CityMap
         /// <summary>
         /// Remove the structure from the screen.
         /// </summary>
-        public void Unrender()
+        public virtual void Unrender()
         {
             if (gameObject != null)
             {

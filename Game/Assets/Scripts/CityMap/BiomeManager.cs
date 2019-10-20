@@ -171,6 +171,11 @@ namespace Game.CityMap
             {
                 if (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
                 {
+                    Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
+                    int[] temp = new int[2];
+                    temp[0] = curPos[0];
+                    temp[1] = curPos[1];
+                    Debug.Log("temp: X: " + temp[0] + ", Y: " + temp[1]);
                     // get neighbouring tiles to current and iterate through them
                     int[,] adjPos = getNeighbouringTiles(curPos);
                     float gradientDifference = Mathf.Infinity;
@@ -178,10 +183,9 @@ namespace Game.CityMap
                     {
                         if (!prevPos[0].Equals(adjPos[i, 0]) && !prevPos[1].Equals(adjPos[i, 1]))
                         {
+                            Debug.Log("prevPos: X: " + prevPos[0] + ", Y: " + prevPos[1]);
                             float gradient;
-                            int[] temp = new int[2];
-                            temp[0] = curPos[0];
-                            temp[1] = curPos[1];
+
                             try
                             {
                                 gradient  = (anchor[1] - adjPos[i, 0]) / (anchor[0] - adjPos[i, 1]);
@@ -201,9 +205,6 @@ namespace Game.CityMap
 
                             Debug.Log("setting tile: X: " + curPos[0] + ", Y: " + curPos[1] + " to ocean");
 
-                            prevPos[0] = temp[0];
-                            prevPos[1] = temp[1];
-
                             // set tile to Ocean
                             MapTile tile = ScriptableObject.CreateInstance<MapTile>();
                             // A vector used for hex position
@@ -221,9 +222,13 @@ namespace Game.CityMap
                             tile.SpriteChange += () => map.RefreshTile(vector);
                         }
                     }
+                    Debug.Log("temp: X: " + temp[0] + ", Y: " + temp[1]);
+                    prevPos[0] = temp[0];
+                    prevPos[1] = temp[1];
                 }
                 else
                 {
+                    Debug.Log("CurPos out of map");
                     break;
                 }
             }

@@ -111,7 +111,7 @@ namespace Game.CityMap
 
             // 2) calculate radius related value of circle around origin
             int radiusBaseValue = Mathf.Max(WIDTH, HEIGHT) / 4;
-            int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 20);
+            int radiusNonce = random.Next(0, Mathf.Max(WIDTH, HEIGHT) / 30);
             Debug.Log("radiusBaseValue: " + radiusBaseValue);
             Debug.Log("radiusNonce: " + radiusNonce);
 
@@ -168,7 +168,7 @@ namespace Game.CityMap
             curPos[1] = anchor[1];
 
             // this is to make the river a bit more wavy
-            float riverGradientBuffer = 1f;
+            float riverGradientBuffer = 2f;
             int counter = 0;
             Boolean negativeGradientBuffer = true;
 
@@ -178,12 +178,12 @@ namespace Game.CityMap
 
             // main iteration
             // continue as long as river tiles are within map
-            while (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] <= HEIGHT && curPos[1] >= 0)
+            while (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] <= HEIGHT && curPos[1] >= 0 && counter < 300)
             {
                 Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
                 // get neighbouring tiles to current and iterate through them
                 int[,] adjPos = getNeighbouringTiles(curPos);
-                float gradientDifference = WIDTH * HEIGHT * 100;
+                float gradientDifference = WIDTH * HEIGHT * 10000;
                 int[] prevPos = new int[2];
                 prevPos[0] = curPos[0];
                 prevPos[1] = curPos[1];
@@ -195,7 +195,7 @@ namespace Game.CityMap
                     temp[1] = adjPos[i, 1];
 
                     // give river gradient a bit of buffer variance
-                    if (counter % 3 == 0)
+                    if (counter % 7 == 0)
                     {
                         if (negativeGradientBuffer)
                         {
@@ -222,7 +222,7 @@ namespace Game.CityMap
                         }
                         catch (DivideByZeroException)
                         {
-                            gradient = WIDTH * HEIGHT * 100; // some large number of signify inifinity
+                            gradient = WIDTH * HEIGHT * 10000; // some large number of signify inifinity
                         }
 
                         // get tile with smallest gradient change to be next current position
@@ -234,13 +234,13 @@ namespace Game.CityMap
                             if (!riverTileTooCloseToBiome(temp, biomeLengthValue))
                             {
                                 float gradientToClosestBiome = getGradientOfClosestBiomeTile(curPos, biomeLengthValue);
+                                
                                 overallRiverGradient = -1f/gradientToClosestBiome;
                             }
 
                             gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
                             curPos[0] = temp[0];
                             curPos[1] = temp[1];
-                            counter++;
                         }
 
                         // set tile to River
@@ -270,6 +270,7 @@ namespace Game.CityMap
                     // current position did not change so stop loop.
                     break;
                 }
+                counter++;
             }
         }
 
@@ -280,7 +281,7 @@ namespace Game.CityMap
         private float getGradientOfClosestBiomeTile(int[] curPos, int length)
         {
             int[] closestBiometile = new int[2];
-            float shortestDist = WIDTH * HEIGHT;
+            float shortestDist = WIDTH * HEIGHT * 10000;
             foreach (int[] a in biomeAnchors.Keys)
             {
                 float curDist = Mathf.Sqrt(Mathf.Pow(curPos[0] - a[0], 2) + Mathf.Pow(curPos[1] - a[1], 2));
@@ -291,7 +292,17 @@ namespace Game.CityMap
                     closestBiometile[1] = a[1];
                 }
             }
-            float gradient = (curPos[1] - closestBiometile[1]) / (curPos[0] - closestBiometile[0]);
+
+            float gradient;
+            try
+            {
+                gradient = (curPos[1] - closestBiometile[1]) / (curPos[0] - closestBiometile[0]);
+            }
+            catch (DivideByZeroException)
+            {
+                gradient = WIDTH * HEIGHT * 10000;
+            }
+            
             return gradient;
         }
 
@@ -307,7 +318,7 @@ namespace Game.CityMap
             int[] dummyCentreAnchor = new int[2];
             dummyCentreAnchor[0] = WIDTH / 2;
             dummyCentreAnchor[1] = HEIGHT / 2;
-            anchorList[dummyCentreAnchor] = Terrain.TerrainTypes.NotSet;
+            anchorList[dummyCentreAnchor] = Terrain.TerrainTypes.Centre;
             return anchorList;
         }
 
@@ -353,7 +364,7 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain)
         {   
             // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 5);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
             int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome

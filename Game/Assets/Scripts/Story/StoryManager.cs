@@ -151,6 +151,10 @@ namespace Game.Story
 
                 if (!storyEvent.ConditionMet())
                 {
+                    // check if this is the first event
+                    if (city.Turn == 4) return;
+
+                    // swap event to the alternate event
                     StoryRequest storyRequest = (StoryRequest) storyEvent;
                     storyRequest.OnNoClick();
                     storyEvent = factory.CreateStoryEvent(NextStoryEvent);

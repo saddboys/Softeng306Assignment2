@@ -77,17 +77,18 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
-           // City.RestartGameEvent += StopDemolish;
-            //City.NextTurnEvent += StopDemolish;
             City?.StartCoroutine(GenerateDestructionParticles(tile));
-             //Test(tile);
+
             // Note: Get structure before it is demolished.
-            if (City != null)
-            {
-                City.Stats.AddContribution(tile.Structure.GetStatsChangeOnDemolish());
-            } 
+            var contribution = tile.Structure.GetStatsChangeOnDemolish();
 
             base.BuildOnto(tile);
+
+            // Note: update stats after building, or else it will assert for buildability for the new values.
+            if (City != null)
+            {
+                City.Stats.AddContribution(contribution);
+            }
         }
         
         IEnumerator GenerateDestructionParticles(MapTile tile)

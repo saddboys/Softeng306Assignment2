@@ -85,6 +85,23 @@ namespace Game
             Stats.Restart();
 
             InvokeRepeating("UpdateForecast", 0, 0.1f);
+
+            // Monkeypatch the turns left font.
+            var label = turnText.rectTransform.parent.gameObject;
+            label.GetComponent<Text>().alignment = TextAnchor.LowerRight;
+            var transform = label.GetComponent<RectTransform>();
+            transform.offsetMin = new Vector2
+            {
+                x = transform.offsetMin.x - 10,
+                y = transform.offsetMin.y,
+            };
+            foreach (var text in label.GetComponentsInChildren<Text>())
+            {
+                text.font = Resources.Load<Font>("Fonts/visitor1");
+                text.material = Resources.Load<Material>("Fonts/visitor1");
+                Shadow shadow = text.gameObject.AddComponent<Shadow>();
+                shadow.effectColor = new Color(0, 0, 0);
+            }
         }
 
         // Update is called once per frame

@@ -174,6 +174,20 @@ namespace Game
             popupInfo.GetComponent<ContentSizeFitter>().horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             popupInfo.GetComponent<ContentSizeFitter>().verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
+            // Monkeypatch the header and popup.
+            Text header = GetComponentInChildren<Text>();
+            header.font = Resources.Load<Font>("Fonts/visitor1");
+            header.material = Resources.Load<Material>("Fonts/visitor1");
+            Shadow shadow = header.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+            Text popupInfoText = popupInfo.GetComponentInChildren<Text>();
+            popupInfoText.font = Resources.Load<Font>("Fonts/visitor1");
+            popupInfoText.material = Resources.Load<Material>("Fonts/visitor1");
+            popupInfoText.color = Color.white;
+            shadow = popupInfoText.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+            popupInfo.GetComponent<Image>().color = GetComponent<Image>().color;
+
             infoBox = new InfoBox(gameObject.transform.parent.gameObject);
 
             invalidSound = Resources.Load<AudioClip>("SoundEffects/Invalid");

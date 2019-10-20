@@ -1,19 +1,23 @@
 fileFormatVersion: 2
-guid: 76441a03813204a709e018d80d7d0602
-timeCreated: 1475703982
-licenseType: Store
+guid: b9ccad56c7e00b44c80b74d5c28b1a8a
 TrueTypeFontImporter:
-  serializedVersion: 3
+  externalObjects: {}
+  serializedVersion: 4
   fontSize: 16
   forceTextureCase: -2
-  characterSpacing: 1
-  characterPadding: 0
+  characterSpacing: 0
+  characterPadding: 1
   includeFontData: 1
-  fontNames: []
-  fallbackFontReferences: []
+  fontName: Visitor TT1 BRK
+  fontNames:
+  - Visitor TT1 BRK
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 76441a03813204a709e018d80d7d0602, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
   userData: 
   assetBundleName: 
   assetBundleVariant: 

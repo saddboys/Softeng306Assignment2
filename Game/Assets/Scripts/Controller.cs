@@ -16,6 +16,9 @@ namespace Game
         [SerializeField]
         private GameObject statsBar;
 
+        [SerializeField]
+        private Slider volumeSlider;
+
         // This links to the JS function inside the plugins folder.
         [DllImport("__Internal")]
         private static extern void WebGLExit();
@@ -48,6 +51,12 @@ namespace Game
             Screen.fullScreen = true;
 #endif
             audio = new AudioManager();
+
+            volumeSlider.onValueChanged.AddListener((float value) =>
+            {
+                audio.Volume = value;
+            });
+            volumeSlider.value = audio.Volume;
         }
 
         private void Update()

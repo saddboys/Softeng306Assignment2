@@ -2,6 +2,7 @@ using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Game.Story;
+using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -107,7 +108,21 @@ namespace Game
         // Update is called once per frame
         void Update()
         {
+            Cheat();
             weather.Update();
+        }
+
+        private void Cheat()
+        {
+            //cheat code
+            if (Input.GetKeyDown(KeyCode.I) && Input.GetKeyDown(KeyCode.O))
+            {
+                Stats.Population += 10000;
+                Stats.Wealth += 10000;
+                Stats.ElectricCapacity += 10000;
+                Stats.Temperature = 0;
+                Stats.Reputation = 100;
+            }
         }
 
         private void UpdateForecast()

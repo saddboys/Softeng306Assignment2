@@ -71,7 +71,6 @@ namespace Game
 
         public event Action RestartGameEvent;
         public event Action EndGameEvent;
-        public event Action RestartGameEvent;
 
         private Weather weather;
         // Start is called before the first frame update
@@ -140,8 +139,6 @@ namespace Game
             RestartGameEvent?.Invoke();
             Stats.Restart();
             Map.Regenerate();
-
-            RestartGameEvent?.Invoke();
         }
 
         private void DestroyExistingParticles()

@@ -64,8 +64,10 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
-            // Go to non-tech ending
-            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.REVISIONIST_ENDING;
+            StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
+
+            // Go to neutral ending
+            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.NEUTRAL_ENDING;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<GiantCoolerRequest>());
         }
 

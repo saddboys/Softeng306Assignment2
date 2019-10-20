@@ -23,8 +23,8 @@ namespace Game.CityMap
                    "CO2: " + WindFarm.StructCO2 + "MT" + "\n" +
                    "Electricity: " + WindFarm.StructElectricity + "\t\t" +
                    "Upkeep: $" + -WindFarm.StructUpkeep + "k";
-            details = "Requires 3k workers. " +
-                      "Although expensive and less effective, wind farms can produce electricity for your town without adding pollution.";
+            details = "Currently providing work for 3k citizens. Although expensive and less effective that power plants, solar farms can produce electricity " +
+                      "for your town without adding pollution.";
         }
         
         public override Stats GetStatsContribution()

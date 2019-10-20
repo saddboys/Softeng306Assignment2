@@ -57,7 +57,7 @@ namespace Game.CityMap
                    "CO2: " + Park.StructCO2 + "MT" + "\n" +
                    "Electricity: " + Park.StructElectricity + "\t\t" +
                    "Upkeep: $" + -Park.StructUpkeep + "k";
-            details = "Add a park to your town. Make it a wonderful town to live in. Click on a tile to build a park.";
+            details = "A place for your citizens to rest, play, exercise, and catch a breath of fresh air.";
         }
     }
 

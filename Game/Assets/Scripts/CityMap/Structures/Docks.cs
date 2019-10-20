@@ -23,9 +23,7 @@ namespace Game.CityMap
                    "CO2: " + Dock.StructCO2 + "MT" + "\n" +
                    "Electricity: " + Dock.StructElectricity + "\t\t" +
                    "Income: $" + Dock.StructUpkeep + "k";
-            details = "Requires 15k workers." +
-                      "Docks are huge commercial buildings to help generate money, but make a lot of pollution." +
-                      " Click on a tile to build a dock.";
+            details = "This is a huge commercial buildings to help generate money, but it adds a lot of pollution. It requires 15k workers.";
         }
         
         public override Stats GetStatsContribution()

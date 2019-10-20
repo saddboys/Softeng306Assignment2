@@ -8,7 +8,7 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out title, out meta, out sprite, out details);
             title = "The Thantec office";
-            details = "The office for Thantec";
+            details = "The office for Thantec.";
             
         }
         

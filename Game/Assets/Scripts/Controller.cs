@@ -8,7 +8,7 @@ namespace Game
 {
     public class Controller : MonoBehaviour
     {
-        private AudioManager audio;
+        private AudioManager audioManager;
 
         [SerializeField]
         private GameObject menu;
@@ -22,6 +22,8 @@ namespace Game
         // This links to the JS function inside the plugins folder.
         [DllImport("__Internal")]
         private static extern void WebGLExit();
+
+        private AudioClip click;
 
         public void Quit()
         {
@@ -50,13 +52,15 @@ namespace Game
 #if UNITY_WEBGL
             Screen.fullScreen = true;
 #endif
-            audio = new AudioManager();
+            audioManager = new AudioManager();
 
             volumeSlider.onValueChanged.AddListener((float value) =>
             {
-                audio.Volume = value;
+                audioManager.Volume = value;
             });
-            volumeSlider.value = audio.Volume;
+            volumeSlider.value = audioManager.Volume;
+
+            click = Resources.Load<AudioClip>("SoundEffects/Click");
         }
 
         private void Update()
@@ -64,6 +68,7 @@ namespace Game
             if (Input.GetKeyDown(KeyCode.Escape) && statsBar.activeSelf)
             {
                 menu.SetActive(!menu.activeSelf);
+                audioManager.Play(click);
             }
         }
     }

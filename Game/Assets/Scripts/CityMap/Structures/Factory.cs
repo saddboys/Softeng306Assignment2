@@ -25,8 +25,7 @@ namespace Game.CityMap
                    "CO2: " + Factory.StructCO2 + "MT" + "\n" +
                    "Electricity: " + Factory.StructElectricity + "\t\t" +
                    "Income: $" + Factory.StructUpkeep + "k";
-            details = "Requires 5k Workers. Citizens of your town need a place to work, and you need a source of money." +
-                      " Click on a tile to build a factory.";
+            details = "A place for your citizens to work, and to generate income for your city! It requires 5k Workers.";
         }
 
         public override Stats GetStatsContribution()

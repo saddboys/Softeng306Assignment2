@@ -11,7 +11,7 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Mountain";
-            details = "A tall mountain which cannot be used for anything";
+            details = "A tall magnificent mountain which cannot be used for anything, but can't we just appreciate this lovely view?";
         }
         
         public override Stats GetStatsContribution()

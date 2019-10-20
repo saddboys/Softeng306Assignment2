@@ -55,7 +55,7 @@ namespace Game.CityMap
                    "CO2: " + Forest.StructCO2 + "MT" + "\n" +
                    "Electricity: " + Forest.StructElectricity + "\t\t" +
                    "Income: $" + Forest.StructUpkeep + "k";
-            details = "Although it may seem expensive, you should grow some forests to help keep the pollution down.";
+            details = "A beautiful, healthy forest.";
         }
     }
 

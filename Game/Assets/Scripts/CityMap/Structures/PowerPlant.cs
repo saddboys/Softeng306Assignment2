@@ -156,8 +156,7 @@ namespace Game.CityMap
                    "CO2: " + PowerPlant.StructCO2 + "MT" + "\n" +
                    "Electricity: " + PowerPlant.StructElectricity + "\t\t" +
                    "Upkeep: $" + -PowerPlant.StructUpkeep + "k";
-            details = "Requires 5k workers. Everything needs power to function. Be careful with it's pollution. " +
-                      "Click on a tile to build a power plant. ";
+            details = "Providing work for 5k citizens. Be careful with it's pollution.";
         }
     }
 

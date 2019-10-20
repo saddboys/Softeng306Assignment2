@@ -60,9 +60,7 @@ namespace Game.CityMap
                    "CO2: " + House.StructCO2 + "MT" + "\n" +
                    "Electricity: " + House.StructElectricity + "\t\t" +
                    "Income: $" + House.StructUpkeep + "k";
-            details = "Provides 5k workers." +
-                      "They will pay you tax, but use some electricity and generate some pollution. " +
-                      "Building too many without parks will make your city unhappy";
+            details = "A place for your citizens to call home. They will pay you tax, but they'll also use some electricity and generate some pollution. It currently houses 5k people.";
         }
     }
 

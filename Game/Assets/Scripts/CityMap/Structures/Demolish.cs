@@ -54,7 +54,7 @@ namespace Game.CityMap
             int popRequirement = -tile.Structure.GetStatsChangeOnDemolish().Population;
             if (City.Stats.Population <= popRequirement)
             {
-                reason = String.Format("Cannot demolish when you have less than {1}k people", popRequirement);
+                reason = String.Format("Cannot demolish when you have less than {0}k people", popRequirement);
                 return false;
             }
 

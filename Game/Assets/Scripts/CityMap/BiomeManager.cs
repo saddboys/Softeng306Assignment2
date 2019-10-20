@@ -176,6 +176,12 @@ namespace Game.CityMap
             curPos[0] = anchor[0];
             curPos[1] = anchor[1];
 
+            // this is to make the river a bit more wavy
+            float riverGradientBuffer = 0.5f;
+            int counter = 0;
+            float overallRiverGradient = riverGradient - riverGradientBuffer;
+            Boolean negativeGradientBuffer = true;
+
             Debug.Log("river iteration");
 
             // main iteration
@@ -195,6 +201,22 @@ namespace Game.CityMap
                     int[] temp = new int[2];
                     temp[0] = adjPos[i, 0];
                     temp[1] = adjPos[i, 1];
+
+                    // give river gradient a bit of buffer variance
+                    if (counter % 5 == 0)
+                    {
+                        if (negativeGradientBuffer)
+                        {
+                            negativeGradientBuffer = false;
+                            overallRiverGradient = riverGradient + riverGradientBuffer;
+                        }
+                        else
+                        {
+                            negativeGradientBuffer = true;
+                            overallRiverGradient = riverGradient - riverGradientBuffer;
+                        }
+                    }
+
                     // if the neighbouring tile is within the map
                     // set the tile to river
                     if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0)
@@ -212,20 +234,21 @@ namespace Game.CityMap
                         }
 
                         // get tile with smallest gradient change to be next current position
-                        if (Mathf.Abs(riverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
+                        if (Mathf.Abs(overallRiverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
                         {
                             // make sure the river does not get too close to other biomes
-                            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
-                            int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
-                            if (!riverTileTooCloseToBiome(temp, biomeHalfLength))
-                            {
-                                gradientDifference = Mathf.Abs(riverGradient - gradient);
-                                curPos[0] = temp[0];
-                                curPos[1] = temp[1];
-                            }
-                            // gradientDifference = Mathf.Abs(riverGradient - gradient);
-                            // curPos[0] = temp[0];
-                            // curPos[1] = temp[1];
+                            // int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
+                            // int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
+                            // if (!riverTileTooCloseToBiome(temp, biomeHalfLength))
+                            // {
+                            //     gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
+                            //     curPos[0] = temp[0];
+                            //     curPos[1] = temp[1];
+                            // }
+                            gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
+                            curPos[0] = temp[0];
+                            curPos[1] = temp[1];
+                            counter++;
                         }
 
                         // set tile to River

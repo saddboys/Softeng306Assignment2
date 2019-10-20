@@ -4,6 +4,9 @@ using Game.CityMap;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
+    /// <summary>
+    /// A story request which asks the users to limit the energy usage for the residents
+    /// </summary>
     public class CallingOnLifestyleRequest : StoryRequest
     {
         public override string Title

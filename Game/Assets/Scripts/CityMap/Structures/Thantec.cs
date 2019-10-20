@@ -55,7 +55,7 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 300; }
+            get { return 3000; }
         }
 
         public override Sprite Sprite { get; } =
@@ -102,7 +102,7 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
+                City.Stats.ElectricCapacity -= 2;
                 City.Stats.Population += 4;
                 City.Stats.Reputation -= 1;
             }

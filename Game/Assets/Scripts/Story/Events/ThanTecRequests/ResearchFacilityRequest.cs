@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// Requests the user to build a research facility for thantec
+    /// </summary>
     public class ResearchFacilityRequest : StoryRequest
     {
         public override string Title
@@ -46,17 +49,20 @@ namespace Game.Story.Events
             "What do you think we should do?"}); 
 
         public override bool ConditionMet() {
-            if (StoryManager.city.Stats.Wealth > 3000 && storyManager.city.Stats.ElectricCapacity >= 10) return true;
-            else return false;
+            if (StoryManager.city.Stats.Wealth > 3000 && StoryManager.city.Stats.ElectricCapacity >= 10) return true;
+            else
+            {
+                StoryManager.NextStoryEvent = EventFactory.StoryEvents.PUSHING_HARDER_REQUEST;
+                return false;
+            }
         }
 
         private void OnBuild()
         {
-            storyManager.city.Stats.Wealth -= 3000;
-            storyManager.city.Stats.ElectricCapacity -=10;
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(true);
             Destroy(StoryManager.canvas.transform.Find("help").gameObject);
             StoryManager.toolbar.BuiltEvent -= OnBuild;
         }
@@ -66,8 +72,8 @@ namespace Game.Story.Events
             storyManager.toolbar.BuiltEvent += OnBuild;
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
-
-            StoryManager.toolbar.CurrentFactory = new ResearchFacilityFactory();
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(false);
+            StoryManager.toolbar.CurrentFactory = new ResearchFacilityFactory(StoryManager.city);
             CreateHelpPopup();
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.GIMME_MONEY_REQUEST;
             
@@ -85,20 +91,19 @@ namespace Game.Story.Events
             GameObject helpPanel = new GameObject("help");
             helpPanel.AddComponent<CanvasRenderer>();
             Image i = helpPanel.AddComponent<Image>();
-            i.color = Color.white;
+            i.sprite = Resources.Load<Sprite>("EventSprites/Thaleah_DemoBackground");
             helpPanel.transform.SetParent(StoryManager.canvas.transform, false);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
-            helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
-            
+
             GameObject helpDescription = new GameObject("Title");
             Text titleText = helpDescription.AddComponent<Text>();
-            titleText.text = "Place the building";
-            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.color = Color.black;
-            titleText.fontSize = 10;
+            titleText.text = "Place the new research facility!";
+            titleText.font = Resources.Load<Font>("Fonts/visitor1");
+            titleText.color = new Color32(219, 219, 219,255);
+            titleText.fontSize = 15;
             titleText.alignment = TextAnchor.MiddleCenter;
             helpDescription.transform.SetParent(helpPanel.transform,false);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
+            helpDescription.GetComponent<RectTransform>().sizeDelta = new Vector2(200,100);
+            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(250,50);
             helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,80);
         }
     }

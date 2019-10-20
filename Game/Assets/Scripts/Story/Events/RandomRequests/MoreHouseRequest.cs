@@ -5,6 +5,10 @@ using UnityEngine.UI;
 
 namespace Game.Story.Events
 {
+    /// <summary>
+    /// A random story request which occurs when population is larg.
+    /// Tells the user to build more houses.
+    /// </summary>
     public class MoreHouseRequest : StoryRequest
     {
         public override string Title
@@ -42,19 +46,24 @@ namespace Game.Story.Events
             storyManager.toolbar.BuiltEvent += OnBuild;
             StoryManager.toolbar.gameObject.SetActive(false);
             StoryManager.endTurnButton.interactable = false;
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(false);
             
             CreateHelpPopup();
-            StoryManager.toolbar.CurrentFactory = new HouseFactory();
+            StoryManager.toolbar.CurrentFactory = new HouseFactory(StoryManager.city);
             Destroy(StoryManager.storyManagerGameObject.GetComponent<MoreHouseRequest>());
         }
-        
-        
+
+        public override bool ConditionMet() {
+            if (storyManager.city.Stats.Wealth > 250 && storyManager.city.Stats.ElectricCapacity > 1) return true;
+            else return false;
+        }
 
         private void OnBuild()
         {
             StoryManager.toolbar.gameObject.SetActive(true);
             StoryManager.endTurnButton.interactable = true;
             StoryManager.toolbar.CurrentFactory = null;
+            StoryManager.city.Stats.transform.Find("Menu Button").gameObject.SetActive(true);
             Destroy(StoryManager.canvas.transform.Find("help").gameObject);
             StoryManager.toolbar.BuiltEvent -= OnBuild;
         }
@@ -69,20 +78,19 @@ namespace Game.Story.Events
             GameObject helpPanel = new GameObject("help");
             helpPanel.AddComponent<CanvasRenderer>();
             Image i = helpPanel.AddComponent<Image>();
-            i.color = Color.white;
+            i.sprite = Resources.Load<Sprite>("EventSprites/Thaleah_DemoBackground");
             helpPanel.transform.SetParent(StoryManager.canvas.transform, false);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
-            helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
-            
+            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(150,50);
+
             GameObject helpDescription = new GameObject("Title");
             Text titleText = helpDescription.AddComponent<Text>();
             titleText.text = "Place the building";
-            titleText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            titleText.color = Color.black;
-            titleText.fontSize = 10;
+            titleText.font = Resources.Load<Font>("Fonts/visitor1");
+            titleText.color = new Color32(219, 219, 219,255);
+            titleText.fontSize = 15;
             titleText.alignment = TextAnchor.MiddleCenter;
             helpDescription.transform.SetParent(helpPanel.transform,false);
-            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(100,50);
+            helpPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(150,50);
             helpPanel.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,80);
         }
     }

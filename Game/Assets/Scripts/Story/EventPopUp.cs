@@ -99,10 +99,10 @@ public class EventPopUp : MonoBehaviour
         descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
         descriptionText.alignment = TextAnchor.MiddleCenter;
         description.transform.SetParent(panel.transform,false);
-        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_LIMIT_HEIGHT/3);
+        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.transform.SetParent(description.transform);
-        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
+        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
 
     }
@@ -136,25 +136,6 @@ public class EventPopUp : MonoBehaviour
         buttonObj.transform.SetParent(panel.transform,false);
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/2.4f);
-        
-//        EventTrigger eventTrigger = buttonObj.AddComponent<EventTrigger>();
-//        EventTrigger.Entry entry = new EventTrigger.Entry();
-//        entry.eventID = EventTriggerType.PointerEnter;
-//        entry.callback.AddListener((eventData) =>
-//        {
-//            buttonImage.color = new Color32(212,212,212,255);
-//        } );
-//        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
-//        exitEntry.eventID = EventTriggerType.PointerExit;
-//        exitEntry.callback.AddListener((eventData) =>
-//        {
-//            buttonImage.color = Color.white;
-//        } );
-//        
-//        
-//        
-//        eventTrigger.triggers.Add(entry);
-//        eventTrigger.triggers.Add(exitEntry);
     }
     
     

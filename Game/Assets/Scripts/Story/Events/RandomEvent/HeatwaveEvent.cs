@@ -35,8 +35,12 @@ namespace Story.Events.RandomEvent
             FindWaterTerrain();
             StoryManager.city.Stats.Reputation -= 5;
             StoryManager.city.Stats.Temperature += 0.5;
+            
         }
 
+        /// <summary>
+        /// Finds water terrains to remove 
+        /// </summary>
         private void FindWaterTerrain()
         {
             Random random = new Random();

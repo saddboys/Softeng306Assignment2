@@ -31,7 +31,8 @@ namespace Game
 
         [SerializeField]
         private StatsBar stats;
-
+        
+        
         public StatsBar Stats
         {
             get { return stats; }

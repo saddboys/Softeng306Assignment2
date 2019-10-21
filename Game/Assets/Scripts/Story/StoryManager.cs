@@ -32,10 +32,10 @@ namespace Game.Story
         public EventFactory.StoryEvents NextStoryEvent { get; set; }
         private EventFactory factory;
         private Queue<int> storyQueue;
-        
         private StoryEvent storyEvent;
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
+        private int chanceOfRandomEvent;
         
         public enum StoryEndings {TECH_ENDING, REVISIONIST_ENDING, NEUTRAL_ENDING}
 
@@ -44,10 +44,8 @@ namespace Game.Story
         {
             get => storyEnding;
             set => storyEnding = value;
-        } 
-//        private Dictionary<int, bool> storyChoices;
-
-
+        }
+        
         public Dictionary<int, bool> StoryChoices = new Dictionary<int, bool>();
 
         void Start()
@@ -57,6 +55,7 @@ namespace Game.Story
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
             ResetStory();
+           
             city.NextTurnEvent += HandleTurnEvent;
             
             // Generate the event pool
@@ -92,11 +91,11 @@ namespace Game.Story
         {
             if (eventPool.Contains(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE))
             {
-                if (city.Stats.Population <= 10) eventPool.Remove(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
+                if (city.Stats.Population <= 30) eventPool.Remove(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
             }
             else
             {
-                if (city.Stats.Population > 10) eventPool.Add(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
+                if (city.Stats.Population > 30) eventPool.Add(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
             }
             
         }
@@ -108,7 +107,7 @@ namespace Game.Story
 
         private void HandleTemperatureChangeEvent()
         {
-            
+            chanceOfRandomEvent = (int)(city.Stats.Temperature * 20);
         }
 
         private void HandleWealthChangeEvent()
@@ -137,6 +136,12 @@ namespace Game.Story
             }
         }
 
+        public void GeneratePopupThroughEvent(EventFactory.RandomEvents randomEvent)
+        {
+            storyEvent = factory.CreateRandomEvent(randomEvent);
+            CreatePopUp();
+        }
+
         /// <summary>
         /// Listener for each turn count.
         /// This will check if its time to show a story event
@@ -151,7 +156,13 @@ namespace Game.Story
 //             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
 //                CreatePopUp();   
 //            }
-
+//
+// For tutorial event and further explaination
+             Debug.Log("enter here city turn is : " + city.Turn);
+            if (city.Turn == 2)
+            {
+               CreateTutorial();
+            }
             if (city.Turn == storyQueue.Peek())
             {
                 // Create new story event here
@@ -171,7 +182,7 @@ namespace Game.Story
             {
                 // Events have a 10% chance of popping up
                 // Check for penultimate turn to prevent buggy behaviour
-                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
+                if (random.Next(0, 100) <= chanceOfRandomEvent && city.Turn != city.MaxTurns - 1)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool
@@ -215,6 +226,24 @@ namespace Game.Story
            
         }
 
+        public void CreateTutorial(){
+             Dialogue dialog = new Dialogue(); 
+          
+            if ( !city.HasEnded)
+            {  
+                dialog.name = "Secretary";
+                dialog.sentences =   new String[] {"Congratulations! You made it to your second turn.", 
+                "As you just saw, your city has changed a bit. ",
+                "Once per turn, each and every building in your city earns or loses money, produces or reduces CO2 emissions, makes your people happier or sadder.",
+                "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city."}; 
+                IntroStory.SetActive(true);
+                FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+                //FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
+            }
+        }
+
+    
+        
         /// <summary>
         /// Determines the ending to show
         /// </summary>
@@ -224,7 +253,6 @@ namespace Game.Story
             // Check reason for ending game
             if (city.Turn == city.MaxTurns)
             {
-                
                 CheckNonFinalStoryEventEffect();
                 Debug.Log("End Story reached " + StoryEnding);
                 string reason = "";
@@ -254,19 +282,22 @@ namespace Game.Story
                         break;
                         
                 }
+                reason = reason + "\n Final Score: " + city.Stats.Score;
                 Controller.GameWon(reason);
 
             } else if (city.Stats.Wealth <= 0)
             {
                 string reason = "You've run out of assets to support your city!";
+                reason = reason + "\n Final Score: " + city.Stats.Score;
                 Controller.GameOver(reason);
-                
+                 Debug.Log("reputation :"+ city.Stats.Reputation);
             } else if (city.Stats.Temperature > 2)
-            {
-                string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
+            {    
+                string reason = "Your actions have resulted in the earth overheating... our planet is now uninhabitable";
+                reason = reason + "\n Final Score: " + city.Stats.Score;
                 Controller.GameOver(reason);
             }
-            
+           
             ResetStory();
         }
 

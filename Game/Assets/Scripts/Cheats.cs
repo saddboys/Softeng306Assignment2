@@ -6,6 +6,8 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
 using System.Linq;
+using Game.Story;
+using Story.Events.RandomEvent;
 
 namespace Game
 /**
@@ -15,6 +17,7 @@ namespace Game
     public class Cheats : MonoBehaviour
     {
         private City city;
+        private StoryManager manager;
         String editStr;
         private Boolean isOn;
 
@@ -72,7 +75,6 @@ namespace Game
         private void Cheat(String str)
         {
             String[] parameters = str.Split(' ');
-
             
             if (parameters.Length > 1) 
             {
@@ -106,6 +108,26 @@ namespace Game
                             Debug.Log("Increase temperature by " + parameters[1]);
                             city.Stats.Temperature += number;
                             break;
+                        case("event"):
+                            switch (parameters[1])
+                            {
+                                case "1":
+                                    manager.GeneratePopupThroughEvent(EventFactory.RandomEvents.HURRICANE_EVENT);
+                                    break;
+                                case "2":
+                                    manager.GeneratePopupThroughEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+                                    break;
+                                case "3":
+                                    manager.GeneratePopupThroughEvent(EventFactory.RandomEvents.HEATWAVE_EVENT);
+                                    break;
+                                case "4":
+                                    manager.GeneratePopupThroughEvent(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            break;
                     }
                 }
             }
@@ -115,6 +137,7 @@ namespace Game
         private void Start()
         {
             city = GameObject.FindObjectOfType<City>();
+            manager = FindObjectOfType<StoryManager>();
             editStr = "";
             isOn = false;
         }

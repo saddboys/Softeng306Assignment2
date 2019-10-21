@@ -12,7 +12,9 @@ public class GameSceneController : MonoBehaviour
     public GameObject stats;
     public GameObject toolbar;
     public GameObject tempbar;
-    
+    public GameObject restartButton;
+    public GameObject nextLevelButton;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -31,6 +33,8 @@ public class GameSceneController : MonoBehaviour
         setActiveUIComponents();
         endStatusText.text = "Game Over";
         endReasonText.text = endReason;
+        restartButton.SetActive(true);
+        nextLevelButton.SetActive(false);
     }
 
     public void GameWon(string endReason)
@@ -38,6 +42,8 @@ public class GameSceneController : MonoBehaviour
         setActiveUIComponents();
         endStatusText.text = "You Win!";
         endReasonText.text = endReason;
+        restartButton.SetActive(false);
+        nextLevelButton.SetActive(true);
     }
 
     private void setActiveUIComponents()

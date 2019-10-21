@@ -181,7 +181,7 @@ namespace Game.Story
             {
                 // Events have a 10% chance of popping up
                 // Check for penultimate turn to prevent buggy behaviour
-                if (random.Next(0, 100) <= chanceOfRandomEvent && city.Turn != city.MaxTurns - 1)
+                if (random.Next(0, 100) <= chanceOfRandomEvent && city.Turn != city.MaxTurns - 1 && city.Turn != 2)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool

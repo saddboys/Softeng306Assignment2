@@ -99,6 +99,7 @@ namespace Game
             
             Turn = 1;
             Stats.Restart(Level);
+            GameObject.FindObjectOfType<Game.AudioBehaviour>().StartMusic();
 
             InvokeRepeating("UpdateForecast", 0, 0.1f);
 
@@ -198,6 +199,7 @@ namespace Game
                     GameObject.FindObjectOfType<DialogueManager>().IntroduceLevel3();
                     break;
             }
+            GameObject.FindObjectOfType<Game.AudioBehaviour>().StartMusic();
         }
 
         public void NextLevel()

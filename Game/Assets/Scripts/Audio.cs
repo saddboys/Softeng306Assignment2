@@ -13,6 +13,7 @@ namespace Game
     {
         private AudioSource audioSource;
         private AudioClip mainLoop;
+        private AudioClip intro;
 
         public float Volume
         {
@@ -26,14 +27,28 @@ namespace Game
             obj.AddComponent<AudioBehaviour>().Audio = this;
             audioSource = obj.AddComponent<AudioSource>();
             mainLoop = Resources.Load<AudioClip>("Music/TestLoop");
-            audioSource.clip = mainLoop;
-            audioSource.loop = true;
+            intro = Resources.Load<AudioClip>("Music/Intro");
+            audioSource.clip = intro;
+            audioSource.loop = false;
             audioSource.Play();
         }
 
         public void Play(AudioClip clip)
         {
             audioSource.PlayOneShot(clip);
+        }
+
+        public void StopMusic()
+        {
+            audioSource.clip = null;
+            audioSource.Stop();
+        }
+
+        public void StartMusic()
+        {
+            audioSource.clip = mainLoop;
+            audioSource.loop = true;
+            audioSource.Play();
         }
     }
 
@@ -62,6 +77,16 @@ namespace Game
         {
             var effects = button.gameObject.AddComponent<ButtonSoundEffects>();
             effects.Audio = Audio;
+        }
+
+        public void StopMusic()
+        {
+            Audio.StopMusic();
+        }
+
+        public void StartMusic()
+        {
+            Audio.StartMusic();
         }
     }
 

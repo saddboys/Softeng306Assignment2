@@ -52,8 +52,9 @@ Commands:
 1. Run through the tutorial to show the dialogue
 2. Build one of each building, demonstrating the information box for each and “ghost” for each building
 3. Selecting a few buildings to demonstrate selectable objects
-4. Ending turn to see stat changes
-5. Ending turns continuously to see random events
-6. Using the console to give yourself different game-overs based on story (good end and bad ends)
-7. Using the console to demonstrate different types of events
-8. Use the Level command to see levels 2 and 3
+4. Rotation of the map
+5. Ending turn to see stat changes
+6. Ending turns continuously to see random events
+7. Using the console to give yourself different game-overs based on story (good end and bad ends)
+8. Using the console to demonstrate different types of events
+9. Use the Level command to see levels 2 and 3

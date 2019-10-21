@@ -91,9 +91,32 @@ namespace Game.CityMap
                     }
                 }
             }
-            
-            // creates a river
-            createRiver();
+
+            // creates rivers until a sufficient length has been found.
+            // max 4 attempts.
+            for (int i = 0; i < 4 || riverLength >= Mathf.Max(WIDTH, HEIGHT) / 2; i++)
+            {
+                createRiver();
+                riverLength = 0;
+            }
+
+            NormalizeWaterTiles();
+        }
+
+        /// <summary>
+        /// Existing logic uses ocean for water testing.
+        /// </summary>
+        private void NormalizeWaterTiles()
+        {
+            foreach (var tile in map.GetTilesBlock(map.cellBounds))
+            {
+                if (tile == null) continue;
+                var mapTile = (MapTile)tile;
+                if (mapTile.Terrain != null && mapTile.Terrain.TerrainType == Terrain.TerrainTypes.River)
+                {
+                    mapTile.Terrain.TerrainType = Terrain.TerrainTypes.Ocean;
+                }
+            }
         }
 
         /// <summary>
@@ -158,17 +181,17 @@ namespace Game.CityMap
             // 5) expand river in bidirectionally
             extendRiverBiome(anchor, riverGradient);
 
-            while (riverLength < Mathf.Max(WIDTH, HEIGHT) / 2)
-            {
-                int[,] adjPos = getNeighbouringTiles(anchor);
-                int value = random.Next(0, 6);
-                int[] anchor2 = new int[2];
-                anchor2[0] = adjPos[value, 0];
-                anchor2[1] = adjPos[value, 1];
-                
-                extendRiverBiome(anchor2, riverGradient);
-            }
-            
+            //while (riverLength < Mathf.Max(WIDTH, HEIGHT) / 2)
+            //{
+            int[,] adjPos = getNeighbouringTiles(anchor);
+            int value = random.Next(0, 6);
+            int[] anchor2 = new int[2];
+            anchor2[0] = adjPos[value, 0];
+            anchor2[1] = adjPos[value, 1];
+
+            extendRiverBiome(anchor2, riverGradient);
+            //}
+
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
             occupiedBiomSpots[anchor] = Terrain.TerrainTypes.River;
         }
@@ -230,7 +253,7 @@ namespace Game.CityMap
 
                     // if the neighbouring tile is within the map
                     // set the tile to river
-                    if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0 && getTileTerrain(temp).Equals(Terrain.TerrainTypes.NotSet))
+                    if (temp[0] < WIDTH && temp[0] >= 0 && temp[1] < HEIGHT && temp[1] >= 0 && getTileTerrain(temp).Equals(Terrain.TerrainTypes.NotSet))
                     {
                         float gradient;
 

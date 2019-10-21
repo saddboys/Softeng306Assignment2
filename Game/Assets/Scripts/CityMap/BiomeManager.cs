@@ -168,7 +168,7 @@ namespace Game.CityMap
             curPos[1] = anchor[1];
 
             // this is to make the river a bit more wavy
-            float riverGradientBuffer = 2f;
+            float riverGradientBuffer = 5f;
             int counter = 0;
             Boolean negativeGradientBuffer = true;
 
@@ -178,7 +178,7 @@ namespace Game.CityMap
 
             // main iteration
             // continue as long as river tiles are within map
-            while (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] <= HEIGHT && curPos[1] >= 0 && counter < 300)
+            while (curPos[0] < WIDTH && curPos[0] > 0 && curPos[1] < HEIGHT && curPos[1] > 0 && counter < 300)
             {
                 Debug.Log("curPos: X: " + curPos[0] + ", Y: " + curPos[1]);
                 // get neighbouring tiles to current and iterate through them
@@ -195,7 +195,7 @@ namespace Game.CityMap
                     temp[1] = adjPos[i, 1];
 
                     // give river gradient a bit of buffer variance
-                    if (counter % 7 == 0)
+                    if (counter % 15 == 0)
                     {
                         if (negativeGradientBuffer)
                         {
@@ -211,7 +211,7 @@ namespace Game.CityMap
 
                     // if the neighbouring tile is within the map
                     // set the tile to river
-                    if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0)
+                    if (temp[0] <= WIDTH && temp[0] >= 0 && temp[1] <= HEIGHT && temp[1] >= 0 && getTileTerrain(temp).Equals(Terrain.TerrainTypes.NotSet))
                     {
                         float gradient;
 
@@ -226,7 +226,7 @@ namespace Game.CityMap
                         }
 
                         // get tile with smallest gradient change to be next current position
-                        if (Mathf.Abs(overallRiverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
+                        if (Mathf.Abs(overallRiverGradient - gradient) <= gradientDifference)
                         {
 
                             gradientDifference = Mathf.Abs(overallRiverGradient - gradient);

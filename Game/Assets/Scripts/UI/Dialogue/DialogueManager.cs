@@ -32,6 +32,7 @@ namespace Game
             endTurn.interactable = false;
             container.SetActive(true);
             Debug.Log("start conversation!"+ dialogue.name);
+            endTurn.interactable = false;
             nameText.text = dialogue.name;
             sentences.Clear();
             if(GameObject.Find("ToolbarCanvas")!=null){
@@ -51,9 +52,7 @@ namespace Game
                 return;
             }
             string sentence = sentences.Dequeue();
-            Debug.Log("next conversation!"+ sentence);
             dialogueText.text = sentence;
-            Debug.Log("counter:"+ counter);
             //this ensures the correct gameobject display on the correct dialgue
             if(counter == 5){
                 endTurn.interactable = false;

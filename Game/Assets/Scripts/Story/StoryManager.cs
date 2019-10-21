@@ -183,7 +183,7 @@ namespace Game.Story
             {
                 // Events have a 10% chance of popping up
                 // Check for penultimate turn to prevent buggy behaviour
-                if (random.Next(0, 100) <= chanceOfRandomEvent && city.Turn != city.MaxTurns - 1)
+                if (random.Next(0, 100) <= chanceOfRandomEvent && city.Turn != city.MaxTurns - 1 && city.Turn != 2)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool
@@ -241,13 +241,13 @@ namespace Game.Story
                 dialog.name = "Secretary";
                 dialog.sentences =   new String[] {"Congratulations! You made it to your second turn.", 
                 "As you just saw, your city has changed a bit. ",
-                "Once per turn, each and every building in your city earns or loses money, produces or reduces CO2 " +
-                "emissions, makes your people happier or sadder.",
-                "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more " +
-                "about what it brings to the city."}; 
+                "Once per turn, each building in your city earns or loses money, produces or reduces CO2 "+
+                "emissions and makes your people happier or sadder.",
+                "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city.",
+                "Well go now! You have 18 turns to reach the highest score possible. But be careful, don't let your resources become too low or else it's game over! "
+                };
                 IntroStory.SetActive(true);
                 FindObjectOfType<DialogueManager>().StartDialogue(dialog);
-                //FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
             }
         }
         
@@ -267,7 +267,7 @@ namespace Game.Story
                 switch (StoryEnding)
                 {
                     case (int) StoryEndings.TECH_ENDING:
-                        reason = "You keep the town\'s temperature under the threshold!\n" +
+                        reason = "You kept the town\'s temperature under the threshold!\n" +
                                  " People are happy and can keep living like they do, but outside the town, the world " +
                                  "continues to heat and go chaotic.\n However, with technology, we can survive " +
                                  "through it.\n If only everyone in the world had access to the technology...";
@@ -294,7 +294,6 @@ namespace Game.Story
             {
                 string reason = "You've run out of assets to support your city!";
                 Controller.GameOver(reason, city.Stats.Score);
-                 Debug.Log("reputation :"+ city.Stats.Reputation);
             } else if (city.Stats.Temperature > 2)            // CASE 3: Game Lost due to exceeding temp limit
             {    
                 string reason = "Your actions have resulted in the our town overheating... " +

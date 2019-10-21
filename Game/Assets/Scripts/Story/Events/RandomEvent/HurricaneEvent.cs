@@ -4,8 +4,6 @@ using Game;
 using Game.CityMap;
 using Game.Story;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using Random = System.Random;
 
 namespace Story.Events.RandomEvent
 {
@@ -31,7 +29,8 @@ namespace Story.Events.RandomEvent
         public override Queue<string> Dialogues { get; }
 
         private const string TITLE = "Hurricane";
-        private const string DESCRIPTION = "Oh no! A hurricane happened :(";
+        private const string DESCRIPTION = "There is currently a hurricane!\n Quickly make your choices before all of" +
+                                           " your buildings get destroyed!";
         public override void OnYesClick()
         {
             // Destroy random buildings

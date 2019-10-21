@@ -235,7 +235,7 @@ namespace Game.Story
                 "As you just saw, your city has changed a bit. ",
                 "Once per turn, each and every building in your city earns or loses money, produces or reduces CO2 emissions, makes your people happier or sadder.",
                 "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city.",
-                "Well go now! You have 18 turns to reach the highest score possible. But be careful, don't let your resources become too low or else it's game over!'' "
+                "Well go now! You have 18 turns to reach the highest score possible. But be careful, don't let your resources become too low or else it's game over! "
                 }; 
                 IntroStory.SetActive(true);
                 FindObjectOfType<DialogueManager>().StartDialogue(dialog);

@@ -22,7 +22,7 @@ See [here](https://github.com/saddboys/Softeng306Assignment2/releases/tag/PROTOT
 use "\`" (tilde) to open the console.
 
 commands are in format:  
-<command> <number>
+<command> <whole number>
   
 example:  
 pops 100
@@ -30,13 +30,14 @@ pops 100
 Add 100k workers to your city
 
 Commands:  
-
-         pops |       increase workers  
-         cash |        increase money  
-         happiness |   increase temperature  
-         energy |     increase electricity  
-         co2 |         increase CO2 output per turn  
-         temp |        increase city temperature  
+| Command       | Effect        |
+| ------------- |:-------------:|
+| pops        | increase workers |
+| cash        | increase money      |
+| energy      | increase electricity      |
+| happiness   | increase popularity      |
+| co2         | increase co2 output per turn      |
+| temp        | increase temperature      |
   
 
 ## Recommended path to explore all mechanics

@@ -107,14 +107,19 @@ namespace Game
          
             Dialogue dialog = new Dialogue(); 
             dialog.name = "Secretary";
-            dialog.sentences =   new String[] {"So how do you run a city?",
-                "At the top of the screen, you’ll see an overview of your city.", 
-                " Make sure your money balance and your happiness is above zero. Your city produces CO2. The more CO2, " +
-                "the faster the temperature rises!",
+            dialog.sentences = new String[]
+            {
+                "So how do you run a city?",
+                "At the top of the screen, you’ll see an overview of your city.",
+                "Make sure your money balance and your happiness is above zero. Your city produces CO2. "
+                    + "The more CO2, the faster the temperature rises!",
                 "On the right, you’ll see the temperature bar. You’d want to keep that low.",
                 "On the left, you get to pick what you want to build.",
                 "Once you’re done, end your turn to see what happens!",
-                "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate."};
+                "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate.",
+                "You’ll be earning points based on how well you are managing your city.",
+                "Well, that's it from me. I’ll be checking in from time to time. Good luck!",
+            };
        
             FindObjectOfType<DialogueManager>().StartDialogue(dialog);
         } 

@@ -36,6 +36,7 @@ namespace Game.Story
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
         private int chanceOfRandomEvent;
+        private bool shownTutorial = false;
         
         public enum StoryEndings {TECH_ENDING, REVISIONIST_ENDING, NEUTRAL_ENDING}
 
@@ -159,9 +160,12 @@ namespace Game.Story
 //
 // For tutorial event and further explaination
              Debug.Log("enter here city turn is : " + city.Turn);
-            if (city.Turn == 2)
+            if (city.Turn == 2 && !shownTutorial)
             {
-               CreateTutorial();
+                CreateTutorial();
+
+                // Only show the turn-2 tutorial dialog once. Don't reshow upon restart or at other levels.
+                shownTutorial = true;
             }
             if (city.Turn == storyQueue.Peek())
             {

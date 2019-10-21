@@ -22,6 +22,18 @@ namespace Game.CityMap
                 Wealth = StructUpkeep,
             };
         }
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A solar farm";
+            meta = "Cost: $" + SolarFarm.StructCost + "k" + "\t\t" +
+                   "CO2: " + SolarFarm.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + SolarFarm.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -SolarFarm.StructUpkeep + "k";
+            details = "Currently providing work for 3k citizens. Although expensive and less effective that power plants, solar farms can produce electricity " +
+                      "for your town without adding pollution.";
+        }
 
         public override Stats GetStatsChangeOnDemolish()
         {

@@ -16,6 +16,17 @@ namespace Game.CityMap
         public static int StructElectricity = -10;
 
         private GameObject smoke;
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A factory";
+            meta = "Cost: $" + Factory.StructCost + "k" + "\t\t" +
+                   "CO2: " + Factory.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Factory.StructElectricity + "\t\t" +
+                   "Income: $" + Factory.StructUpkeep + "k";
+            details = "A place for your citizens to work, and to generate income for your city! It requires 5k Workers.";
+        }
 
         public override Stats GetStatsContribution()
         {
@@ -140,12 +151,7 @@ namespace Game.CityMap
             }
             base.Unrender();
         }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Factory";
-        }
+        
     }
 
     public class FactoryFactory : StructureFactory

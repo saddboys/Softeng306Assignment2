@@ -43,8 +43,9 @@ namespace Game.CityMap
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Thantec";
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Research Facility";
+            details = "Thantec's research facility. I wonder how their research is going.";
         }
     }
     
@@ -111,8 +112,8 @@ namespace Game.CityMap
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
-            title = "Build the Thantec office!";
-            details = "Thantec needs a location for their office.";
+            title = "Build the Thantec Research Facility!";
+            details = "Thantec needs a location for their research facility.";
         }
     }
 }

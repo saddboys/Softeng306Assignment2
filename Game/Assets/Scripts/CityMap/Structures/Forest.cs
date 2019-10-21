@@ -8,7 +8,7 @@ namespace Game.CityMap
     {
         public static int StructCO2 = -5;
         public static int StructReputation = 0;
-        public static int StructCost = 500;
+        public static int StructCost = 5000;
         public static int StructUpkeep = 0;
         public static int StructScore = 100;
         public static int StructPopulation = 0;
@@ -49,8 +49,13 @@ namespace Game.CityMap
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Forrest";
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A forest";
+            meta = "Cost: $" + Forest.StructCost + "k" + "\t\t" +
+                   "CO2: " + Forest.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Forest.StructElectricity + "\t\t" +
+                   "Income: $" + Forest.StructUpkeep + "k";
+            details = "A beautiful, healthy forest.";
         }
     }
 

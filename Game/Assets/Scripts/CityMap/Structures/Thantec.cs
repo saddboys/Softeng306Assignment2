@@ -4,6 +4,14 @@ namespace Game.CityMap
 {
     public class Thantec : Structure
     {
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out title, out meta, out sprite, out details);
+            title = "The Thantec office";
+            details = "The office for Thantec.";
+            
+        }
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
@@ -40,12 +48,7 @@ namespace Game.CityMap
                 RenderOntoSprite(canvas, positionNew, "EventSprites/thantec-office", new Vector2(1, 1.5f));
             }
         }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Thantec";
-        }
+        
     }
     
     public class ThantecFactory : StructureFactory

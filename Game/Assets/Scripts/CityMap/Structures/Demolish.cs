@@ -43,9 +43,25 @@ namespace Game.CityMap
                 reason = "Nothing to demolish here";
                 return false;
             } 
-            if (tile.Structure.GetType() == typeof(House) && City.Stats.Population < 5)
+            if (tile.Structure.GetType() == typeof(Thantec) || 
+                tile.Structure.GetType() == typeof(ResearchFacility) || 
+                tile.Structure.GetType() == typeof(GiantCooler))
             {
-                reason = "Cannot demolish a house when you have less than 5k people";
+                reason = "Cannot demolish a Thantec building";
+                return false;
+            }
+
+            int popRequirement = -tile.Structure.GetStatsChangeOnDemolish().Population;
+            if (City.Stats.Population <= popRequirement)
+            {
+                reason = String.Format("Cannot demolish when you have less than {0}k people", popRequirement);
+                return false;
+            }
+
+            double elecRequirement = -tile.Structure.GetStatsChangeOnDemolish().ElectricCapacity;
+            if (City.Stats.ElectricCapacity < elecRequirement)
+            {
+                reason = "Demolishing this will create an electricity shortage";
                 return false;
             } 
             
@@ -61,17 +77,18 @@ namespace Game.CityMap
 
         public override void BuildOnto(MapTile tile)
         {
-           // City.RestartGameEvent += StopDemolish;
-            //City.NextTurnEvent += StopDemolish;
             City?.StartCoroutine(GenerateDestructionParticles(tile));
-             //Test(tile);
+
             // Note: Get structure before it is demolished.
-            if (City != null)
-            {
-                City.Stats.AddContribution(tile.Structure.GetStatsChangeOnDemolish());
-            } 
+            var contribution = tile.Structure.GetStatsChangeOnDemolish();
 
             base.BuildOnto(tile);
+
+            // Note: update stats after building, or else it will assert for buildability for the new values.
+            if (City != null)
+            {
+                City.Stats.AddContribution(contribution);
+            }
         }
         
         IEnumerator GenerateDestructionParticles(MapTile tile)

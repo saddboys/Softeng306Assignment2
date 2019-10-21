@@ -76,6 +76,7 @@ namespace Game.Story.Events
 
         public override void OnNoClick()
         {
+            StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
 
             // Go to neutral ending
             StoryManager.StoryEnding = (int) StoryManager.StoryEndings.NEUTRAL_ENDING;

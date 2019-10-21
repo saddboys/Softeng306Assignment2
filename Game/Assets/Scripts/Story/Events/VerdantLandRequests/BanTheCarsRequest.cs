@@ -64,9 +64,6 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
-            
-            // Set ending route
-            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.NEUTRAL_ENDING;
         }
     }
 }

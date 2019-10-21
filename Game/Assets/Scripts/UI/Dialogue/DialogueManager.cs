@@ -119,6 +119,7 @@ namespace Game
                 "On the left, you get to pick what you want to build.",
                 "Once you’re done, end your turn to see what happens!",
                 "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate.",
+                "If you ever forget the controls, you can find it in the menu at the top-right corner of the screen.",
                 "You’ll be earning points based on how well you are managing your city.",
                 "Well, that's it from me. I’ll be checking in from time to time. Good luck!",
             };
@@ -133,9 +134,9 @@ namespace Game
             dialog.sentences = new String[]
             {
                 "Welcome back, mayor!",
-                "Thanks to your successful run last year, you have now been elected as a mayor to a neighbouring town.",
+                "Thanks to your successful run last year, you have now been elected as a mayor for a neighbouring town.",
                 "However, while this large town has become very wealthy, the pollution has become a dire situation "
-                    + "and large changes are need to be made immediately.",
+                    + "and you need to make large, immediate changes. Now.",
                 "Do you have what it takes to save this town? Whose values will you stand by, and whose heart will you break?",
                 "Good luck!",
             };
@@ -150,9 +151,9 @@ namespace Game
             dialog.sentences = new String[]
             {
                 "Welcome back, mayor!",
-                "Your home country has been kept safe thanks to your role for the past years. However, not everyone in this "
+                "Your home country has been kept safe thanks to your active role in the past few years. However, not everyone in this "
                     + "world had been too fortunate.",
-                "You have been invited to a remote town at the opposite side of the world to bring back the life it used to have.",
+                "You have been invited to a dying, remote town at the opposite side of the world to bring back the life it used to have.",
                 "As you can see, nothing much is left in this town, as the grass dries up and the sands sweep over the landscape.",
                 "Will you be able to prevent this town from disappearing?",
                 "Good luck!",

@@ -40,6 +40,7 @@ Commands:
 | co2         | increase co2 output per turn      |
 | temp        | increase temperature      |
 | event X        | create a random popup, where X is (1. hurricane, 2.flood, 3.heatwave, 4.more houses)      |
+| level X       | jump to level 1, 2 or 3 |
   
 
 ## Recommended path to explore all mechanics

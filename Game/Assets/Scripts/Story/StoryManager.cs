@@ -32,7 +32,6 @@ namespace Game.Story
         public EventFactory.StoryEvents NextStoryEvent { get; set; }
         private EventFactory factory;
         private Queue<int> storyQueue;
-        
         private StoryEvent storyEvent;
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
@@ -57,6 +56,7 @@ namespace Game.Story
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
             ResetStory();
+           
             city.NextTurnEvent += HandleTurnEvent;
             
             // Generate the event pool
@@ -151,7 +151,13 @@ namespace Game.Story
 //             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
 //                CreatePopUp();   
 //            }
-
+//
+// For tutorial event and further explaination
+             Debug.Log("enter here city turn is : " + city.Turn);
+            if (city.Turn == 2)
+            {
+               CreateTutorial();
+            }
             if (city.Turn == storyQueue.Peek())
             {
                 // Create new story event here
@@ -215,6 +221,24 @@ namespace Game.Story
            
         }
 
+        public void CreateTutorial(){
+             Dialogue dialog = new Dialogue(); 
+          
+            if ( !city.HasEnded)
+            {  
+                dialog.name = "Secretary";
+                dialog.sentences =   new String[] {"Congratulations! You made it to your second turn.", 
+                "As you just saw, your city has changed a bit. ",
+                "Once per turn, each and every building in your city earns or loses money, produces or reduces CO2 emissions, makes your people happier or sadder.",
+                "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city."}; 
+                IntroStory.SetActive(true);
+                FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+                //FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
+            }
+        }
+
+    
+        
         /// <summary>
         /// Determines the ending to show
         /// </summary>

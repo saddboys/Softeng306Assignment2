@@ -29,7 +29,8 @@ namespace Game
 
         [SerializeField]
         private StatsBar stats;
-
+        
+        
         public StatsBar Stats
         {
             get { return stats; }
@@ -170,6 +171,7 @@ namespace Game
             RestartGameEvent?.Invoke();
             Stats.Restart();
             Map.Regenerate();
+           // dialogueManager.Counter = 0;
         }
 
         private void DestroyExistingParticles()

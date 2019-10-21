@@ -151,7 +151,7 @@ namespace Game.Story
 //             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
 //                CreatePopUp();   
 //            }
-//
+
             if (city.Turn == storyQueue.Peek())
             {
                 // Create new story event here

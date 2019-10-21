@@ -16,6 +16,10 @@ namespace Game
         public GameObject tempbar;
         public Animator animator;
         public Action Finished;
+        public Button endTurn;
+        private int counter = 0;
+  
+    private bool isIntro = true;
 
         // Start is called before the first frame update
         void Start()
@@ -24,12 +28,12 @@ namespace Game
         }
 
         public void StartDialogue(Dialogue dialogue){
-        
+            
             Debug.Log("start conversation!"+ dialogue.name);
             nameText.text = dialogue.name;
             sentences.Clear();
             if(GameObject.Find("ToolbarCanvas")!=null){
-   GameObject.Find("ToolbarCanvas").SetActive(false);
+                GameObject.Find("ToolbarCanvas").SetActive(false);
             }
           
             foreach (string sentence in dialogue.sentences)
@@ -47,8 +51,26 @@ namespace Game
             string sentence = sentences.Dequeue();
             Debug.Log("next conversation!"+ sentence);
             dialogueText.text = sentence;
+            Debug.Log("counter:"+ counter);
+            //this ensures the correct gameobject display on the correct dialgue
+            if(counter == 5){
+                 endTurn.interactable = false;
+            stats.SetActive(true);
+            
+            }else if(counter == 6)
+            {
+            tempbar.SetActive(true);
+            }
+            else if( counter == 7){
+            toolbar.SetActive(true);
+            }
+            
+            
+            counter ++;
+            
             StopAllCoroutines();
             StartCoroutine(TypeSentence(sentence));
+
         }
         
         IEnumerator TypeSentence (string sentence)
@@ -63,16 +85,39 @@ namespace Game
 
         public void EndDialogue(){
             animator.SetBool("isOpen", false);
-            tempbar.SetActive(true);
-            stats.SetActive(true);
-            toolbar.SetActive(true);
+             if(isIntro){
+                Debug.Log("Tutorial start");
+                CreateTutorial();
+                isIntro=false;
+                GameObject.Find("IntroStory").SetActive(true);
+            }else {
+                 GameObject.Find("IntroStory").SetActive(false);
+            }
+             endTurn.interactable = true;
+           
             Finished?.Invoke();
-           //TODO:Uncomment this line if you merge to master game scene! 
-           GameObject.Find("IntroStory").SetActive(false);
-           GameObject.Find("ToolbarCanvas").SetActive(true);
-        //GameObject.Find("DialogueCanvas").SetActive(false);
+           if(counter > 9){
+                stats.SetActive(true);
+                tempbar.SetActive(true);
+                toolbar.SetActive(true);
+           }
+            
         }
 
-
+        public void CreateTutorial(){
+         
+            Dialogue dialog = new Dialogue(); 
+            dialog.name = "Secretary";
+             dialog.sentences =   new String[] {"So how do you run a city?",
+             "At the top of the screen, you’ll get a glimpse of how your city is going.Make sure you keep your money balance and your happiness"+
+              "rating above zero. Your city produces CO2. The more CO2, the faster the temperature rises!",
+              "On the right, you’ll see the temperature bar. You’d want to keep that low.",
+             "On the left, you get to pick what you want to build.",
+             "Once you’re done, end your turn to see what happens!",
+             "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate."};
+       
+            FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+            } 
+        
     }
 }

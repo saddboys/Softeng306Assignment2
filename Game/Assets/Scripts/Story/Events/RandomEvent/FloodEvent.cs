@@ -29,8 +29,8 @@ namespace Game.Story.Events.RandomEvent
 
         public override Queue<string> Dialogues { get; }
 
-        private const string TITLE = "FLOOD";
-        private const string DESCRIPTION = "Flooding happened bad luck :(";
+        private const string TITLE = "Flood";
+        private const string DESCRIPTION = "A flood occurred! \nSome tiles have been destroyed by the water!";
         private List<Stack<MapTile>> tempFloodTiles;
         private List<Stack<Vector3Int>> tempFloodPosition;
        // private Stack<Vector3Int> tempFloodTilePositions;

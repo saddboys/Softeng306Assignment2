@@ -40,7 +40,7 @@ namespace Game.Story.Events
 
 
         private const string TITLE = "More House Request";
-        private const string DESCRIPTION = "You are rich. Please build more houses.";
+        private const string DESCRIPTION = "You have a lot of extra money. Please build more houses.";
         public override void OnYesClick()
         {
             storyManager.toolbar.BuiltEvent += OnBuild;

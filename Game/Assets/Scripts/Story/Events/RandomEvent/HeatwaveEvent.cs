@@ -28,7 +28,8 @@ namespace Story.Events.RandomEvent
         public override Queue<string> Dialogues { get; }
 
         private const string TITLE = "Heatwave";
-        private const string DESCRIPTION = "There is a heatwave";
+        private const string DESCRIPTION = "A heatwave occurred. Some of the water has dried up. \n " +
+                                           "Reputation decreased and temperature increased.";
         public override void OnYesClick()
         {
             // Dry up water

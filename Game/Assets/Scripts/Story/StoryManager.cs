@@ -149,16 +149,15 @@ namespace Game.Story
         /// </summary>
         private void HandleTurnEvent()
         {
-//            For testing an event
-//            if (city.Turn == 2)
-//            {
-//                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
-//             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
-//                CreatePopUp();   
-//            }
-//
-// For tutorial event and further explaination
-             Debug.Log("enter here city turn is : " + city.Turn);
+            //            For testing an event
+            //            if (city.Turn == 2)
+            //            {
+            //                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
+            //             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
+            //                CreatePopUp();   
+            //            }
+            //
+            // For tutorial event and further explaination
             if (city.Turn == 2)
             {
                CreateTutorial();

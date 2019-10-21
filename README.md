@@ -30,12 +30,12 @@ pops 100
 Add 100k workers to your city
 
 Commands:
-         pops        increase worker
-         cash        increase money
-         happiness   increase temperature
-         energy      increase electricity
-         co2         increase CO2 output per turn
-         temp        increase city temperature
+         \tpops\t\t        increase worker  
+         \tcash\t\t        increase money  
+         \thappiness\t\t   increase temperature  
+         \tenergy\t\t      increase electricity  
+         \tco2\t\t         increase CO2 output per turn  
+         \ttemp\t\t        increase city temperature  
   
 
 ## Recommended path to explore all mechanics

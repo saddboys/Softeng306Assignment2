@@ -33,6 +33,7 @@ namespace Game.Story
         private EventFactory factory;
         private Queue<int> storyQueue;
         
+
         private StoryEvent storyEvent;
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
@@ -107,7 +108,6 @@ namespace Game.Story
 
         private void HandleTemperatureChangeEvent()
         {
-            Debug.Log("goes here shithishit");
             chanceOfRandomEvent = (int)(city.Stats.Temperature * 20);
         }
 
@@ -137,6 +137,12 @@ namespace Game.Story
             }
         }
 
+        public void GeneratePopupThroughEvent(EventFactory.RandomEvents randomEvent)
+        {
+            storyEvent = factory.CreateRandomEvent(randomEvent);
+            CreatePopUp();
+        }
+
         /// <summary>
         /// Listener for each turn count.
         /// This will check if its time to show a story event
@@ -152,7 +158,6 @@ namespace Game.Story
 //                CreatePopUp();   
 //            }
 
-            Debug.Log("Chance is " + chanceOfRandomEvent);
             if (city.Turn == storyQueue.Peek())
             {
                 // Create new story event here

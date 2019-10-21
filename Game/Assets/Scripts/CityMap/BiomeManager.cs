@@ -228,19 +228,30 @@ namespace Game.CityMap
                         // get tile with smallest gradient change to be next current position
                         if (Mathf.Abs(overallRiverGradient - gradient) <= gradientDifference && !getTileTerrain(temp).Equals(Terrain.TerrainTypes.River))
                         {
-                            // make sure the river does not get too close to other biomes
+
+                            gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
+                            curPos[0] = temp[0];
+                            curPos[1] = temp[1];
+
+                            // make sure the river does not get too close to other biomes besides oceans
                             int biomeLengthValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 5);
                             // int biomeHalfLength = random.Next(biomeLengthValue - 2, biomeLengthValue + 2);
                             if (!riverTileTooCloseToBiome(temp, biomeLengthValue))
                             {
                                 float gradientToClosestBiome = getGradientOfClosestBiomeTile(curPos, biomeLengthValue);
-                                
-                                overallRiverGradient = -1f/gradientToClosestBiome;
-                            }
+                                int[] closestBiometile = getClosestBiomeAnchorTile(curPos);
+                                float prevDist = Mathf.Sqrt(Mathf.Pow(prevPos[0] - closestBiometile[0], 2) + Mathf.Pow(prevPos[1] - closestBiometile[1], 2));
+                                float curDist = Mathf.Sqrt(Mathf.Pow(curPos[0] - closestBiometile[0], 2) + Mathf.Pow(curPos[1] - closestBiometile[1], 2));
 
-                            gradientDifference = Mathf.Abs(overallRiverGradient - gradient);
-                            curPos[0] = temp[0];
-                            curPos[1] = temp[1];
+                                Debug.Log("prevDist: " + prevDist);
+                                Debug.Log("curDist: " + curDist);
+
+                                // check if the river is heading towards a biome and if is change gradient of the river
+                                if (curDist < prevDist)
+                                {
+                                    overallRiverGradient = -1f/gradientToClosestBiome;
+                                }
+                            }
                         }
 
                         // set tile to River
@@ -280,18 +291,7 @@ namespace Game.CityMap
         /// </summary>
         private float getGradientOfClosestBiomeTile(int[] curPos, int length)
         {
-            int[] closestBiometile = new int[2];
-            float shortestDist = WIDTH * HEIGHT * 10000;
-            foreach (int[] a in biomeAnchors.Keys)
-            {
-                float curDist = Mathf.Sqrt(Mathf.Pow(curPos[0] - a[0], 2) + Mathf.Pow(curPos[1] - a[1], 2));
-                if (curDist < shortestDist)
-                {
-                    shortestDist = curDist;
-                    closestBiometile[0] = a[0];
-                    closestBiometile[1] = a[1];
-                }
-            }
+            int[] closestBiometile = getClosestBiomeAnchorTile(curPos);
 
             float gradient;
             try
@@ -328,14 +328,15 @@ namespace Game.CityMap
         /// <return> true if it is too close to a tile
         private Boolean riverTileTooCloseToBiome(int[] curPos, int length)
         {
+            int[] closestBiometile = getClosestBiomeAnchorTile(curPos);
             foreach (int[] a in biomeAnchors.Keys)
             {
-                if (!biomeAnchors[a].Equals(Terrain.TerrainTypes.Ocean))
+                if (a[0] == closestBiometile[0] && a[1] == closestBiometile[1])
                 {
-                    float dist = Mathf.Sqrt(Mathf.Pow(curPos[0] - a[0], 2) + Mathf.Pow(curPos[1] - a[1], 2));
-                    if (dist < length * 2)
+                    if (!biomeAnchors[a].Equals(Terrain.TerrainTypes.Ocean) && !biomeAnchors[a].Equals(Terrain.TerrainTypes.River))
                     {
-                        return true;
+                        float dist = Mathf.Sqrt(Mathf.Pow(curPos[0] - closestBiometile[0], 2) + Mathf.Pow(curPos[1] - closestBiometile[1], 2));
+                        return dist < length * 2;
                     }
                 }
             }
@@ -343,19 +344,34 @@ namespace Game.CityMap
         }
 
         /// <summary>
+        /// Gets the anchor tile coordinates of a biome which is closest to the current tile
+        /// </summary>
+        /// <return> anchor tile coordinates of the closest biome
+        private int[] getClosestBiomeAnchorTile(int[] curPos)
+        {
+            int[] closestBiometile = new int[2];
+            float shortestDist = WIDTH * HEIGHT * 10000;
+            foreach (int[] a in biomeAnchors.Keys)
+            {
+                float curDist = Mathf.Sqrt(Mathf.Pow(curPos[0] - a[0], 2) + Mathf.Pow(curPos[1] - a[1], 2));
+                if (curDist < shortestDist)
+                {
+                    shortestDist = curDist;
+                    closestBiometile[0] = a[0];
+                    closestBiometile[1] = a[1];
+                }
+            }
+            return closestBiometile;
+        }
+
+        /// <summary>
         /// checks if the anchor is too close to another anchor point
         /// </summary>
         private Boolean biomeAnchorTooClose(int[] anchor, int length)
         {
-            foreach (int[] a in biomeAnchors.Keys)
-            {
-                float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - a[0], 2) + Mathf.Pow(anchor[1] - a[1], 2));
-                if (dist < length * 2)
-                {
-                    return true;
-                }
-            }
-            return false;
+            int[] closestBiometile = getClosestBiomeAnchorTile(anchor);
+            float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - closestBiometile[0], 2) + Mathf.Pow(anchor[1] - closestBiometile[1], 2));
+            return dist < length * 2;
         }
 
         /// <summary>
@@ -364,7 +380,7 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain)
         {   
             // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
             int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome

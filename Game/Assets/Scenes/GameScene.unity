@@ -6317,6 +6317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3863797d494884ac290849ffd05f2686, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  container: {fileID: 1223622121}
   nameText: {fileID: 529811277}
   dialogueText: {fileID: 1099157318}
   stats: {fileID: 912060186}

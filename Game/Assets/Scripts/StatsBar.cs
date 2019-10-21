@@ -83,7 +83,7 @@ namespace Game
             elecStat = new ForecastableStat(tooltipQueue, electricCapacityValueText, "F0", "", " Electricity", 1, 0.1f, (Mathf.NegativeInfinity, Mathf.NegativeInfinity));
             repStat = new ForecastableStat(tooltipQueue, reputationValueText, "F0", "%", " Reputation", 2, 0.5f, (10, Mathf.NegativeInfinity));
             scoreStat = new AnimatedStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, (Mathf.NegativeInfinity, Mathf.NegativeInfinity), false, false);
-            wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5, (500, Mathf.NegativeInfinity));
+            wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C0", "k", "", 50, 5, (500, Mathf.NegativeInfinity));
             co2Stat.ChangeEvent += OnChange;
             co2Stat.ChangeEvent += CO2ChangeEvent.Invoke;
             tempStat.ChangeEvent += OnChange;
@@ -190,8 +190,8 @@ namespace Game
                     tempStat.Reset(0);
                     popStat.Reset(30);
                     elecStat.Reset(4);
-                    repStat.Reset(50);
-                    wealthStat.Reset(7000);
+                    repStat.Reset(30);
+                    wealthStat.Reset(200000);
                     break;
                 case 3:
                     co2Stat.Reset(0);
@@ -425,7 +425,21 @@ namespace Game
 
         public virtual void Update()
         {
-            Shown += Mathf.Clamp((float)(Value - Shown), -step, step);
+            if (Shown > Value + step * 100)
+            {
+                // Jump from afar quickly.
+                Shown = Value + step * 100;
+            }
+            else if (Shown < Value - step * 100)
+            {
+                // Jump from afar quickly.
+                Shown = Value - step * 100;
+            }
+            else
+            {
+                // Steady change.
+                Shown += Mathf.Clamp((float)(Value - Shown), -step, step);
+            }
             if (warn)
             {
                 if ((Time.time * 2) % 2 < 1)

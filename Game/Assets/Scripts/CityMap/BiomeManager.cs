@@ -37,7 +37,7 @@ namespace Game.CityMap
         /// <summary>
         /// main method that should be called to populate biomes
         /// </summary>
-        public void start()
+        public void start(int level)
         {
             // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 30;
@@ -46,14 +46,28 @@ namespace Game.CityMap
             // ocean
             for (int i = 0; i < numBiomes; i++)
             {
-                // Ocean
-                createBiome(Terrain.TerrainTypes.Ocean);
-                // Desert
-                createBiome(Terrain.TerrainTypes.DesertHill);
-                // GrassHill
-                createBiome(Terrain.TerrainTypes.GrassHill);
-                // Mountain
-                createBiome(Terrain.TerrainTypes.Grass);
+                switch (level)
+                {
+                    case 1:
+                    case 2:
+                    default:
+                        // Ocean
+                        createBiome(Terrain.TerrainTypes.Ocean);
+                        // Desert
+                        createBiome(Terrain.TerrainTypes.DesertHill);
+                        // GrassHill
+                        createBiome(Terrain.TerrainTypes.GrassHill);
+                        // Mountain
+                        createBiome(Terrain.TerrainTypes.Grass);
+                        break;
+                    case 3:
+                        // Desert
+                        createBiome(Terrain.TerrainTypes.DesertHill);
+                        createBiome(Terrain.TerrainTypes.DesertHill);
+                        createBiome(Terrain.TerrainTypes.DesertHill);
+                        createBiome(Terrain.TerrainTypes.DesertHill);
+                        break;
+                }
             }
 
             // Populate none biom areas with grass
@@ -76,7 +90,7 @@ namespace Game.CityMap
                         {
                             tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
                         }
-                        else if (surroundedByDessert(pos))
+                        else if (surroundedByDessert(pos) || level == 3)
                         {
                             tile.Terrain = new Terrain(Terrain.TerrainTypes.Desert);
                         }
@@ -92,12 +106,15 @@ namespace Game.CityMap
                 }
             }
 
-            // creates rivers until a sufficient length has been found.
-            // max 4 attempts.
-            for (int i = 0; i < 4 || riverLength >= Mathf.Max(WIDTH, HEIGHT) / 2; i++)
+            if (level != 3)
             {
-                createRiver();
-                riverLength = 0;
+                // creates rivers until a sufficient length has been found.
+                // max 4 attempts.
+                for (int i = 0; i < 4 || riverLength >= Mathf.Max(WIDTH, HEIGHT) / 2; i++)
+                {
+                    createRiver();
+                    riverLength = 0;
+                }
             }
 
             NormalizeWaterTiles();

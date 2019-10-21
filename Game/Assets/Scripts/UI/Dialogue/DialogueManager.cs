@@ -19,7 +19,7 @@ namespace Game
         public Button endTurn;
         private int counter = 0;
   
-    private bool isIntro = true;
+        private bool isIntro = true;
 
         // Start is called before the first frame update
         void Start()
@@ -54,15 +54,15 @@ namespace Game
             Debug.Log("counter:"+ counter);
             //this ensures the correct gameobject display on the correct dialgue
             if(counter == 5){
-                 endTurn.interactable = false;
-            stats.SetActive(true);
+                endTurn.interactable = false;
+                stats.SetActive(true);
             
             }else if(counter == 7)
             {
-            tempbar.SetActive(true);
+                tempbar.SetActive(true);
             }
             else if( counter == 8){
-            toolbar.SetActive(true);
+                toolbar.SetActive(true);
             }
             
             
@@ -85,22 +85,22 @@ namespace Game
 
         public void EndDialogue(){
             animator.SetBool("isOpen", false);
-             if(isIntro){
+            if(isIntro){
                 Debug.Log("Tutorial start");
                 CreateTutorial();
                 isIntro=false;
                 GameObject.Find("IntroStory").SetActive(true);
             }else {
-                 GameObject.Find("IntroStory").SetActive(false);
+                GameObject.Find("IntroStory").SetActive(false);
             }
-             endTurn.interactable = true;
+            endTurn.interactable = true;
            
             Finished?.Invoke();
-           if(counter > 9){
+            if(counter > 9){
                 stats.SetActive(true);
                 tempbar.SetActive(true);
                 toolbar.SetActive(true);
-           }
+            }
             
         }
 
@@ -108,16 +108,17 @@ namespace Game
          
             Dialogue dialog = new Dialogue(); 
             dialog.name = "Secretary";
-             dialog.sentences =   new String[] {"So how do you run a city?",
-             "At the top of the screen, you’ll see an overview of your city.", " Make sure your money balance and your happiness"+
-              "is above zero. Your city produces CO2. The more CO2, the faster the temperature rises!",
-              "On the right, you’ll see the temperature bar. You’d want to keep that low.",
-             "On the left, you get to pick what you want to build.",
-             "Once you’re done, end your turn to see what happens!",
-             "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate."};
+            dialog.sentences =   new String[] {"So how do you run a city?",
+                "At the top of the screen, you’ll see an overview of your city.", 
+                " Make sure your money balance and your happiness is above zero. Your city produces CO2. The more CO2, " +
+                "the faster the temperature rises!",
+                "On the right, you’ll see the temperature bar. You’d want to keep that low.",
+                "On the left, you get to pick what you want to build.",
+                "Once you’re done, end your turn to see what happens!",
+                "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate."};
        
             FindObjectOfType<DialogueManager>().StartDialogue(dialog);
-            } 
+        } 
         
     }
 }

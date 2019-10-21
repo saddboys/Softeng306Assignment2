@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
@@ -23,7 +21,6 @@ public class GameUIButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-//        ButtonText.color = new Color(38, 239, 95, 255);
         if (button.interactable)
         {
             buttonText.color = Color.green;    

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Game.CityMap;
 using Game.Story;
 using Game.Story.Events;
@@ -17,21 +18,22 @@ public class EventPopUp : MonoBehaviour
     private int POP_UP_HEIGHT;
     private float POP_UP_LIMIT_HEIGHT;
     private float POP_UP_LIMIT_WIDTH;
-    private const int BUTTON_WIDTH = 80;
-    private const int BUTTON_HEIGHT = 25;
-    private const int TITLE_FONT_SIZE = 45;
-    private const int DESCRIPTION_FONT_SIZE = 15;
-
-    void Start()
-    {
-        POP_UP_WIDTH =  Screen.currentResolution.width/2;
-        POP_UP_HEIGHT = Screen.currentResolution.height/4;
-    }
-    
+    private readonly int BUTTON_WIDTH = 80;
+    private readonly int BUTTON_HEIGHT = 25;
+    private readonly int TITLE_FONT_SIZE = 30;
+    private int DESCRIPTION_FONT_SIZE = 15;
+   // private int button_font_size;
     private const string POP_UP_NAME = "popup-panel";
     private Animator animator;
     private GameObject panel;
-    
+
+    private void Awake()
+    {
+        POP_UP_WIDTH =  Screen.currentResolution.width/10; 
+        POP_UP_HEIGHT = Screen.currentResolution.height/6;
+        //DESCRIPTION_FONT_SIZE = POP_UP_WIDTH / 10;
+    }
+
     /// <summary>
     /// Generate a popup depending on the EventType
     /// </summary>
@@ -82,8 +84,8 @@ public class EventPopUp : MonoBehaviour
         titleText.fontSize = TITLE_FONT_SIZE;
         titleText.alignment = TextAlignmentOptions.Center;
         title.transform.SetParent(panel.transform,false);
-        title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_WIDTH,100);
-        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_HEIGHT/2);
+        title.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_HEIGHT/2);
+        title.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_HEIGHT/1.8f);
         
         // Creating the description
         GameObject description = new GameObject("Description");
@@ -91,20 +93,32 @@ public class EventPopUp : MonoBehaviour
         backgroundImage.color = new Color32(255,255,255,50);
         
         GameObject descriptionTextObject = new GameObject("DescriptionText");
-
+        CanvasScaler descriptionScaler= descriptionTextObject.AddComponent<CanvasScaler>();
         Text descriptionText = descriptionTextObject.AddComponent<Text>();
         descriptionText.text = StoryEvent.Description;
        // descriptionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         descriptionText.font = Resources.Load<Font>("Fonts/Electronic");
-        descriptionText.color = Color.black;
-        descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
+        descriptionText.color = Color.white;
+        //  descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
         descriptionText.alignment = TextAnchor.MiddleCenter;
+        Shadow shadow = descriptionText.gameObject.AddComponent<Shadow>();
+        shadow.effectColor = Color.black;
         description.transform.SetParent(panel.transform,false);
-        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
+        Vector2 descriptionSize = new Vector2(POP_UP_LIMIT_WIDTH, POP_UP_LIMIT_HEIGHT / 4);
+        description.GetComponent<RectTransform>().sizeDelta = descriptionSize;
         description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.transform.SetParent(description.transform);
-        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
+        //descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
+        descriptionText.resizeTextForBestFit = true;
         descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
+        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = descriptionSize;
+        descriptionTextObject.GetComponent<RectTransform>().localScale = new Vector3(1,1,1);
+
+
+//        descriptionText.resizeTextMaxSize = POP_UP_WIDTH;
+//        descriptionText.resizeTextMinSize = 15;
+
+
 
     }
     /// <summary>
@@ -128,8 +142,10 @@ public class EventPopUp : MonoBehaviour
         text.text = "OK";
         text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = Color.black;
-        text.fontSize = DESCRIPTION_FONT_SIZE;
-        textContainer.transform.position = new Vector3(0 + BUTTON_WIDTH/2,-BUTTON_WIDTH/2,0);
+        text.alignment = TextAnchor.MiddleCenter;
+        text.resizeTextForBestFit = true;
+      //  text.fontSize = DESCRIPTION_FONT_SIZE;
+        textContainer.transform.position = new Vector3(0,0,0);
     
         Image buttonImage = buttonObj.AddComponent<Image>();
         buttonImage.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
@@ -137,7 +153,8 @@ public class EventPopUp : MonoBehaviour
         buttonObj.transform.SetParent(panel.transform,false);
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/2.4f);
-        
+        textContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
+
         AddHoverEffect(buttonObj);
     }
     
@@ -168,7 +185,7 @@ public class EventPopUp : MonoBehaviour
         text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = Color.black;
         text.alignment = TextAnchor.MiddleCenter;
-        text.fontSize = DESCRIPTION_FONT_SIZE;
+        text.resizeTextForBestFit = true;
         textContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         textContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
 
@@ -191,12 +208,11 @@ public class EventPopUp : MonoBehaviour
         text2.text = "No";
         text2.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text2.color = Color.black;
+        text2.resizeTextForBestFit = true;
         text2.alignment = TextAnchor.MiddleCenter;
-        text2.fontSize = DESCRIPTION_FONT_SIZE;
         textContainer2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         textContainer2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         
-
         Image buttonImage2 = buttonObj2.AddComponent<Image>();
         buttonImage2.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
@@ -239,11 +255,14 @@ public class EventPopUp : MonoBehaviour
     /// <returns></returns>
     IEnumerator Popup(bool isEvent)
     {
+        int xIncrease = POP_UP_WIDTH / 5;
+        int yIncrease = POP_UP_HEIGHT / 5;
+        Debug.Log("X INCREASE" + xIncrease);
         Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
         while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
         {
-            currentSize.x += 27;
-            currentSize.y += 25;
+            currentSize.x += xIncrease;
+            currentSize.y += yIncrease;
             panel.GetComponent<RectTransform>().sizeDelta = new Vector2(currentSize.x,currentSize.y);
             yield return null;
         }

@@ -29,9 +29,10 @@ namespace Game.CityMap
         public Tilemap map;
         public GameObject parent;
         private int[,] terrainMap;
-        public int WIDTH = 40;
-        public int HEIGHT = 30;
-        private List<int[]> occupiedBiomSpots = new List<int[]>();
+
+        private readonly int WIDTH = 40;
+        private readonly int HEIGHT = 40;
+
         Random random = new Random();
 
         private AudioClip rotateSound;
@@ -85,6 +86,7 @@ namespace Game.CityMap
                 {
                     //Debug.Log("position of tile is: " + position.x + ", " + position.y + ", " + position.z);
                     TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
+                    // Debug.Log("pos: " + position);
                 }
             }
             previousHoveredTile = currentTile;
@@ -155,69 +157,8 @@ namespace Game.CityMap
                 terrainMap = new int[WIDTH, HEIGHT];
             }
 
-            // create biomes
-            int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 13;
-
-            createBiome(Terrain.TerrainTypes.Desert);
-            for (int i = 0; i < numBiomes; i++) {
-                createBiome(Terrain.TerrainTypes.Ocean);
-            }
-            
-
-
-            // Populate none biom areas with grass
-            for (int i = 0; i < WIDTH; i++)
-            {
-                for (int j = 0; j < HEIGHT; j++)
-                {
-                    MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-
-                    // A vector used for hex position
-                    Vector3Int vector = new Vector3Int(-i + WIDTH / 2, -j + HEIGHT / 2, 0);
-                    // Find the real position (the position on the screen)
-                    
-                    
-                    int value = random.Next(0,100);
-                    int[] pos = new int[2];
-                    pos[0] = i;
-                    pos[1] = j;
-                    if (!TileOccupied(occupiedBiomSpots, pos))
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Grass);
-                        SetTileTo(vector, tile);
-                        // Refresh the tile whenever its sprite changes.
-                        tile.SpriteChange += () => map.RefreshTile(vector);
-                    }
-                    else if (value < 50)
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Beach);
-                    }
-                    else if (value < 60)
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.GrassHill);  
-                    } 
-                    else if (value < 70)
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.DesertHill);
-                    } 
-                    else
-                    {
-                        tile.Terrain = new Terrain(Terrain.TerrainTypes.Ocean);
-                    }
-                    map.SetTile(vector, tile);
-                    Vector3 mappedVector = map.CellToWorld(vector);
-                    // Debug.Log("Screen: " + mappedVector);
-                    
-                    tile.ScreenPosition = mappedVector;
-                    tile.name = "i: " + vector.x + " j: " + vector.y + "z: " + vector.z;
-                   // Debug.Log("NAME IS: " + tile.name);
-                    tile.Canvas = parent;
-                    // Refresh the tile whenever its sprite changes.
-                    tile.SpriteChange += () => map.RefreshTile(vector);
-                    
-                }
-            }
-
+            BiomeManager biomeManager = new BiomeManager(WIDTH, HEIGHT, map, parent);
+            biomeManager.start();
 
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
@@ -268,141 +209,6 @@ namespace Game.CityMap
             camera.GetComponent<CameraDrag>().PanTo(new Vector3(0, 0, 0));
             camera.GetComponent<CameraZoom>().ResetZoom();
         }
-        
-        /// <summary>
-        /// creates a biome for a given type of terrain
-        /// </summary>
-        private void createBiome(Terrain.TerrainTypes terrain)
-        {
-            // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
-            int biomeHalfLength = random.Next(biomeLenghtValue - 4, biomeLenghtValue + 4);
-
-            // random anchor spot for biome
-            // index 0 for x and 1 and y coordinate
-            int[] anchor = new int[2];
-            anchor[0] = random.Next(0, WIDTH);
-            anchor[1] = random.Next(0, HEIGHT);
-            
-            while (TileOccupied(occupiedBiomSpots, anchor))
-            {
-                anchor[0] = random.Next(0, WIDTH);
-                anchor[1] = random.Next(0, HEIGHT);
-            }
-
-            // adding anchor to screen
-            MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
-            Vector3Int anchorVector = new Vector3Int(-anchor[0] + WIDTH / 2, -anchor[1] + HEIGHT / 2, 0);
-            Vector3 anchorMappedVector = map.CellToWorld(anchorVector);
-
-            anchorTile.Canvas = parent;
-            anchorTile.ScreenPosition = anchorMappedVector;
-
-            anchorTile.Terrain = new Terrain(terrain);
-
-            growBoime(anchor, biomeHalfLength, terrain);
-
-            // create beach biom if the biome type is Ocean
-            if (terrain.Equals(Terrain.TerrainTypes.Ocean))
-            {
-                addBeachBiome(anchor, biomeHalfLength);
-            }
-            
-        }
-
-        /// <summary>
-        /// grows a biome
-        /// </summary>
-        private void growBoime(int[] anchor, int biomHalfLength, Terrain.TerrainTypes terrain)
-        {
-            // constants that will be used further down the line
-            float k = Mathf.Sqrt(Mathf.Pow(biomHalfLength, 2) * 2);
-            float a = (float) 2.0f / Mathf.Log10(Mathf.Pow(k, 2) - 2.0f);
-
-            // growing biom
-            for (int i = 0; i < biomHalfLength * 2; i++) 
-            {
-                for (int j = 0; j < biomHalfLength * 2; j++)
-                {
-                    // current position array where index 0 is X and index 1 is Y coordinate
-                    int[] curPos = new int[2];
-                    curPos[0] = anchor[0] - biomHalfLength + i;
-                    curPos[1] = anchor[1] - biomHalfLength + j;
-
-                    // check if X and Y values are within the map
-                    if (curPos[0] < WIDTH && curPos[0] >= 0 && curPos[1] < HEIGHT && curPos[1] >= 0)
-                    {
-                        MapTile tile = ScriptableObject.CreateInstance<MapTile>();
-                        // A vector used for hex position
-                        Vector3Int vector = new Vector3Int(-curPos[0] + WIDTH / 2, -curPos[1] + HEIGHT / 2, 0);
-                        // Find the real position (the position on the screen)
-                        Vector3 mappedVector = map.CellToWorld(vector);
-
-                        tile.Canvas = parent;
-                        tile.ScreenPosition = mappedVector;
-
-                        // check if terrain is vacant
-                        if (!TileOccupied(occupiedBiomSpots, curPos))
-                        {
-                            // Debug.Log("Cur: X: " + curX + ", Y: " + curY);
-
-                            // weighted random terrain allocation depending on distance from anchor
-                            int value = random.Next(0, 100);
-
-                            // weighting is done in such a that:
-                            // P = (k^2 - d^2)^a,
-                            //    where:
-                            //       P = probability of the biome tile being set
-                            //       k = a constant (calculated earlier before the nested for loops)
-                            //       d = absolute distance between the anchor and any potential biome tile
-                            //       a = a constant (calculated earlier before the nested for loops)
-                            //
-                            // the formula satisfies the two equations below:
-                            //    100 = (k^2 - 2)^a, this ensures that the biome is atleast 3x3
-                            //    0 = (k^2 - d^2)^a, where d is a distance for an arbitrary square just outside the biome half length
-                            //
-                            // so if biome half length is 7 then k = 11.3 and a = 0.484
-                            float dist = Mathf.Sqrt(Mathf.Pow(anchor[0] - curPos[0], 2) + Mathf.Pow(anchor[1] - curPos[1], 2));
-                            double prob = Mathf.Pow(Mathf.Pow(k, 2) - Mathf.Pow(dist, 2), a);
-                            if (value < prob)
-                            {
-                                occupiedBiomSpots.Add(curPos);
-                                tile.Terrain = new Terrain(terrain);
-                                SetTileTo(vector, tile);
-                                // Refresh the tile whenever its sprite changes.
-                                tile.SpriteChange += () => map.RefreshTile(vector);
-                            }
-                        }
-                    } 
-                }
-            }
-        }
-
-        /// <summary>
-        /// updates the beach biome by growing the biome further beach tiles
-        /// </summary>
-        private void addBeachBiome(int[] anchor, int curBiomHalfLength)
-        {
-            int beachBiomeHalfLength = curBiomHalfLength + 3;
-            growBoime(anchor, beachBiomeHalfLength, Terrain.TerrainTypes.Beach);
-        }
-
-        /// <summary>
-        /// Checks if the given position (int[2]) is in the given the list of int[2]
-        /// This is to check if a tile is already occupied
-        /// </summary>
-        /// <returns> Boolean if a position is occupied
-        private Boolean TileOccupied(List<int[]> occupiedPosList, int[] pos)
-        {
-            foreach(int[] occupiedPos in occupiedPosList)
-            {
-                if (occupiedPos[0].Equals(pos[0]) && occupiedPos[1].Equals(pos[1]))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         /// <summary>
         /// Accumulate all the stats contributions (e.g. the CO2, the profits, etc.)
@@ -442,7 +248,6 @@ namespace Game.CityMap
                 Destroy(t);
             }
 
-            occupiedBiomSpots.Clear();
             DestroyRest();
             Generate();
         }

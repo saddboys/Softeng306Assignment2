@@ -96,7 +96,7 @@ namespace Game
              endTurn.interactable = true;
            
             Finished?.Invoke();
-           if(counter > 10){
+           if(counter > 9){
                 stats.SetActive(true);
                 tempbar.SetActive(true);
                 toolbar.SetActive(true);

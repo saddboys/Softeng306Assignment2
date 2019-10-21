@@ -28,7 +28,7 @@ namespace Game
         }
 
         public void StartDialogue(Dialogue dialogue){
-            
+            endTurn.interactable = false;
             Debug.Log("start conversation!"+ dialogue.name);
             endTurn.interactable = false;
             nameText.text = dialogue.name;
@@ -58,11 +58,11 @@ namespace Game
                  endTurn.interactable = false;
             stats.SetActive(true);
             
-            }else if(counter == 6)
+            }else if(counter == 7)
             {
             tempbar.SetActive(true);
             }
-            else if( counter == 7){
+            else if( counter == 8){
             toolbar.SetActive(true);
             }
             
@@ -110,8 +110,8 @@ namespace Game
             Dialogue dialog = new Dialogue(); 
             dialog.name = "Secretary";
              dialog.sentences =   new String[] {"So how do you run a city?",
-             "At the top of the screen, you’ll get a glimpse of how your city is going.Make sure you keep your money balance and your happiness"+
-              "rating above zero. Your city produces CO2. The more CO2, the faster the temperature rises!",
+             "At the top of the screen, you’ll see an overview of your city.", " Make sure your money balance and your happiness"+
+              "is above zero. Your city produces CO2. The more CO2, the faster the temperature rises!",
               "On the right, you’ll see the temperature bar. You’d want to keep that low.",
              "On the left, you get to pick what you want to build.",
              "Once you’re done, end your turn to see what happens!",

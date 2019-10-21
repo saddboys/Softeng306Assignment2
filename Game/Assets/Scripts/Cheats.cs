@@ -5,6 +5,7 @@ using Game.CityMap;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using System;
+using System.Linq;
 
 namespace Game
 /**
@@ -19,6 +20,7 @@ namespace Game
 
         void OnGUI()
         {
+            
             if((Event.current.Equals(Event.KeyboardEvent ("`"))))
             {
                 if (!isOn)
@@ -35,14 +37,20 @@ namespace Game
             
             if(isOn)
             {
-                if((!Event.current.Equals(Event.KeyboardEvent ("`")))){
+                GUI.SetNextControlName("cheatConsole");
+                GUI.FocusControl("cheatConsole");
+                if(!Event.current.Equals(Event.KeyboardEvent ("`")))
+                {
+                    editStr = editStr.Replace("`", "");
                     editStr = GUI.TextField(new Rect(15, 50, 300, 20), editStr, 200);
                     if (Event.current.type == EventType.KeyDown && Event.current.character == "\n"[0])
                     {
                         Cheat(editStr);
                         editStr = "";
                     }
+
                 }
+
             }
         }
 

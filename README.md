@@ -1,13 +1,15 @@
 # Softeng306Assignment2
 
-A Unity Game about Climate Change
+A Unity Game about Climate Change.
+
+The [FINAL](https://github.com/saddboys/Softeng306Assignment2/releases/tag/FINAL) version is at commit [`595d204`](https://github.com/saddboys/Softeng306Assignment2/tree/595d204756c5c62d03eb7b7527c1fcff58c49990).
 
 The [PROTOTYPE](https://github.com/saddboys/Softeng306Assignment2/releases/tag/PROTOTYPE) version is at commit [`6540559`](https://github.com/saddboys/Softeng306Assignment2/tree/6540559ba1dfd242085a232972afadc403623bb7).
 
-## Running the Prototype
+## Running the Final Version
 
-Simply visit http://ernestwong.nz/Softeng306Assignment2/ to play the game!
-See [here](https://github.com/saddboys/Softeng306Assignment2/releases/tag/PROTOTYPE) for alternative ways to play this game.
+Simply visit http://ernestwong.nz/terratopia/ to play the game!
+See [here](https://github.com/saddboys/Softeng306Assignment2/releases/tag/FINAL) for alternative ways to play this game.
 
 ## Development Environment
 

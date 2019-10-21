@@ -27,21 +27,22 @@ public class GameSceneController : MonoBehaviour
         
     }
 
-    public void GameOver(string endReason)
+    public void GameOver(string endReason, double score)
     {
-        
         setActiveUIComponents();
         endStatusText.text = "Game Over";
         endReasonText.text = endReason;
+        endScoreText.text = "Score: " + score;
         restartButton.SetActive(true);
         nextLevelButton.SetActive(false);
     }
 
-    public void GameWon(string endReason)
+    public void GameWon(string endReason, double score)
     {
         setActiveUIComponents();
         endStatusText.text = "You Win!";
         endReasonText.text = endReason;
+        endScoreText.text = "Score: " + score;
         restartButton.SetActive(false);
         nextLevelButton.SetActive(true);
     }

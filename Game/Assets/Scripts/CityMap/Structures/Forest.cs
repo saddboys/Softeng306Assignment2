@@ -8,7 +8,7 @@ namespace Game.CityMap
     {
         public static int StructCO2 = -5;
         public static int StructReputation = 0;
-        public static int StructCost = 5000;
+        public static int StructCost = 2000;
         public static int StructUpkeep = 0;
         public static int StructScore = 100;
         public static int StructPopulation = 0;

@@ -175,9 +175,9 @@ namespace Game.Story.Events.RandomEvent
             StoryManager.city.NextTurnEvent += StopRain;
             GameObject customParticleSystem = new GameObject("CustomParticleSystem");
             customParticleSystem.transform.SetParent(StoryManager.city.Map.gameObject.transform,false);
-            customParticleSystem.transform.position = new Vector3(10,14,32);
+            customParticleSystem.transform.position = new Vector3(-10,14,32);
 
-            Quaternion quaternion = Quaternion.Euler(0, 0, -20);
+            Quaternion quaternion = Quaternion.Euler(0, 0, 20);
             customParticleSystem.transform.rotation = quaternion;
             ParticleSystem particles = customParticleSystem.AddComponent<ParticleSystem>();
             Particles.InitParticleSystem(particles);

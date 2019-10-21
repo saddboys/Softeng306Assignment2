@@ -49,6 +49,7 @@ Commands:
 
 ## Recommended path to explore all mechanics
 
+0. Show the start menu
 1. Run through the tutorial to show the dialogue
 2. Build one of each building, demonstrating the information box for each and “ghost” for each building
 3. Selecting a few buildings to demonstrate selectable objects

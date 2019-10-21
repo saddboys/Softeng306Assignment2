@@ -114,7 +114,9 @@ namespace Game
               "On the right, you’ll see the temperature bar. You’d want to keep that low.",
              "On the left, you get to pick what you want to build.",
              "Once you’re done, end your turn to see what happens!",
-             "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate."};
+             "To move around the city, drag your mouse or use your arrow keys. Press the spacebar to rotate.",
+             "You’ll be earning points based on how well you are managing your city.",
+             "Well, that's it from me. I’ll be checking in from time to time. Good luck!"};
        
             FindObjectOfType<DialogueManager>().StartDialogue(dialog);
             } 

@@ -18,6 +18,9 @@ namespace Game.CityMap
             Beach,
             GrassHill,
             DesertHill,
+            NotSet,
+            River,
+            Centre
         };
         public TerrainTypes TerrainType { get; set; }
 

@@ -18,7 +18,7 @@ namespace Game.CityMap
         public Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots { get; }
         public Dictionary<int[], Terrain.TerrainTypes> biomeAnchors { get; }
         Random random = new Random();
-
+        private int riverLength = 0;
 
         public BiomeManager(int width, int height, Tilemap m, GameObject p, Dictionary<int[], Terrain.TerrainTypes> obs)
         {
@@ -151,6 +151,17 @@ namespace Game.CityMap
 
             // 5) expand river in bidirectionally
             extendRiverBiome(anchor, riverGradient);
+
+            while (riverLength < Mathf.Max(WIDTH, HEIGHT) / 2)
+            {
+                int[,] adjPos = getNeighbouringTiles(anchor);
+                int value = random.Next(0, 6);
+                int[] anchor2 = new int[2];
+                anchor2[0] = adjPos[value, 0];
+                anchor2[1] = adjPos[value, 1];
+                
+                extendRiverBiome(anchor2, riverGradient);
+            }
             
             // add anchor to occupiedBiomeSpots so that it won't get overwritten when non biomes are made
             occupiedBiomSpots[anchor] = Terrain.TerrainTypes.River;
@@ -197,6 +208,8 @@ namespace Game.CityMap
                     // give river gradient a bit of buffer variance
                     if (counter % 15 == 0)
                     {
+                        anchor[0] = curPos[0];
+                        anchor[1] = curPos[1];
                         if (negativeGradientBuffer)
                         {
                             negativeGradientBuffer = false;
@@ -282,6 +295,7 @@ namespace Game.CityMap
                     break;
                 }
                 counter++;
+                riverLength++;
             }
         }
 

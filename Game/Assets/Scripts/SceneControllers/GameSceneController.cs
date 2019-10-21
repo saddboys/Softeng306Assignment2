@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameSceneController : MonoBehaviour
@@ -27,9 +26,15 @@ public class GameSceneController : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// This function is called when the player loses the game. 
+    /// It sets all the components (Game end status, end reason, and score) in the end game overlay
+    /// </summary>
+    /// <param name="endReason"></param> A description giving more info on why the user lost and the consequences
+    /// <param name="score"></param> The score 
     public void GameOver(string endReason, double score)
     {
-        setActiveUIComponents();
+        SetActiveUiComponents();
         endStatusText.text = "Game Over";
         endReasonText.text = endReason;
         endScoreText.text = "Score: " + score;
@@ -37,9 +42,15 @@ public class GameSceneController : MonoBehaviour
         nextLevelButton.SetActive(false);
     }
 
+    /// <summary>
+    /// This function is called when the player wins the game. 
+    /// It sets all the components (Game end status, end reason, and score) in the end game overlay
+    /// </summary>
+    /// <param name="endReason"></param> A description giving more info on why the user won and the consequences
+    /// <param name="score"></param> The score 
     public void GameWon(string endReason, double score)
     {
-        setActiveUIComponents();
+        SetActiveUiComponents();
         endStatusText.text = "You Win!";
         endReasonText.text = endReason;
         endScoreText.text = "Score: " + score;
@@ -47,7 +58,10 @@ public class GameSceneController : MonoBehaviour
         nextLevelButton.SetActive(true);
     }
 
-    private void setActiveUIComponents()
+    /// <summary>
+    /// Helper method to control display of UI components
+    /// </summary>
+    private void SetActiveUiComponents()
     {
         endScreen.SetActive(true);
         stats.SetActive(false);

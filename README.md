@@ -21,6 +21,8 @@ See [here](https://github.com/saddboys/Softeng306Assignment2/releases/tag/FINAL)
 
 ## Cheat commands:
 
+Press "i" and "o" at the same time to gain 10000 of each resource, and reduce temperature to 0
+
 use "\`" (tilde) to open the console.
 
 commands are in format:  
@@ -54,3 +56,4 @@ Commands:
 5. Ending turns continuously to see random events
 6. Using the console to give yourself different game-overs based on story (good end and bad ends)
 7. Using the console to demonstrate different types of events
+8. Use the Level command to see levels 2 and 3

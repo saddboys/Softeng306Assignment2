@@ -5,6 +5,8 @@ namespace Game.CityMap
 {
     public abstract class Structure : InfoBoxSource
     {
+        public MapTile Tile { get; set; }
+
         private Sprite sprite;
 
         /// <summary>
@@ -86,7 +88,7 @@ namespace Game.CityMap
         /// <summary>
         /// Remove the structure from the screen.
         /// </summary>
-        public void Unrender()
+        public virtual void Unrender()
         {
             if (gameObject != null)
             {

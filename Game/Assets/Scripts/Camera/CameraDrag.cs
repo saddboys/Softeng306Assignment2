@@ -5,13 +5,29 @@ public class CameraDrag : MonoBehaviour
 {
     public float dragSpeed;
     private Vector3 dragOrigin;
-
-    private float minX = -5f;
-    private float maxX = 5f;
-    private float minY = -5f;
-    private float maxY = 5f;
+    private Vector3 targetPosition;
 
     private bool dragEnabled = false;
+
+    [SerializeField]
+    private Game.CityMap.CityMap map;
+
+    public void PanTo(Vector3 worldPosition)
+    {
+        targetPosition.x = worldPosition.x;
+        targetPosition.y = worldPosition.y;
+    }
+
+    public void TeleportTo(Vector3 worldPosition)
+    {
+        PanTo(worldPosition);
+        transform.position = targetPosition;
+    }
+
+    private void Start()
+    {
+        targetPosition = transform.position;
+    }
 
     void Update()
     {
@@ -40,12 +56,19 @@ public class CameraDrag : MonoBehaviour
         screenKeyboardMove.y = (Input.GetKey(KeyCode.UpArrow) ? 1 : 0) - (Input.GetKey(KeyCode.DownArrow) ? 1 : 0);
         move += screenKeyboardMove * 0.1f;
 
-        transform.Translate(move, Space.World);
-        
-        Vector3 v3 = transform.position;
-        v3.x = Mathf.Clamp(v3.x, minX, maxX);
-        v3.y = Mathf.Clamp(v3.y, minY, maxY);
-        transform.position = v3;
+        targetPosition += new Vector3(move.x, move.y, 0);
+
+        Bounds mapBounds = map.map.localBounds;
+        mapBounds.min = map.map.LocalToWorld(mapBounds.min);
+        mapBounds.max = map.map.LocalToWorld(mapBounds.max);
+
+        Vector3 v3 = targetPosition;
+        v3.x = Mathf.Clamp(v3.x, mapBounds.min.x, mapBounds.max.x);
+        v3.y = Mathf.Clamp(v3.y, mapBounds.min.y, mapBounds.max.y);
+        targetPosition = v3;
+
+        // Smoothly navigate to position via a low-pass filter.
+        transform.position += (targetPosition - transform.position) * Time.deltaTime * 2;
     }
     
  

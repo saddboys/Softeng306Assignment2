@@ -19,26 +19,29 @@ namespace Game.CityMap
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
         public event EventHandler<TileClickArgs> TileMouseEnterEvent;
-        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent; 
         private MapTile previousHoveredTile;
+
+        // Camera to reposition after rotation.
+        [SerializeField]
+        private GameObject camera;
 
         public Tilemap map;
         public GameObject parent;
-        public Text display;
         private int[,] terrainMap;
+
         private readonly int WIDTH = 40;
         private readonly int HEIGHT = 40;
+
         Random random = new Random();
 
+        private AudioClip rotateSound;
 
         public MapTile[] Tiles
         {
             get
             {
                 BoundsInt cellBounds = map.cellBounds;
-                // Debug.Log("Cell bounds are" + cellBounds);
-                // cellBounds.size = new Vector3Int(WIDTH,HEIGHT,2);
-                // Debug.Log("Bounds are" + cellBounds);
                 return Array.ConvertAll(map.GetTilesBlock(cellBounds),
                     tileBase => (MapTile)tileBase);
             }
@@ -48,6 +51,7 @@ namespace Game.CityMap
         // Start is called before the first frame update
         void Start()
         {
+            rotateSound = Resources.Load<AudioClip>("SoundEffects/CameraRotate");
             Generate();
         }
         // Update is called once per frame
@@ -55,7 +59,7 @@ namespace Game.CityMap
         {
             CheckTileClick();
             CheckTileHover();
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
             {
                 Rotate(true);
             }
@@ -67,6 +71,7 @@ namespace Game.CityMap
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
             MapTile currentTile = map.GetTile<MapTile>(position);
+            
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 currentTile = null;
@@ -79,6 +84,7 @@ namespace Game.CityMap
                 }
                 if (currentTile != null)
                 {
+                    //Debug.Log("position of tile is: " + position.x + ", " + position.y + ", " + position.z);
                     TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
                     // Debug.Log("pos: " + position);
                 }
@@ -113,6 +119,12 @@ namespace Game.CityMap
             {
                 // Notify the click event for things like the ToolBar or other user feedback.
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+
+                // Focus onto structure
+                if (someOtherTile.Structure != null)
+                {
+                    camera.GetComponent<CameraDrag>().PanTo(new Vector3(worldPoint.x, worldPoint.y, 0));
+                }
             }
         }
 
@@ -139,7 +151,6 @@ namespace Game.CityMap
         /// </summary>
         private void Generate()
         {
-            Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
 
             if (terrainMap == null)
             {
@@ -193,6 +204,10 @@ namespace Game.CityMap
 
             // Start off at an angle to further enhance 2.5D effect.
             Rotate(true);
+
+            // Reset camera for new maps.
+            camera.GetComponent<CameraDrag>().PanTo(new Vector3(0, 0, 0));
+            camera.GetComponent<CameraZoom>().ResetZoom();
         }
 
         /// <summary>
@@ -218,11 +233,11 @@ namespace Game.CityMap
         {
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
+                var t = map.GetTile<MapTile>(pos);
+
                 // Clear tile from the tilemap.
                 map.SetTile(pos, null);
-            }
-            foreach (var t in Tiles)
-            {
+
                 if (t == null)
                 {
                     continue;
@@ -232,16 +247,33 @@ namespace Game.CityMap
                 // Remove tile from object graph.
                 Destroy(t);
             }
+
+            occupiedBiomSpots.Clear();
+            DestroyRest();
             Generate();
+        }
+
+        private void DestroyRest()
+        {
+            foreach (Transform child in parent.transform)
+            { 
+                Destroy(child.gameObject);
+            }
         }
 
         public void Rotate(bool clockwise)
         {
+            // Find tile location that camera is currently centred at.
+            var cameraFocus = map.WorldToCell(camera.transform.position);
+            var cameraZPos = camera.transform.position.z;
+
             var centre = map.cellBounds.min + map.cellBounds.max;
             centre.x /= 2;
             centre.y /= 2;
             centre.z = 0;
-            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+
+            // Perform the swapping in two stages. Can't be done in a single pass.
+
             List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
@@ -250,45 +282,61 @@ namespace Game.CityMap
                 // Remove the tile at the old position.
                 map.SetTile(pos, null);
             }
+
             foreach (var (pos, tile) in tiles)
             {
-                // Transform into hexagonal coordinate system.
-                var hexCoords = new Vector3Int
-                {
-                    x = pos.x - (pos.y - (pos.y & 1)) / 2,
-                    y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
-                    z = pos.y,
-                };
-
-                // Rotate in the hexagonal coordinate system.
-                if (clockwise)
-                {
-                    hexCoords = new Vector3Int
-                    {
-                        x = -hexCoords.z,
-                        y = -hexCoords.x,
-                        z = -hexCoords.y,
-                    };
-                }
-                else
-                {
-                    hexCoords = new Vector3Int
-                    {
-                        x = -hexCoords.y,
-                        y = -hexCoords.z,
-                        z = -hexCoords.x,
-                    };
-                }
-
-                // Transform back to grid's rectangular coordinate system and apply.
-                var rectCoords = new Vector3Int
-                {
-                    x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
-                    y = hexCoords.z,
-                    z = 0,
-                };
-                SetTileTo(rectCoords, tile);
+                SetTileTo(RotateCellPosition(pos, clockwise), tile);
             }
+
+            // Shrink bounds to where tiles exist.
+            map.CompressBounds();
+
+            // Recenter camera to previous tile.
+            Vector3 newPos = map.CellToWorld(RotateCellPosition(cameraFocus, clockwise));
+            newPos.z = cameraZPos;
+            camera.GetComponent<CameraDrag>().TeleportTo(newPos);
+
+            // Nice swoosh sound.
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(rotateSound);
+        }
+
+        public Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
+        {
+            // Transform into hexagonal coordinate system.
+            var hexCoords = new Vector3Int
+            {
+                x = pos.x - (pos.y - (pos.y & 1)) / 2,
+                y = (pos.y - (pos.y & 1)) / 2 - pos.x - pos.y,
+                z = pos.y,
+            };
+
+            // Rotate in the hexagonal coordinate system.
+            if (clockwise)
+            {
+                hexCoords = new Vector3Int
+                {
+                    x = -hexCoords.z,
+                    y = -hexCoords.x,
+                    z = -hexCoords.y,
+                };
+            }
+            else
+            {
+                hexCoords = new Vector3Int
+                {
+                    x = -hexCoords.y,
+                    y = -hexCoords.z,
+                    z = -hexCoords.x,
+                };
+            }
+
+            // Transform back to grid's rectangular coordinate system and apply.
+            return new Vector3Int
+            {
+                x = hexCoords.x + (hexCoords.z - (hexCoords.z & 1)) / 2,
+                y = hexCoords.z,
+                z = 0,
+            };
         }
 
         private void SetTileTo(Vector3Int position, MapTile tile)

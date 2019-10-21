@@ -6,12 +6,32 @@ namespace Game.CityMap
 {
     public class Dock : Structure
     {
+        public static int StructCO2 = 30;
+        public static int StructReputation = 0;
+        public static int StructCost = 5000;
+        public static int StructUpkeep = 1500;
+        public static int StructScore = 2000;
+        public static int StructPopulation = -15;
+        public static int StructElectricity = -30;
+        
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A dock";
+            meta = "Cost: $" + Dock.StructCost + "k" + "\t\t" +
+                   "CO2: " + Dock.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Dock.StructElectricity + "\t\t" +
+                   "Income: $" + Dock.StructUpkeep + "k";
+            details = "This is a huge commercial buildings to help generate money, but it adds a lot of pollution. It requires 15k workers.";
+        }
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 10,
-                Wealth = 250,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
         
@@ -26,16 +46,12 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 1,
-                Reputation = -5
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Dock";
-        }
+        
     }
 
     public class DockFactory : StructureFactory
@@ -44,7 +60,12 @@ namespace Game.CityMap
         public DockFactory() : base() { }
         public override int Cost
         {
-            get { return 2000; }
+            get { return Dock.StructCost; }
+        }
+
+        public override int Population
+        {
+            get { return -Dock.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
@@ -57,7 +78,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 1)
+            if (City?.Stats.ElectricCapacity < -Dock.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -91,8 +112,9 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
-                City.Stats.Reputation += 5;
+                City.Stats.ElectricCapacity -= Dock.StructElectricity;
+                City.Stats.Reputation += Dock.StructReputation;
+                City.Stats.Score += Dock.StructScore;
             }
         }
 
@@ -100,7 +122,13 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a dock";
-            details = "Click on a tile to build a dock.";
+            meta = "Cost: $" + Dock.StructCost + "k" + "\t\t" +
+                   "CO2: " + Dock.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Dock.StructElectricity + "\t\t" +
+                   "Income: $" + Dock.StructUpkeep + "k";
+            details = "Requires 15k workers." +
+                      "Docks are huge commercial buildings to help generate money, but make a lot of pollution." +
+                      " Click on a tile to build a dock.";
         }
     }
 }

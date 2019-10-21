@@ -6,12 +6,25 @@ namespace Game.CityMap
 {
     public class PowerPlant : Structure
     {
+        
+        public static int StructCO2 = 30;
+        public static int StructReputation = -1;
+        public static int StructCost = 1500;
+        public static int StructUpkeep = -200;
+        public static int StructScore = 600;
+        public static int StructPopulation = -5;
+        public static int StructElectricity = 30;
+
+        private GameObject smoke;
+        
+        
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
-                CO2 = 30,
-                Wealth = -200,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep,
             };
         }
 
@@ -19,109 +32,149 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = -20,
+                Population = -StructPopulation,
+                Reputation = -StructReputation,
+                ElectricCapacity = -StructElectricity,
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            }
+            else
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/powerPlant", new Vector2(1, 1.5f));
+            }
 
             // Render smoke.
-            // Now the fun begins...
+            if (smoke != null)
+            {
+                // Reuse existing smoke.
+                smoke.transform.SetParent(GameObject.transform);
+                smoke.transform.localPosition = new Vector3(-0.23f, 0.55f);
+                smoke.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                smoke = new GameObject();
+                smoke.transform.SetParent(GameObject.transform);
+                smoke.transform.localPosition = new Vector3(-0.23f, 0.55f);
+                smoke.transform.localScale = new Vector3(1, 1, 1);
 
-            GameObject smoke = new GameObject();
-            smoke.transform.SetParent(GameObject.transform);
-            smoke.transform.localPosition = new Vector3(-0.23f, 0.55f);
-            smoke.transform.localScale = new Vector3(1, 1, 1);
+                ParticleSystem particles = smoke.AddComponent<ParticleSystem>();
+                Particles.InitParticleSystem(particles);
 
-            ParticleSystem particles = smoke.AddComponent<ParticleSystem>();
-            Particles.InitParticleSystem(particles);
+                var main = particles.main;
+                main.startLifetime = 5;
+                main.startSize = 1;
+                main.startSpeed = 1;
+                main.startColor = new Color(221, 221, 221);
+                main.maxParticles = 40;
 
-            var main = particles.main;
-            main.startLifetime = 10;
-            main.startSize = 0.1f;
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.1f, 0.2f);
-            main.maxParticles = 4000;
+                var emission = particles.emission;
+                emission.rateOverTime = 3;
+                emission.enabled = true;
 
-            var emission = particles.emission;
-            emission.rateOverTime = 200;
-            emission.enabled = true;
+                var shape = particles.shape;
+                shape.angle = 10;
+                shape.radius = 0.0001f;
+                shape.rotation = new Vector3(-90, 90, 0);
+                shape.scale = new Vector3(0.05f, 0.05f, 0.05f);
+                shape.enabled = true;
 
-            var shape = particles.shape;
-            shape.angle = 10;
-            shape.radius = 3.0f;
-            shape.rotation = new Vector3(-90, 90, 0);
-            shape.scale = new Vector3(0.05f, 0.05f, 0.05f);
-            shape.enabled = true;
+                var limit = particles.limitVelocityOverLifetime;
+                limit.limit = 1;
+                limit.dampen = 1;
+                limit.multiplyDragByParticleSize = false;
+                limit.multiplyDragByParticleVelocity = true;
+                limit.drag = 4;
+                limit.enabled = true;
 
-            var limit = particles.limitVelocityOverLifetime;
-            limit.limit = 1;
-            limit.dampen = 1;
-            limit.multiplyDragByParticleSize = true;
-            limit.multiplyDragByParticleVelocity = true;
-            limit.drag = 400;
-            limit.enabled = true;
+                var force = particles.forceOverLifetime;
+                force.x = new ParticleSystem.MinMaxCurve(0.15f, 0.2f);
+                force.y = new ParticleSystem.MinMaxCurve(-0.45f, 0.5f);
+                force.randomized = true;
+                force.enabled = true;
 
-            var force = particles.forceOverLifetime;
-            force.x = new ParticleSystem.MinMaxCurve(0.05f, 0.01f);
-            force.y = new ParticleSystem.MinMaxCurve(-0.4f, 0.4f);
-            force.randomized = true;
-            force.enabled = true;
+                var colorOverLifetime = particles.colorOverLifetime;
+                Gradient gradientLifetime = new Gradient();
+                GradientColorKey[] colorKeys = new GradientColorKey[2];
+                colorKeys[0].color = new Color(178, 178, 178);
+                colorKeys[0].time = 0.0f;
+                colorKeys[1].color = Color.white;
+                colorKeys[1].time = 0.1f;
+                GradientAlphaKey[] alphaKeys = new GradientAlphaKey[4];
+                alphaKeys[0].alpha = 0;
+                alphaKeys[0].time = 0;
+                alphaKeys[1].alpha = 1;
+                alphaKeys[1].time = 0.15f;
+                alphaKeys[2].alpha = 1;
+                alphaKeys[2].time = 0.5f;
+                alphaKeys[3].alpha = 0;
+                alphaKeys[3].time = 1.0f;
+                gradientLifetime.SetKeys(colorKeys, alphaKeys);
+                colorOverLifetime.color = gradientLifetime;
+                colorOverLifetime.enabled = true;
 
-            var colorOverLifetime = particles.colorOverLifetime;
-            Gradient gradientLifetime = new Gradient();
-            GradientColorKey[] colorKeys = new GradientColorKey[2];
-            colorKeys[0].color = Color.white;
-            colorKeys[0].time = 0.0f;
-            colorKeys[1].color = Color.white;
-            colorKeys[1].time = 1.0f;
-            GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-            alphaKeys[0].alpha = 82.0f / 255.0f;
-            alphaKeys[0].time = 0.0f;
-            alphaKeys[1].alpha = 0;
-            alphaKeys[1].time = 1.0f;
-            gradientLifetime.SetKeys(colorKeys, alphaKeys);
-            colorOverLifetime.color = gradientLifetime;
-            colorOverLifetime.enabled = true;
+                var sizeOverLifetime = particles.sizeOverLifetime;
+                sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1,
+                    new AnimationCurve(new Keyframe(0.0f, 0.12f), new Keyframe(0.025f, 0.45f, 5, 5), new Keyframe(0.2f, 0.7f)));
+                sizeOverLifetime.enabled = true;
 
-            var colorBySpeed = particles.colorBySpeed;
-            Gradient gradientSpeed = new Gradient();
-            GradientColorKey[] colorKeysSpeed = new GradientColorKey[2];
-            colorKeysSpeed[0].color = Color.white;
-            colorKeysSpeed[0].time = 0.0f;
-            colorKeysSpeed[1].color = Color.black;
-            colorKeysSpeed[1].time = 1.0f;
-            GradientAlphaKey[] alphaKeysSpeed = new GradientAlphaKey[2];
-            alphaKeysSpeed[0].alpha = 1;
-            alphaKeysSpeed[0].time = 0;
-            alphaKeysSpeed[1].alpha = 1;
-            alphaKeysSpeed[1].time = 1;
-            gradientSpeed.SetKeys(colorKeysSpeed, alphaKeysSpeed);
-            colorBySpeed.color = gradientSpeed;
-            colorBySpeed.range = new Vector2(0, 0.3f);
-            colorBySpeed.enabled = true;
+                var renderer = smoke.GetComponent<ParticleSystemRenderer>();
+                renderer.sortingLayerName = "Structure";
+                renderer.sortingOrder = 1000;
+                Material material = new Material(renderer.material);
+                material.mainTexture = Resources.Load<Texture>("Textures/CloudParticle");
+                renderer.material = material;
+            }
+        }
 
-            var renderer = smoke.GetComponent<ParticleSystemRenderer>();
-            renderer.sortingLayerName = "Structure";
-            renderer.sortingOrder = 1000;
+        public override void Unrender()
+        {
+            // Detatch smoke so it stays when we need it. E.g., rotation.
+            if (smoke != null)
+            {
+                smoke.transform.SetParent(null);
+                smoke.transform.localScale = new Vector3(0, 0, 0);
+            }
+            base.Unrender();
         }
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Power plant";
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A power plant";
+            meta = "Cost: $" + PowerPlant.StructCost + "k" + "\t\t" +
+                   "CO2: " + PowerPlant.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + PowerPlant.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -PowerPlant.StructUpkeep + "k";
+            details = "Providing work for 5k citizens. Be careful with it's pollution.";
         }
     }
 
     public class PowerPlantFactory : StructureFactory
     {
-        public PowerPlantFactory(City city) : base(city) { }
+        public PowerPlantFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/PowerPlant");
+        }
+
         public PowerPlantFactory() : base() { }
         public override int Cost
         {
-            get { return 1500; }
+            get { return PowerPlant.StructCost; }
+        }
+        public override int Population
+        {
+            get { return -PowerPlant.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
@@ -138,7 +191,8 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity += 20;
+                City.Stats.ElectricCapacity += PowerPlant.StructElectricity;
+                City.Stats.Score += PowerPlant.StructScore;
             }
         }
 
@@ -162,7 +216,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a power plant";
-            details = "Everything needs power to function. Click on a tile to build a power plant. Be careful with it's pollution.";
+            meta = "Cost: $" + PowerPlant.StructCost + "k" + "\t\t" +
+                   "CO2: " + PowerPlant.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + PowerPlant.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -PowerPlant.StructUpkeep + "k";
+            details = "Requires 5k workers. Everything needs power to function. Be careful with it's pollution. " +
+                      "Click on a tile to build a power plant. ";
         }
     }
 }

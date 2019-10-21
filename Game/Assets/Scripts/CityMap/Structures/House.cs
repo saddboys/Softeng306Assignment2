@@ -1,18 +1,27 @@
 ﻿using Game;
 using Game.CityMap;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 
 namespace Game.CityMap
 {
     public class House : Structure
     {
+        public static int StructCO2 = 1;
+        public static int StructReputation = -1;
+        public static int StructCost = 250;
+        public static int StructUpkeep = 50;
+        public static int StructScore = 100;
+        public static int StructPopulation = 5;
+        public static int StructElectricity = -1;
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
             {
                 
-                Wealth = 50,
-                CO2 = 1,
+                Wealth = StructUpkeep,
+                CO2 = StructCO2,
             };
         }
 
@@ -20,23 +29,38 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 1,
-                Population = -4,
-                Reputation = 1
+                ElectricCapacity = -StructElectricity,
+                Population = -StructPopulation,
+                Reputation = -StructReputation
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.2f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
+
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
+            }
+            else
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.1f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/House", new Vector2(1, 1.5f));
+            }
         }
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "House";
+            base.GetInfoBoxData(out _, out _, out sprite, out _);
+            title = "A house";
+            meta = "Cost: $" + House.StructCost + "k" + "\t\t" +
+                   "CO2: " + House.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + House.StructElectricity + "\t\t" +
+                   "Income: $" + House.StructUpkeep + "k";
+            details = "A place for your citizens to call home. They will pay you tax, but they'll also use some electricity and generate some pollution. It currently houses 5k people.";
         }
     }
 
@@ -47,7 +71,12 @@ namespace Game.CityMap
 
         public override int Cost
         {
-            get { return 250; }
+            get { return House.StructCost; }
+        }
+        
+        public override int Population
+        {
+            get { return -House.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
@@ -64,7 +93,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 1)
+            if (City?.Stats.ElectricCapacity < -House.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -94,17 +123,23 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 1;
-                City.Stats.Population += 4;
-                City.Stats.Reputation -= 1;
+                City.Stats.ElectricCapacity += House.StructElectricity;
+                City.Stats.Reputation += House.StructReputation;
+                City.Stats.Score += House.StructScore;
             }
         }
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            base.GetInfoBoxData(out _, out _, out sprite, out _);
             title = "Build a house";
-            details = "Citizens of your town need a place to live. Click on a tile to build a house.";
+            meta = "Cost: $" + House.StructCost + "k" + "\t\t" +
+                   "CO2: " + House.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + House.StructElectricity + "\t\t" +
+                   "Income: $" + House.StructUpkeep + "k";
+            details = "Provides 5k workers." +
+                      "They will pay you tax, but use some electricity and generate some pollution. " +
+                      "Building too many without parks will make your city unhappy";
         }
     }
 }

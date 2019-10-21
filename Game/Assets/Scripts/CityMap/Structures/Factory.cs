@@ -7,12 +7,33 @@ namespace Game.CityMap
 {
     public class Factory : Structure
     {
+        public static int StructCO2 = 10;
+        public static int StructReputation = 0;
+        public static int StructCost = 3000;
+        public static int StructUpkeep = 500;
+        public static int StructScore = 750;
+        public static int StructPopulation = -5;
+        public static int StructElectricity = -10;
+
+        private GameObject smoke;
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A factory";
+            meta = "Cost: $" + Factory.StructCost + "k" + "\t\t" +
+                   "CO2: " + Factory.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Factory.StructElectricity + "\t\t" +
+                   "Income: $" + Factory.StructUpkeep + "k";
+            details = "A place for your citizens to work, and to generate income for your city! It requires 5k Workers.";
+        }
+
         public override Stats GetStatsContribution()
         {
             return new Stats()
             {
-                CO2 = 20,
-                Wealth = 500,
+                CO2 = StructCO2,
+                Wealth = StructUpkeep
             };
         }
 
@@ -20,101 +41,117 @@ namespace Game.CityMap
         {
             return new Stats
             {
-                ElectricCapacity = 5,
-                Reputation = -3
+                Population = -StructPopulation,
+                ElectricCapacity = -StructElectricity,
+                Reputation = -StructReputation
             };
         }
 
         public override void RenderOnto(GameObject canvas, Vector3 position)
         {
-            Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
-            RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
+            if (Tile.Terrain.TerrainType == Terrain.TerrainTypes.DesertHill 
+                || Tile.Terrain.TerrainType == Terrain.TerrainTypes.GrassHill)
+            {
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.3f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
+            }
+            else
+            {           
+                Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
+                RenderOntoSprite(canvas, positionNew, "Textures/structures/FactoryNew", new Vector2(5f, 5f));
+            }
 
             // Render smoke.
-            // Now the fun begins...
+            if (smoke != null)
+            {
+                // Reuse existing smoke.
+                smoke.transform.SetParent(GameObject.transform);
+                smoke.transform.localPosition = new Vector3(-2.7f, 6.6f);
+                smoke.transform.localScale = new Vector3(1, 1, 1);
+            }
+            else
+            {
+                smoke = new GameObject();
+                smoke.transform.SetParent(GameObject.transform);
+                smoke.transform.localPosition = new Vector3(-2.7f, 6.6f);
+                smoke.transform.localScale = new Vector3(1, 1, 1);
 
-            GameObject smoke = new GameObject();
-            smoke.transform.SetParent(GameObject.transform);
-            smoke.transform.localPosition = new Vector3(-2.7f, 6.6f);
-            smoke.transform.localScale = new Vector3(1, 1, 1);
+                ParticleSystem particles = smoke.AddComponent<ParticleSystem>();
+                Particles.InitParticleSystem(particles);
 
-            ParticleSystem particles = smoke.AddComponent<ParticleSystem>();
-            Particles.InitParticleSystem(particles);
+                var main = particles.main;
+                main.startLifetime = 4;
+                main.startSize = 1;
+                main.startSpeed = 1;
+                main.startColor = new Color(221, 221, 221);
+                main.maxParticles = 40;
 
-            var main = particles.main;
-            main.startLifetime = 10;
-            main.startSize = 0.1f;
-            main.startSpeed = new ParticleSystem.MinMaxCurve(0.1f, 0.2f);
-            main.maxParticles = 4000;
+                var emission = particles.emission;
+                emission.rateOverTime = 4;
+                emission.enabled = true;
 
-            var emission = particles.emission;
-            emission.rateOverTime = 200;
-            emission.enabled = true;
+                var shape = particles.shape;
+                shape.angle = 10;
+                shape.radius = 0.0001f;
+                shape.rotation = new Vector3(-90, 90, 0);
+                shape.scale = new Vector3(0.05f, 0.05f, 0.05f);
+                shape.enabled = true;
 
-            var shape = particles.shape;
-            shape.angle = 10;
-            shape.radius = 0.5f;
-            shape.rotation = new Vector3(-90, 90, 0);
-            shape.scale = new Vector3(0.05f, 0.05f, 0.05f);
-            shape.enabled = true;
+                var limit = particles.limitVelocityOverLifetime;
+                limit.limit = 1;
+                limit.dampen = 1;
+                limit.multiplyDragByParticleSize = false;
+                limit.multiplyDragByParticleVelocity = true;
+                limit.drag = 4;
+                limit.enabled = true;
 
-            var limit = particles.limitVelocityOverLifetime;
-            limit.limit = 1;
-            limit.dampen = 1;
-            limit.multiplyDragByParticleSize = true;
-            limit.multiplyDragByParticleVelocity = true;
-            limit.drag = 400;
-            limit.enabled = true;
+                var force = particles.forceOverLifetime;
+                force.x = new ParticleSystem.MinMaxCurve(0.15f, 0.2f);
+                force.y = new ParticleSystem.MinMaxCurve(-0.37f, 0.4f);
+                force.randomized = true;
+                force.enabled = true;
 
-            var force = particles.forceOverLifetime;
-            force.x = new ParticleSystem.MinMaxCurve(0.05f, 0.01f);
-            force.y = new ParticleSystem.MinMaxCurve(-0.4f, 0.4f);
-            force.randomized = true;
-            force.enabled = true;
+                var colorOverLifetime = particles.colorOverLifetime;
+                Gradient gradientLifetime = new Gradient();
+                GradientColorKey[] colorKeys = new GradientColorKey[2];
+                colorKeys[0].color = new Color(178, 178, 178);
+                colorKeys[0].time = 0.0f;
+                colorKeys[1].color = Color.white;
+                colorKeys[1].time = 0.1f;
+                GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
+                alphaKeys[0].alpha = 1;
+                alphaKeys[0].time = 0.6f;
+                alphaKeys[1].alpha = 0;
+                alphaKeys[1].time = 1.0f;
+                gradientLifetime.SetKeys(colorKeys, alphaKeys);
+                colorOverLifetime.color = gradientLifetime;
+                colorOverLifetime.enabled = true;
 
-            var colorOverLifetime = particles.colorOverLifetime;
-            Gradient gradientLifetime = new Gradient();
-            GradientColorKey[] colorKeys = new GradientColorKey[2];
-            colorKeys[0].color = Color.white;
-            colorKeys[0].time = 0.0f;
-            colorKeys[1].color = Color.white;
-            colorKeys[1].time = 1.0f;
-            GradientAlphaKey[] alphaKeys = new GradientAlphaKey[2];
-            alphaKeys[0].alpha = 82.0f / 255.0f;
-            alphaKeys[0].time = 0.0f;
-            alphaKeys[1].alpha = 0;
-            alphaKeys[1].time = 1.0f;
-            gradientLifetime.SetKeys(colorKeys, alphaKeys);
-            colorOverLifetime.color = gradientLifetime;
-            colorOverLifetime.enabled = true;
+                var sizeOverLifetime = particles.sizeOverLifetime;
+                sizeOverLifetime.size = new ParticleSystem.MinMaxCurve(1,
+                    new AnimationCurve(new Keyframe(0.0f, 0.1f), new Keyframe(0.23f, 0.3f)));
+                sizeOverLifetime.enabled = true;
 
-            var colorBySpeed = particles.colorBySpeed;
-            Gradient gradientSpeed = new Gradient();
-            GradientColorKey[] colorKeysSpeed = new GradientColorKey[2];
-            colorKeysSpeed[0].color = Color.white;
-            colorKeysSpeed[0].time = 0.0f;
-            colorKeysSpeed[1].color = Color.black;
-            colorKeysSpeed[1].time = 1.0f;
-            GradientAlphaKey[] alphaKeysSpeed = new GradientAlphaKey[2];
-            alphaKeysSpeed[0].alpha = 1;
-            alphaKeysSpeed[0].time = 0;
-            alphaKeysSpeed[1].alpha = 1;
-            alphaKeysSpeed[1].time = 1;
-            gradientSpeed.SetKeys(colorKeysSpeed, alphaKeysSpeed);
-            colorBySpeed.color = gradientSpeed;
-            colorBySpeed.range = new Vector2(0, 0.3f);
-            colorBySpeed.enabled = true;
-
-            var renderer = smoke.GetComponent<ParticleSystemRenderer>();
-            renderer.sortingLayerName = "Structure";
-            renderer.sortingOrder = 1000;
+                var renderer = smoke.GetComponent<ParticleSystemRenderer>();
+                renderer.sortingLayerName = "Structure";
+                renderer.sortingOrder = 1000;
+                Material material = new Material(renderer.material);
+                material.mainTexture = Resources.Load<Texture>("Textures/CloudParticle");
+                renderer.material = material;
+            }
         }
 
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        public override void Unrender()
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Factory";
+            // Detatch smoke so it stays when we need it. E.g., rotation.
+            if (smoke != null)
+            {
+                smoke.transform.SetParent(null);
+                smoke.transform.localScale = new Vector3(0, 0, 0);
+            }
+            base.Unrender();
         }
+        
     }
 
     public class FactoryFactory : StructureFactory
@@ -123,13 +160,21 @@ namespace Game.CityMap
         {
             get
             {
-                return 2500;
+                return Factory.StructCost;
             }
+        }
+
+        public override int Population
+        {
+            get { return -Factory.StructPopulation; }
         }
 
         public override Sprite Sprite { get; } =
             Resources.Load<Sprite>("Textures/structures/FactoryNew");
-        public FactoryFactory(City city) : base(city) { }
+        public FactoryFactory(City city) : base(city)
+        {
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Factory");
+        }
         public FactoryFactory() : base() { }
 
         protected override Structure Create()
@@ -143,7 +188,7 @@ namespace Game.CityMap
             {
                 return false;
             }
-            if (City?.Stats.ElectricCapacity < 5)
+            if (City?.Stats.ElectricCapacity < -Factory.StructElectricity)
             {
                 reason = "Not enough electric capacity";
                 return false;
@@ -173,8 +218,9 @@ namespace Game.CityMap
 
             if (City != null)
             {
-                City.Stats.ElectricCapacity -= 5;
-                City.Stats.Reputation += 3;
+                City.Stats.ElectricCapacity += Factory.StructElectricity;
+                City.Stats.Reputation += Factory.StructReputation;
+                City.Stats.Score += Factory.StructScore;
             }
         }
 
@@ -182,7 +228,12 @@ namespace Game.CityMap
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
             title = "Build a factory";
-            details = "Citizens of your town need a place to work. Click on a tile to build a factory.";
+            meta = "Cost: $" + Factory.StructCost + "k" + "\t\t" +
+                   "CO2: " + Factory.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Factory.StructElectricity + "\t\t" +
+                   "Income: $" + Factory.StructUpkeep + "k";
+            details = "Requires 5k Workers. Citizens of your town need a place to work, and you need a source of money." +
+                      " Click on a tile to build a factory.";
         }
     }
 }

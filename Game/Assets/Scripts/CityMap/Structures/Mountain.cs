@@ -6,6 +6,14 @@ namespace Game.CityMap
 {
     public class Mountain : Structure
     {
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "Mountain";
+            details = "A tall magnificent mountain which cannot be used for anything, but can't we just appreciate this lovely view?";
+        }
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
@@ -25,12 +33,6 @@ namespace Game.CityMap
             Vector3 positionNew = new Vector3(position.x, position.y + 0.15f, position.z);
             RenderOntoSprite(canvas, positionNew, "Textures/structures/mountain", new Vector2(1, 1.5f));
         }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Mountain";
-        }
     }
 
     public class MountainFactory : StructureFactory
@@ -39,6 +41,11 @@ namespace Game.CityMap
         public MountainFactory() : base() { }
 
         public override int Cost
+        {
+            get { return 1000000; }
+        }
+
+        public override int Population 
         {
             get { return 1000000; }
         }
@@ -92,7 +99,7 @@ namespace Game.CityMap
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
             base.GetInfoBoxData(out _, out meta, out sprite, out _);
-            title = "mountain";
+            title = "Mountain";
             details = "A tall mountain which cannot be used for anything";
         }
     }

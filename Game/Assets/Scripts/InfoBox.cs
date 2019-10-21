@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace Game
 {
-    public class InfoBox
+    public class InfoBox 
     {
         private const float X = 0;
         private const float Y = 0;
@@ -22,7 +22,8 @@ namespace Game
 
         public InfoBox(GameObject canvas)
         {
-            var font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            var font = Resources.Load<Font>("Fonts/visitor1");
+            var fontMaterial = Resources.Load<Material>("Fonts/visitor1");
             var boxObject = new GameObject();
             var transform = boxObject.AddComponent<RectTransform>();
             transform.SetParent(canvas.transform);
@@ -34,6 +35,7 @@ namespace Game
             var background = boxObject.AddComponent<Image>();
             background.sprite = canvas.GetComponentInChildren<Image>().sprite;
             background.type = Image.Type.Sliced;
+            background.color = new Color(0,0,0,(float) 0.60);
 
             const float TITLE_WIDTH = WIDTH - PAD - PAD - PAD - HEADER_HEIGHT;
 
@@ -48,9 +50,12 @@ namespace Game
             title = titleObject.AddComponent<Text>();
             title.text = "Title";
             title.font = font;
+            title.material = fontMaterial;
             title.fontSize = 14;
-            title.color = Color.black;
+            title.color = Color.white;
             title.alignment = TextAnchor.MiddleLeft;
+            Shadow shadow = titleObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
 
             var metaObject = new GameObject();
             transform = metaObject.AddComponent<RectTransform>();
@@ -62,9 +67,9 @@ namespace Game
             transform.offsetMax = new Vector2(PAD + TITLE_WIDTH, -PAD - HEADER_HEIGHT * 0.4f);
             meta = metaObject.AddComponent<Text>();
             meta.text = "Cost";
-            meta.font = font;
+            meta.font = Resources.GetBuiltinResource<Font>("Arial.ttf"); 
             meta.fontSize = 10;
-            meta.color = Color.black;
+            meta.color = Color.green;
             meta.alignment = TextAnchor.MiddleLeft;
 
             var imageObject = new GameObject();
@@ -88,9 +93,9 @@ namespace Game
             transform.offsetMax = new Vector2(-PAD, HEIGHT - HEADER_HEIGHT - PAD - PAD);
             details = detailsObject.AddComponent<Text>();
             details.text = "Details";
-            details.font = font;
+            details.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             details.fontSize = 12;
-            details.color = Color.black;
+            details.color = Color.white;
 
             SetInfo(null);
         }
@@ -101,7 +106,8 @@ namespace Game
             {
                 title.text = "Nothing selected";
                 meta.text = "";
-                image.sprite = null; // TODO
+                image.sprite = null;
+                image.color = Color.clear;
                 details.text = "Select something to build to get started, or click a tile to learn more about it.";
             }
             else
@@ -110,6 +116,7 @@ namespace Game
                 this.title.text = title;
                 this.meta.text = meta;
                 this.image.sprite = sprite;
+                this.image.color = Color.white;
                 this.details.text = details;
             }
         }

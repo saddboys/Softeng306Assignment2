@@ -9,15 +9,15 @@ namespace Game
     public class StatsBar : MonoBehaviour
     {
         private readonly List<String> tooltipQueue = new List<string>();
-        private readonly List<GameObject> tooltips = new List<GameObject>();
         private GameObject tooltipCanvas;
+        public int RestartCount { get; private set; }
 
         ForecastableStat co2Stat;
         ForecastableStat tempStat;
         ForecastableStat popStat;
         ForecastableStat elecStat;
         ForecastableStat repStat;
-        ForecastableStat scoreStat;
+        AnimatedStat scoreStat;
         ForecastableStat wealthStat;
         public double CO2 { get => co2Stat.Value; set => co2Stat.Value = value; }
         public double Temperature { get => tempStat.Value; set => tempStat.Value = value; }
@@ -53,13 +53,34 @@ namespace Game
 
         private void Start()
         {
-            co2Stat = new ForecastableStat(tooltipQueue, co2ValueText, "F0", " MT", " CO2", 2, 0.5f);
-            tempStat = new ForecastableStat(tooltipQueue, temperatureValueText, "F2", "°C", " Change", 0.01f, 0.001f);
-            popStat = new ForecastableStat(tooltipQueue, populationValueText, "F1", "k", " Population", 1, 0.1f);
-            elecStat = new ForecastableStat(tooltipQueue, electricCapacityValueText, "F0", "", " Electricity", 1, 0.1f);
-            repStat = new ForecastableStat(tooltipQueue, reputationValueText, "F0", "%", " Reputation", 2, 0.5f);
-            scoreStat = new ForecastableStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, 50);
-            wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5);
+            // Monkeypatch fix. Don't want to touch game scene.
+            var moneyLabel = moneyValueText.rectTransform.parent.gameObject.GetComponent<RectTransform>();
+            moneyLabel.position = new Vector3
+            {
+                x = moneyLabel.position.x - 30,
+                y = moneyLabel.position.y,
+                z = moneyLabel.position.z,
+            };
+            var moneyTransform = moneyValueText.rectTransform;
+            moneyTransform.position = new Vector3
+            {
+                x = moneyTransform.position.x + 20,
+                y = moneyTransform.position.y,
+                z = moneyTransform.position.z,
+            };
+            var scoreLabel = scoreValueText.rectTransform.parent.gameObject.GetComponent<Text>();
+            scoreLabel.font = Resources.Load<Font>("Fonts/visitor1");
+            scoreLabel.material = Resources.Load<Material>("Fonts/visitor1");
+            Shadow shadow = scoreLabel.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+
+            co2Stat = new ForecastableStat(tooltipQueue, co2ValueText, "F0", " MT", " CO2", 2, 0.5f, (500, Mathf.Infinity));
+            tempStat = new ForecastableStat(tooltipQueue, temperatureValueText, "F2", "°C", " Change", 0.01f, 0.001f, (1.5f, Mathf.Infinity), false);
+            popStat = new ForecastableStat(tooltipQueue, populationValueText, "F1", "k", " Population", 1, 0.1f, (5, Mathf.NegativeInfinity));
+            elecStat = new ForecastableStat(tooltipQueue, electricCapacityValueText, "F0", "", " Electricity", 1, 0.1f, (Mathf.NegativeInfinity, Mathf.NegativeInfinity));
+            repStat = new ForecastableStat(tooltipQueue, reputationValueText, "F0", "%", " Reputation", 2, 0.5f, (10, Mathf.NegativeInfinity));
+            scoreStat = new AnimatedStat(tooltipQueue, scoreValueText, "F0", "", " Score", 200, (Mathf.NegativeInfinity, Mathf.NegativeInfinity), false, false);
+            wealthStat = new ForecastableStat(tooltipQueue, moneyValueText, "C", "k", "", 50, 5, (500, Mathf.NegativeInfinity));
             co2Stat.ChangeEvent += OnChange;
             co2Stat.ChangeEvent += CO2ChangeEvent.Invoke;
             tempStat.ChangeEvent += OnChange;
@@ -73,7 +94,6 @@ namespace Game
             scoreStat.ChangeEvent += OnChange;
             wealthStat.ChangeEvent += OnChange;
             wealthStat.ChangeEvent += WealthChangeEvent.Invoke;
-            
 
             tooltipCanvas = new GameObject();
             Canvas canvas = tooltipCanvas.AddComponent<Canvas>();
@@ -97,48 +117,11 @@ namespace Game
             if (tooltipQueue.Count > 0)
             {
                 GameObject tooltip = new GameObject();
-                RectTransform rectTransform = tooltip.AddComponent<RectTransform>();
-                rectTransform.position = Input.mousePosition;
-                rectTransform.pivot = new Vector2(0, 0);
-                rectTransform.SetParent(tooltipCanvas.transform);
-                ContentSizeFitter fitter = tooltip.AddComponent<ContentSizeFitter>();
-                fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-                fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-                HorizontalLayoutGroup group = tooltip.AddComponent<HorizontalLayoutGroup>();
-                group.childControlHeight = true;
-                group.childControlWidth = true;
-                Text text = tooltip.AddComponent<Text>();
-                text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-                text.text = String.Join("\n", tooltipQueue);
-                text.fontSize = 10;
-                Shadow shadow = tooltip.AddComponent<Shadow>();
-                shadow.effectColor = new Color(0, 0, 0);
+                var behaviour = tooltip.AddComponent<StatsChangeTooltip>();
+                behaviour.Init(String.Join("\n", tooltipQueue), this, tooltipCanvas.transform);
                 tooltipQueue.Clear();
-                tooltips.Add(tooltip);
             }
 
-            // Make change tooltips float upwards and fade out.
-            foreach (var tooltip in tooltips)
-            {
-                Text text = tooltip.GetComponent<Text>();
-                Color color = text.color;
-                Vector3 pos = tooltip.transform.position;
-                pos.y += color.a / 2.0f;
-                tooltip.transform.position = pos;
-                color.a -= 0.005f;
-                text.color = color;
-            }
-
-            // Remove tooltips that are no longer visible.
-            tooltips.RemoveAll(tooltip =>
-            {
-                if (tooltip.GetComponent<Text>().color.a < 0.0f)
-                {
-                    Destroy(tooltip);
-                    return true;
-                }
-                return false;
-            });
         }
 
         /// <summary>
@@ -152,7 +135,6 @@ namespace Game
             popStat.Forecast.Value = stats.Population;
             elecStat.Forecast.Value = stats.ElectricCapacity;
             repStat.Forecast.Value = stats.Reputation;
-            scoreStat.Forecast.Value = stats.Score;
             wealthStat.Forecast.Value = stats.Wealth;
         }
 
@@ -194,11 +176,8 @@ namespace Game
             scoreStat.Reset(0);
             wealthStat.Reset(10000);
 
-            foreach (var tooltip in tooltips)
-            {
-                Destroy(tooltip);
-            }
-            tooltips.Clear();
+            // This will magically destroy all active tooltips.
+            RestartCount++;
         }
 
         private void OnChange()
@@ -212,32 +191,96 @@ namespace Game
         }
     }
 
+    public class StatsChangeTooltip : MonoBehaviour
+    {
+        private StatsBar parentBar;
+        private int restartId;
+
+        public void Init(string textContent, StatsBar bar, Transform parent)
+        {
+            parentBar = bar;
+            restartId = bar.RestartCount;
+            RectTransform rectTransform = gameObject.AddComponent<RectTransform>();
+            rectTransform.position = Input.mousePosition;
+            rectTransform.pivot = new Vector2(0, 0);
+            rectTransform.SetParent(parent);
+            ContentSizeFitter fitter = gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            HorizontalLayoutGroup group = gameObject.AddComponent<HorizontalLayoutGroup>();
+            group.childControlHeight = true;
+            group.childControlWidth = true;
+            Text text = gameObject.AddComponent<Text>();
+            text.font = Resources.Load<Font>("Fonts/visitor1");
+            text.material = Resources.Load<Material>("Fonts/visitor1");
+            text.text = textContent;
+            text.fontSize = 12;
+            Shadow shadow = gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+        }
+
+        private void Update()
+        {
+            // Make change tooltips float upwards and fade out.
+            Text text = GetComponent<Text>();
+            Color color = text.color;
+            Vector3 pos = transform.position;
+            pos.y += color.a / 2.0f;
+            transform.position = pos;
+            color.a -= 0.005f;
+            text.color = color;
+
+            // Remove tooltips that are no longer visible,
+            // or if stats bar has restarted.
+            if (GetComponent<Text>().color.a < 0.0f || restartId != parentBar.RestartCount)
+            {
+                Destroy(gameObject);
+            }
+        }
+    }
+
     public class ForecastableStat : AnimatedStat
     {
         public AnimatedStat Forecast { get; private set; }
 
-        public ForecastableStat(List<String> tooltipQueue, Text text, string format, string suffix, string explainer, float step, float forecastStep)
-            : base(tooltipQueue, text, format, suffix, explainer, step)
+        public ForecastableStat(
+            List<String> tooltipQueue,
+            Text text,
+            string format,
+            string suffix,
+            string explainer,
+            float step,
+            float forecastStep,
+            ValueTuple<float, float> warnRegion,
+            bool fixAnchor = true)
+            : base(tooltipQueue,
+                  text,
+                  format,
+                  suffix,
+                  explainer,
+                  step,
+                  warnRegion,
+                  false,
+                  fixAnchor)
         {
+            text.alignment = TextAnchor.UpperCenter;
             GameObject forecastObject = new GameObject();
-            Shadow shadow = forecastObject.AddComponent<Shadow>();
-            shadow.effectColor = new Color(0, 0, 0);
             Text forecastText = forecastObject.AddComponent<Text>();
-            forecastText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            forecastText.font = Resources.Load<Font>("Fonts/visitor1");
+            forecastText.material = Resources.Load<Material>("Fonts/visitor1");
             forecastText.color = new Color(1, 1, 1);
             forecastText.fontSize = 10;
             forecastText.rectTransform.anchorMin = new Vector2(0.5f, 0);
             forecastText.rectTransform.anchorMax = new Vector2(0.5f, 0);
             forecastText.rectTransform.pivot = new Vector2(0.5f, 0);
             forecastText.rectTransform.SetParent(text.transform);
-            forecastText.rectTransform.localPosition = new Vector3(0, -50);
             ContentSizeFitter fitter = forecastObject.AddComponent<ContentSizeFitter>();
             fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             fitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             HorizontalLayoutGroup group = forecastObject.AddComponent<HorizontalLayoutGroup>();
             group.childControlHeight = true;
             group.childControlWidth = true;
-            Forecast = new AnimatedStat(tooltipQueue: null, forecastText, format, suffix, explainer, forecastStep, true);
+            Forecast = new AnimatedStat(tooltipQueue: null, forecastText, format, suffix, explainer, forecastStep, (Mathf.NegativeInfinity, Mathf.NegativeInfinity), true);
         }
 
         public override void Update()
@@ -265,6 +308,7 @@ namespace Game
                     change *= -1;
                     tooltipQueue?.Add("-" + change.ToString(format) + suffix + explainer);
                 }
+                CheckWarn();
                 ChangeEvent?.Invoke();
             }
         }
@@ -302,6 +346,9 @@ namespace Game
         private readonly string explainer;
         private readonly float step;
         private readonly bool isRelative;
+        private readonly ValueTuple<float, float> warnRegion;
+
+        private bool warn = false;
 
         public event Action ChangeEvent;
 
@@ -312,7 +359,9 @@ namespace Game
             string suffix,
             string explainer,
             float step,
-            bool isRelative = false)
+            ValueTuple<float, float> warnRegion,
+            bool isRelative = false,
+            bool fixAnchor = true)
         {
             this.tooltipQueue = tooltipQueue;
             this.text = text;
@@ -321,18 +370,58 @@ namespace Game
             this.explainer = explainer;
             this.step = step;
             this.isRelative = isRelative;
+            this.warnRegion = warnRegion;
+
+            text.font = Resources.Load<Font>("Fonts/visitor1");
+            text.material = Resources.Load<Material>("Fonts/visitor1");
+            if (fixAnchor)
+            {
+                text.rectTransform.anchorMin = new Vector2(1, 0);
+                text.rectTransform.anchorMax = new Vector2(1, 1);
+                text.rectTransform.offsetMin = new Vector2(text.rectTransform.offsetMin.x, 0);
+                text.rectTransform.offsetMax = new Vector2(text.rectTransform.offsetMax.x, 0);
+            }
+            Shadow shadow = text.gameObject.AddComponent<Shadow>();
+            shadow.effectColor = new Color(0, 0, 0);
+            ContentSizeFitter fitter = text.gameObject.AddComponent<ContentSizeFitter>();
+            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
+            HorizontalLayoutGroup group =
+                text.gameObject.GetComponent<HorizontalLayoutGroup>() ?? text.gameObject.AddComponent<HorizontalLayoutGroup>();
+            group.childControlWidth = true;
+
         }
 
         public virtual void Update()
         {
             Shown += Mathf.Clamp((float)(Value - Shown), -step, step);
+            if (warn)
+            {
+                if ((Time.time * 2) % 2 < 1)
+                {
+                    text.color = Color.red;
+                } else
+                {
+                    text.color = Color.clear;
+                }
+            }
+            else
+            {
+                text.color = Color.white;
+            }
         }
 
         public void Reset(double value, double shown = 0)
         {
             this.value = value;
+            CheckWarn();
             Shown = shown;
             ChangeEvent?.Invoke();
+        }
+
+        private void CheckWarn()
+        {
+            warn = value >= warnRegion.Item1 && value <= warnRegion.Item2
+                || value >= warnRegion.Item2 && value <= warnRegion.Item1;
         }
     }
 }

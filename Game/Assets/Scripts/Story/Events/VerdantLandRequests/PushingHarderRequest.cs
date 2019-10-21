@@ -5,6 +5,10 @@ using Game.CityMap;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
+    
+    /// <summary>
+    /// A story request which asks the user to destory the factories which are causing the co2 emissions
+    /// </summary>
     public class PushingHarderRequest: StoryRequest
     {
         public override string Title
@@ -17,7 +21,11 @@ namespace Game.Story.Events.VerdantLandRequests
             get { return DESCRIPTION; }
         }
 
-        public override Sprite EventImage { get; }
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/pushingharder"); }
+        }
+
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }

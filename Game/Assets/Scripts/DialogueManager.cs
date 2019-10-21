@@ -32,7 +32,10 @@ namespace Game
             Debug.Log("start conversation!"+ dialogue.name);
             nameText.text = dialogue.name;
             sentences.Clear();
-
+            if(GameObject.Find("ToolbarCanvas")!=null){
+   GameObject.Find("ToolbarCanvas").SetActive(false);
+            }
+          
             foreach (string sentence in dialogue.sentences)
             {
                 sentences.Enqueue(sentence);

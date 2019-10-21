@@ -1,8 +1,9 @@
 using System;
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Game.Story;
+using UnityEditor.VersionControl;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Game
@@ -22,6 +23,9 @@ namespace Game
             }
         }
         private int turn;
+
+        private readonly int maxTurns = 20;
+        public int MaxTurns => maxTurns;
 
         [SerializeField]
         private StatsBar stats;
@@ -60,25 +64,16 @@ namespace Game
         [SerializeField]
         private Text turnText;
 
-        [SerializeField]
-        private GameSceneController controller;
-        
-
-        public GameSceneController Controller
-        {
-            get { return controller; }
-        }
-
-        public GameObject dialogueManager;
-        
         /// <summary>
         /// Fires at the beginning of each new turn.
         /// Useful for spawning events and for updating structures.
         /// E.g. Some structures take 3 turns to build, etc.
         /// </summary>
         public event Action NextTurnEvent;
-        
+
+        public event Action RestartGameEvent;
         public event Action EndGameEvent;
+
         private Weather weather;
         // Start is called before the first frame update
         void Start()
@@ -92,12 +87,43 @@ namespace Game
             Stats.Restart();
 
             InvokeRepeating("UpdateForecast", 0, 0.1f);
+
+            // Monkeypatch the turns left font.
+            var label = turnText.rectTransform.parent.gameObject;
+            label.GetComponent<Text>().alignment = TextAnchor.LowerRight;
+            var transform = label.GetComponent<RectTransform>();
+            transform.offsetMin = new Vector2
+            {
+                x = transform.offsetMin.x - 10,
+                y = transform.offsetMin.y,
+            };
+            foreach (var text in label.GetComponentsInChildren<Text>())
+            {
+                text.font = Resources.Load<Font>("Fonts/visitor1");
+                text.material = Resources.Load<Material>("Fonts/visitor1");
+                Shadow shadow = text.gameObject.AddComponent<Shadow>();
+                shadow.effectColor = new Color(0, 0, 0);
+            }
         }
 
         // Update is called once per frame
         void Update()
         {
+            Cheat();
             weather.Update();
+        }
+
+        private void Cheat()
+        {
+            //cheat code
+            if (Input.GetKeyDown(KeyCode.I) && Input.GetKeyDown(KeyCode.O))
+            {
+                Stats.Population += 10000;
+                Stats.Wealth += 10000;
+                Stats.ElectricCapacity += 10000;
+                Stats.Temperature = 0;
+                Stats.Reputation = 100;
+            }
         }
 
         private void UpdateForecast()
@@ -112,7 +138,7 @@ namespace Game
             Stats.UpdateContribution(Map.GetStatsContribution());
             Turn++;
             CheckEndGame();
-            NextTurnEvent?.Invoke();
+       //     NextTurnEvent?.Invoke();
         }
 
         /// <summary>
@@ -120,43 +146,17 @@ namespace Game
         /// </summary>
         public void CheckEndGame()
         {
-            double temp = stats.Temperature;
-            double wealth = stats.Wealth;
-                
-            if (Turn == 20)
+            Debug.Log("Checking end game " + turn);
+            if (Turn == MaxTurns || Stats.Wealth <= 0 || Stats.Temperature > 2)
             {
-                string reason = "Congratulations! You have sustainably developed your city!";
-                EndGame(true, reason);
-                hasEnded = true;
-            } else if (wealth <= 0)
-            {
-                string reason = "You've run out of assets to support your city!";
-                EndGame(false, reason);
-                hasEnded = true;
-            } else if (temp > 2)
-            {
-                string reason = "Your actions have resulted in the earth overheating... our planet is now inhabitable";
-                EndGame(false, reason);
-                hasEnded = true;
-            } 
-        }
-
-        /// <summary>
-        /// The function triggers the game over overlay, specifying the reason for failure
-        /// </summary>
-        /// <param name="reason">The reason the player has lost the game</param>
-        public void EndGame(bool isWon, string reason)
-        {
-            EndGameEvent?.Invoke();
-            EndTurnButton.interactable = false;
-            if (isWon)
-            {
-                Controller.GameWon(reason);   
+                Debug.Log("Trying to end game");
+                EndGameEvent?.Invoke();
             }
-            else 
+            else
             {
-                Controller.GameOver(reason);    
+                NextTurnEvent?.Invoke();
             }
+            
         }
 
         /// <summary>
@@ -167,9 +167,19 @@ namespace Game
             hasEnded = false;
             EndTurnButton.interactable = true;
             Turn = 1;
+            DestroyExistingParticles();
+            RestartGameEvent?.Invoke();
             Stats.Restart();
             Map.Regenerate();
            // dialogueManager.Counter = 0;
+        }
+
+        private void DestroyExistingParticles()
+        {
+            foreach (Transform child in map.gameObject.transform)
+            {
+                Destroy(child.gameObject);
+            }
         }
     }
 }

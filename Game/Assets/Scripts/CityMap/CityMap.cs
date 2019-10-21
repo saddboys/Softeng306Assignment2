@@ -19,7 +19,7 @@ namespace Game.CityMap
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
         public event EventHandler<TileClickArgs> TileMouseEnterEvent;
-        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent; 
         private MapTile previousHoveredTile;
 
         // Camera to reposition after rotation.
@@ -34,6 +34,7 @@ namespace Game.CityMap
         private List<int[]> occupiedBiomSpots = new List<int[]>();
         Random random = new Random();
 
+        private AudioClip rotateSound;
 
         public MapTile[] Tiles
         {
@@ -49,6 +50,7 @@ namespace Game.CityMap
         // Start is called before the first frame update
         void Start()
         {
+            rotateSound = Resources.Load<AudioClip>("SoundEffects/CameraRotate");
             Generate();
         }
         // Update is called once per frame
@@ -56,7 +58,7 @@ namespace Game.CityMap
         {
             CheckTileClick();
             CheckTileHover();
-            if (Input.GetKeyDown(KeyCode.R))
+            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.Space))
             {
                 Rotate(true);
             }
@@ -68,6 +70,7 @@ namespace Game.CityMap
             Vector3 worldPoint = ray.GetPoint(-ray.origin.z / ray.direction.z);
             Vector3Int position = map.WorldToCell(worldPoint);
             MapTile currentTile = map.GetTile<MapTile>(position);
+            
             if (EventSystem.current.IsPointerOverGameObject())
             {
                 currentTile = null;
@@ -80,6 +83,7 @@ namespace Game.CityMap
                 }
                 if (currentTile != null)
                 {
+                    //Debug.Log("position of tile is: " + position.x + ", " + position.y + ", " + position.z);
                     TileMouseEnterEvent?.Invoke(this, new TileClickArgs(currentTile));
                 }
             }
@@ -113,6 +117,12 @@ namespace Game.CityMap
             {
                 // Notify the click event for things like the ToolBar or other user feedback.
                 TileClickedEvent?.Invoke(this, new TileClickArgs(someOtherTile));
+
+                // Focus onto structure
+                if (someOtherTile.Structure != null)
+                {
+                    camera.GetComponent<CameraDrag>().PanTo(new Vector3(worldPoint.x, worldPoint.y, 0));
+                }
             }
         }
 
@@ -139,7 +149,6 @@ namespace Game.CityMap
         /// </summary>
         private void Generate()
         {
-            Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
 
             if (terrainMap == null)
             {
@@ -200,7 +209,8 @@ namespace Game.CityMap
                     // Debug.Log("Screen: " + mappedVector);
                     
                     tile.ScreenPosition = mappedVector;
-                    tile.name = "j: " + j + " i: " + i;
+                    tile.name = "i: " + vector.x + " j: " + vector.y + "z: " + vector.z;
+                   // Debug.Log("NAME IS: " + tile.name);
                     tile.Canvas = parent;
                     // Refresh the tile whenever its sprite changes.
                     tile.SpriteChange += () => map.RefreshTile(vector);
@@ -253,6 +263,10 @@ namespace Game.CityMap
 
             // Start off at an angle to further enhance 2.5D effect.
             Rotate(true);
+
+            // Reset camera for new maps.
+            camera.GetComponent<CameraDrag>().PanTo(new Vector3(0, 0, 0));
+            camera.GetComponent<CameraZoom>().ResetZoom();
         }
         
         /// <summary>
@@ -275,7 +289,6 @@ namespace Game.CityMap
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
-            Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -430,8 +443,16 @@ namespace Game.CityMap
             }
 
             occupiedBiomSpots.Clear();
-
+            DestroyRest();
             Generate();
+        }
+
+        private void DestroyRest()
+        {
+            foreach (Transform child in parent.transform)
+            { 
+                Destroy(child.gameObject);
+            }
         }
 
         public void Rotate(bool clockwise)
@@ -444,7 +465,9 @@ namespace Game.CityMap
             centre.x /= 2;
             centre.y /= 2;
             centre.z = 0;
-            MapTile test = map.GetTile<MapTile>(new Vector3Int(0, 0, 0));
+
+            // Perform the swapping in two stages. Can't be done in a single pass.
+
             List<ValueTuple<Vector3Int, MapTile>> tiles = new List<(Vector3Int, MapTile)>();
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
@@ -453,6 +476,7 @@ namespace Game.CityMap
                 // Remove the tile at the old position.
                 map.SetTile(pos, null);
             }
+
             foreach (var (pos, tile) in tiles)
             {
                 SetTileTo(RotateCellPosition(pos, clockwise), tile);
@@ -464,10 +488,13 @@ namespace Game.CityMap
             // Recenter camera to previous tile.
             Vector3 newPos = map.CellToWorld(RotateCellPosition(cameraFocus, clockwise));
             newPos.z = cameraZPos;
-            camera.transform.position = newPos;
+            camera.GetComponent<CameraDrag>().TeleportTo(newPos);
+
+            // Nice swoosh sound.
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(rotateSound);
         }
 
-        private Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
+        public Vector3Int RotateCellPosition(Vector3Int pos, bool clockwise)
         {
             // Transform into hexagonal coordinate system.
             var hexCoords = new Vector3Int

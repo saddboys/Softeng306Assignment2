@@ -1,8 +1,12 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
+    /// <summary>
+    /// A story request which asks the user to ban the cars
+    /// </summary>
     public class BanTheCarsRequest : StoryRequest
     {
         public override string Title
@@ -18,7 +22,12 @@ namespace Game.Story.Events.VerdantLandRequests
                 
         private const string TITLE = "Ban the Cars!";
         private const string DESCRIPTION = "Get rid of cars, to reduce pollution from them?";
-        public override Sprite EventImage { get; }
+
+        public override Sprite EventImage
+        {
+            get { return Resources.Load<Sprite>("EventSprites/banthecars"); }
+        }
+
         public override Queue<string> Dialogues
         {
             get { return dialogMessages; }
@@ -36,9 +45,19 @@ namespace Game.Story.Events.VerdantLandRequests
             // Decrease happiness, reduce carbon emissions and also affects money 
             StoryManager.city.Stats.Reputation -= 10;
             StoryManager.city.Stats.CO2 -= 25;
-            StoryManager.city.Stats.Wealth -= 5000;
+            if (StoryManager.city.Stats.Wealth >= 2000) 
+            {
+                StoryManager.city.Stats.Wealth -= 2000;
+            } 
+            else
+            {
+                StoryManager.city.Stats.Wealth = 0;
+            }
 
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
+            
+            // Set ending route
+            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.REVISIONIST_ENDING;
         }
 
         public override void OnNoClick()

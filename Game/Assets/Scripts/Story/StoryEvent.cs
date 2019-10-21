@@ -26,11 +26,22 @@ namespace Game.Story
             get { return EventTypes.Event; }
         }
 
+        /// <summary>
+        /// Generates the effects of certain events
+        /// </summary>
+        /// <param name="canvas"></param>
         public virtual void GenerateScene(GameObject canvas)
         {
             return;
         }
-        
+
+        /// <summary>
+        /// Checks if the event's conditions are met.
+        /// </summary>
+        public virtual bool ConditionMet() 
+        {
+            return true;
+        }
         
         
         /// <summary>

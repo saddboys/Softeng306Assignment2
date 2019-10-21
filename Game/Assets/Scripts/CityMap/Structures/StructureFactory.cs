@@ -8,13 +8,14 @@ namespace Game.CityMap
 {
     public abstract class StructureFactory : InfoBoxSource
     {
-        // TODO: Could store the picture associated with the structure (for the toolbar) in here.
+        protected AudioClip buildSound;
 
         /// <summary>
         /// Assume that all structures have a cost, as it is useful to display it to the user.
         /// This is to be set by each concrete StructureFactory implementation.
         /// </summary>
         public virtual int Cost { get; }
+        public virtual int Population { get; }
 
         /// <summary>
         /// Sprite to use for the toolbar button.
@@ -35,6 +36,7 @@ namespace Game.CityMap
         protected StructureFactory(City city)
         {
             City = city;
+            buildSound = Resources.Load<AudioClip>("SoundEffects/Build");
         }
 
         /// <summary>
@@ -71,6 +73,12 @@ namespace Game.CityMap
             if (City?.Stats.Wealth < Cost)
             {
                 reason = "Not enough money";
+                return false;
+            }
+
+            if (City?.Stats.Population < Population)
+            {
+                reason = "Not enough workers";
                 return false;
             }
 
@@ -122,7 +130,10 @@ namespace Game.CityMap
             if (City != null)
             {
                 City.Stats.Wealth -= Cost;
+                City.Stats.Population -= Population;
             }
+
+            GameObject.FindObjectOfType<AudioBehaviour>().Play(buildSound);
         }
 
         public Structure CreateGhost()

@@ -3492,7 +3492,7 @@ MonoBehaviour:
   endScreen: {fileID: 1395271885}
   endStatusText: {fileID: 263322987}
   endReasonText: {fileID: 1078567220}
-  endScoreText: {fileID: 0}
+  endScoreText: {fileID: 762437986}
   stats: {fileID: 912060186}
   toolbar: {fileID: 140038115}
   tempbar: {fileID: 1076415658}

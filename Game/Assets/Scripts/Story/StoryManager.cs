@@ -282,20 +282,17 @@ namespace Game.Story
                         break;
                         
                 }
-                reason = reason + "\n Final Score: " + city.Stats.Score;
-                Controller.GameWon(reason);
+                Controller.GameWon(reason, city.Stats.Score);
 
             } else if (city.Stats.Wealth <= 0)
             {
                 string reason = "You've run out of assets to support your city!";
-                reason = reason + "\n Final Score: " + city.Stats.Score;
-                Controller.GameOver(reason);
+                Controller.GameOver(reason, city.Stats.Score);
                  Debug.Log("reputation :"+ city.Stats.Reputation);
             } else if (city.Stats.Temperature > 2)
             {    
                 string reason = "Your actions have resulted in the earth overheating... our planet is now uninhabitable";
-                reason = reason + "\n Final Score: " + city.Stats.Score;
-                Controller.GameOver(reason);
+                Controller.GameOver(reason, city.Stats.Score);
             }
            
             ResetStory();

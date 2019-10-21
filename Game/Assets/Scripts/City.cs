@@ -1,8 +1,7 @@
 using System;
-﻿using System.Collections;
+ using System.Collections;
 using System.Collections.Generic;
 using Game.Story;
-using UnityEditor.VersionControl;
 using UnityEngine;
 using UnityEngine.UI;
 

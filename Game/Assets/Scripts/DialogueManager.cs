@@ -30,6 +30,7 @@ namespace Game
         public void StartDialogue(Dialogue dialogue){
             
             Debug.Log("start conversation!"+ dialogue.name);
+            endTurn.interactable = false;
             nameText.text = dialogue.name;
             sentences.Clear();
             if(GameObject.Find("ToolbarCanvas")!=null){

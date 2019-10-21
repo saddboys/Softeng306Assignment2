@@ -102,6 +102,10 @@ namespace Game
             Canvas canvas = tooltipCanvas.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 2;
+
+            // Fix temperature forecast's scale as its parent is different to others on the stats bar.
+            // (Temperature readings are on the thermometer panel instead).
+            temperatureValueText.transform.Find("Forecast").transform.localScale = new Vector3(1, 1, 1);
         }
 
         private void Update()
@@ -292,7 +296,7 @@ namespace Game
                   fixAnchor)
         {
             text.alignment = TextAnchor.UpperCenter;
-            GameObject forecastObject = new GameObject();
+            GameObject forecastObject = new GameObject("Forecast");
             Text forecastText = forecastObject.AddComponent<Text>();
             forecastText.font = Resources.Load<Font>("Fonts/visitor1");
             forecastText.material = Resources.Load<Material>("Fonts/visitor1");

@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
+    /// <summary>
+    /// A story request which asks the user to ban the cars
+    /// </summary>
     public class BanTheCarsRequest : StoryRequest
     {
         public override string Title
@@ -61,9 +64,6 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             StoryManager.NextStoryEvent = EventFactory.StoryEvents.CALLING_ON_LIFESTYLE_REQUEST;
             Destroy(StoryManager.storyManagerGameObject.GetComponent<BanTheCarsRequest>());
-            
-            // Set ending route
-            StoryManager.StoryEnding = (int) StoryManager.StoryEndings.NEUTRAL_ENDING;
         }
     }
 }

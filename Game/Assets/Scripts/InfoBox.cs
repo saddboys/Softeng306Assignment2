@@ -69,7 +69,7 @@ namespace Game
             meta.text = "Cost";
             meta.font = Resources.GetBuiltinResource<Font>("Arial.ttf"); 
             meta.fontSize = 10;
-            meta.color = Color.white;
+            meta.color = Color.green;
             meta.alignment = TextAnchor.MiddleLeft;
 
             var imageObject = new GameObject();
@@ -106,7 +106,8 @@ namespace Game
             {
                 title.text = "Nothing selected";
                 meta.text = "";
-                image.sprite = null; // TODO
+                image.sprite = null;
+                image.color = Color.clear;
                 details.text = "Select something to build to get started, or click a tile to learn more about it.";
             }
             else
@@ -115,6 +116,7 @@ namespace Game
                 this.title.text = title;
                 this.meta.text = meta;
                 this.image.sprite = sprite;
+                this.image.color = Color.white;
                 this.details.text = details;
             }
         }

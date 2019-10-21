@@ -17,6 +17,8 @@ namespace Game.CityMap
 
         private GameObject smoke;
         
+        
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
@@ -148,8 +150,13 @@ namespace Game.CityMap
 
         public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
         {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Power plant";
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A power plant";
+            meta = "Cost: $" + PowerPlant.StructCost + "k" + "\t\t" +
+                   "CO2: " + PowerPlant.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + PowerPlant.StructElectricity + "\t\t" +
+                   "Upkeep: $" + -PowerPlant.StructUpkeep + "k";
+            details = "Providing work for 5k citizens. Be careful with it's pollution.";
         }
     }
 

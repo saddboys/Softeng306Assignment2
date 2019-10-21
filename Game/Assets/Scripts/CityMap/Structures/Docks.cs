@@ -14,6 +14,18 @@ namespace Game.CityMap
         public static int StructPopulation = -15;
         public static int StructElectricity = -30;
         
+        
+        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
+        {
+            base.GetInfoBoxData(out _, out meta, out sprite, out _);
+            title = "A dock";
+            meta = "Cost: $" + Dock.StructCost + "k" + "\t\t" +
+                   "CO2: " + Dock.StructCO2 + "MT" + "\n" +
+                   "Electricity: " + Dock.StructElectricity + "\t\t" +
+                   "Income: $" + Dock.StructUpkeep + "k";
+            details = "This is a huge commercial buildings to help generate money, but it adds a lot of pollution. It requires 15k workers.";
+        }
+        
         public override Stats GetStatsContribution()
         {
             return new Stats
@@ -39,12 +51,7 @@ namespace Game.CityMap
                 Reputation = -StructReputation
             };
         }
-
-        public override void GetInfoBoxData(out string title, out string meta, out Sprite sprite, out string details)
-        {
-            base.GetInfoBoxData(out _, out meta, out sprite, out details);
-            title = "Dock";
-        }
+        
     }
 
     public class DockFactory : StructureFactory

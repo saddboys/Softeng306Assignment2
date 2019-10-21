@@ -4,6 +4,9 @@ using Game.CityMap;
 
 namespace Game.Story.Events.VerdantLandRequests
 {
+    /// <summary>
+    /// A story request which asks the users to limit the energy usage for the residents
+    /// </summary>
     public class CallingOnLifestyleRequest : StoryRequest
     {
         public override string Title
@@ -37,7 +40,15 @@ namespace Game.Story.Events.VerdantLandRequests
         {
             // Decrease happiness, decrease population
             StoryManager.city.Stats.Reputation -= 20;
-            StoryManager.city.Stats.Population -= 10;
+
+            if (StoryManager.city.Stats.Population >= 10)
+            {
+                StoryManager.city.Stats.Population -= 10;
+            }
+            else 
+            {
+                StoryManager.city.Stats.Population = 0;
+            }
 
             // Decrease energy usage and reduce carbon emissions of houses
             House.StructElectricity += 1;

@@ -19,7 +19,7 @@ namespace Game.CityMap
         public event EventHandler<TileClickArgs> TileClickedEvent;
 
         public event EventHandler<TileClickArgs> TileMouseEnterEvent;
-        public event EventHandler<TileClickArgs> TileMouseLeaveEvent;
+        public event EventHandler<TileClickArgs> TileMouseLeaveEvent; 
         private MapTile previousHoveredTile;
 
         // Camera to reposition after rotation.
@@ -149,7 +149,6 @@ namespace Game.CityMap
         /// </summary>
         private void Generate()
         {
-            Debug.Log("Camera dimensions: " + Camera.main.pixelWidth +" , " + Camera.main.pixelHeight);
 
             if (terrainMap == null)
             {
@@ -290,7 +289,6 @@ namespace Game.CityMap
                 anchor[0] = random.Next(0, WIDTH);
                 anchor[1] = random.Next(0, HEIGHT);
             }
-            Debug.Log("Anchor: X: " + anchor[0] + ", Y: " + anchor[1]);
 
             // adding anchor to screen
             MapTile anchorTile = ScriptableObject.CreateInstance<MapTile>();
@@ -445,8 +443,16 @@ namespace Game.CityMap
             }
 
             occupiedBiomSpots.Clear();
-
+            DestroyRest();
             Generate();
+        }
+
+        private void DestroyRest()
+        {
+            foreach (Transform child in parent.transform)
+            { 
+                Destroy(child.gameObject);
+            }
         }
 
         public void Rotate(bool clockwise)

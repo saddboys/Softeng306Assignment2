@@ -52,6 +52,7 @@ namespace Game.Story
 
         void Start()
         {
+            city.RestartGameEvent += ResetStory;
             factory = new EventFactory();
             factory.ManagerObject = storyManagerGameObject;
             random = new Random();
@@ -72,6 +73,9 @@ namespace Game.Story
 //            city.EndGameEvent += ResetStory;
         }
 
+        /// <summary>
+        /// When the game restarts, reset the necessary parameters
+        /// </summary>
         private void ResetStory()
         {
             // Create a queue for turn number of the story events
@@ -133,30 +137,29 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Listener for each turn count.
+        /// This will check if its time to show a story event
+        /// or it will generate a random event
+        /// </summary>
         private void HandleTurnEvent()
         {
 //            For testing an event
 //            if (city.Turn == 2)
 //            {
 //                storyEvent = factory.CreateRandomEvent(EventFactory.RandomEvents.FLOOD_EVENT);
-//           //  storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
+//             // storyEvent = factory.CreateStoryEvent(EventFactory.StoryEvents.GIANT_COOLER_REQUEST);
 //                CreatePopUp();   
 //            }
-
+//
             if (city.Turn == storyQueue.Peek())
             {
                 // Create new story event here
                 storyEvent = factory.CreateStoryEvent(NextStoryEvent);
                 storyEvent.StoryManager = this;
-
+                
                 if (!storyEvent.ConditionMet())
                 {
-                    // check if this is the first event
-                    if (city.Turn == 4) return;
-
-                    // swap event to the alternate event
-                    StoryRequest storyRequest = (StoryRequest) storyEvent;
-                    storyRequest.OnNoClick();
                     storyEvent = factory.CreateStoryEvent(NextStoryEvent);
                 }
 
@@ -167,7 +170,8 @@ namespace Game.Story
             else
             {
                 // Events have a 10% chance of popping up
-                if (random.Next(0, 10) == 1)
+                // Check for penultimate turn to prevent buggy behaviour
+                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool
@@ -177,6 +181,9 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// Creates the popup for when an event occurs
+        /// </summary>
         private void CreatePopUp()
         {
             EventPopUp popUp;
@@ -226,14 +233,24 @@ namespace Game.Story
                 switch (StoryEnding)
                 {
                     case (int) StoryEndings.TECH_ENDING:
-                        reason = "You keep the town’s temperature under the threshold! People are happy and can keep living like they do, but outside the town, the world continues to heat and go chaotic. However, with technology, we can survive through it. If only everyone in the world had access to the technology…";
+                        reason = "You keep the town\'s temperature under the threshold!\n" +
+                                 " People are happy and can keep living like they do, but outside the town, the world " +
+                                 "continues to heat and go chaotic.\n However, with technology, we can survive " +
+                                 "through it.\n If only everyone in the world had access to the technology...";
                         break;
                     case (int) StoryEndings.REVISIONIST_ENDING:
                         reason =
-                            "You did it! The town’s temperature stayed below the threshold. Perhaps climate change can be managed after all, though it required sacrificing some modern comforts. The people aren’t the happiest about that, but they’re not too unhappy. At least their planet is still there.";
+                            "You did it!\n The town\'s temperature stayed below the threshold.\n" +
+                            " Perhaps climate change can be managed after all, though it required sacrificing some " +
+                            "modern comforts.\n The people aren\'t the happiest about that, but they\'re not too " +
+                            "unhappy.\n At least their planet is still there.";
                         break;
                     case (int) StoryEndings.NEUTRAL_ENDING:
-                        reason = "Congratulations! You managed to keep the temperature under the threshold! And you didn’t make too many drastic changes! By doing what this one city did, perhaps climate change has been averted… right?\nAre these actions enough? Or are they just postponing the inevitable? Without drastic action, is it possible to stop temperatures from rising?";
+                        reason = "Congratulations!\n You managed to keep the temperature under the threshold!\n" +
+                                 " And you didn\'t make too many drastic changes! By doing what this one city did, " +
+                                 "perhaps climate change has been averted... right?\nAre these actions enough?" +
+                                 " Or are they just postponing the inevitable?\n Without drastic action, is it possible" +
+                                 " to stop temperatures from rising?";
                         break;
                         
                 }
@@ -269,7 +286,7 @@ namespace Game.Story
 
             if (thanTechExists && StoryEnding != (int) StoryEndings.TECH_ENDING)
             {
-                storyEnding = (int) StoryEndings.REVISIONIST_ENDING;
+                // storyEnding = (int) StoryEndings.REVISIONIST_ENDING;
             }
         }
 

@@ -4,6 +4,7 @@ using Game.Story;
 using Game.Story.Events;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class EventPopUp : MonoBehaviour
@@ -99,10 +100,10 @@ public class EventPopUp : MonoBehaviour
         descriptionText.fontSize = DESCRIPTION_FONT_SIZE;
         descriptionText.alignment = TextAnchor.MiddleCenter;
         description.transform.SetParent(panel.transform,false);
-        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
-        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_LIMIT_HEIGHT/3);
+        description.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
+        description.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.transform.SetParent(description.transform);
-        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH/1.3f,POP_UP_LIMIT_HEIGHT/4);
+        descriptionTextObject.GetComponent<RectTransform>().sizeDelta = new Vector2(POP_UP_LIMIT_WIDTH,POP_UP_LIMIT_HEIGHT/4);
         descriptionTextObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
 
     }
@@ -137,24 +138,7 @@ public class EventPopUp : MonoBehaviour
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,-POP_UP_HEIGHT/2.4f);
         
-//        EventTrigger eventTrigger = buttonObj.AddComponent<EventTrigger>();
-//        EventTrigger.Entry entry = new EventTrigger.Entry();
-//        entry.eventID = EventTriggerType.PointerEnter;
-//        entry.callback.AddListener((eventData) =>
-//        {
-//            buttonImage.color = new Color32(212,212,212,255);
-//        } );
-//        EventTrigger.Entry exitEntry = new EventTrigger.Entry();
-//        exitEntry.eventID = EventTriggerType.PointerExit;
-//        exitEntry.callback.AddListener((eventData) =>
-//        {
-//            buttonImage.color = Color.white;
-//        } );
-//        
-//        
-//        
-//        eventTrigger.triggers.Add(entry);
-//        eventTrigger.triggers.Add(exitEntry);
+        AddHoverEffect(buttonObj);
     }
     
     
@@ -188,13 +172,11 @@ public class EventPopUp : MonoBehaviour
         textContainer.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         textContainer.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
 
-
         Image buttonImage = buttonObj.AddComponent<Image>();
         buttonImage.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
         buttonObj.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj.GetComponent<RectTransform>().anchoredPosition = new Vector2(-POP_UP_LIMIT_WIDTH/4,-POP_UP_HEIGHT/2.4f);
-        
-        
+
         // The no button or whatever it is going to be called
         GameObject buttonObj2 = new GameObject();
         Button noButton = buttonObj2.AddComponent<Button>();
@@ -213,11 +195,41 @@ public class EventPopUp : MonoBehaviour
         text2.fontSize = DESCRIPTION_FONT_SIZE;
         textContainer2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0,0);
         textContainer2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
+        
 
         Image buttonImage2 = buttonObj2.AddComponent<Image>();
         buttonImage2.sprite = Resources.LoadAll<Sprite>("EventSprites/button-spritesheet")[0];
         buttonObj2.GetComponent<RectTransform>().sizeDelta = new Vector2(BUTTON_WIDTH,BUTTON_HEIGHT);
         buttonObj2.GetComponent<RectTransform>().anchoredPosition = new Vector2(POP_UP_LIMIT_WIDTH/4,-POP_UP_HEIGHT/2.4f);
+        AddHoverEffect(buttonObj2);
+        AddHoverEffect(buttonObj);
+    }
+
+    /// <summary>
+    /// Add hover effects for the event pop up buttons
+    /// </summary>
+    /// <param name="buttonObject"></param>
+    private void AddHoverEffect(GameObject buttonObject)
+    {
+        EventTrigger trigger = buttonObject.AddComponent<EventTrigger>();
+        EventTrigger.Entry entry = new EventTrigger.Entry();
+        entry.eventID = EventTriggerType.PointerEnter;
+        entry.callback.AddListener(delegate(BaseEventData arg0) { 
+            Image image = buttonObject.GetComponent<Image>();
+            image.color = new Color32(227, 226, 225,255); });
+        EventTrigger.Entry exit = new EventTrigger.Entry();
+        exit.eventID = EventTriggerType.PointerExit;
+        exit.callback.AddListener(delegate(BaseEventData arg0) { 
+            Image image = buttonObject.GetComponent<Image>();
+            image.color = Color.white; });
+        EventTrigger.Entry onClick = new EventTrigger.Entry();
+        onClick.eventID = EventTriggerType.PointerDown;
+        onClick.callback.AddListener(delegate(BaseEventData arg0) { 
+            Image image = buttonObject.GetComponent<Image>();
+            image.color = new Color32(204, 203, 202,255); });
+        trigger.triggers.Add(onClick);
+        trigger.triggers.Add(entry);
+        trigger.triggers.Add(exit);
     }
 
     /// <summary>
@@ -227,8 +239,6 @@ public class EventPopUp : MonoBehaviour
     /// <returns></returns>
     IEnumerator Popup(bool isEvent)
     {
-
-
         Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
         while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
         {

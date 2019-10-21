@@ -57,7 +57,11 @@ namespace Story.Events.RandomEvent
                 {
                     if (tile.Structure.GetType() != typeof(Mountain))
                     {
-                        new DemolishFactory(StoryManager.city).BuildOnto(tile);
+                        DemolishFactory demolishFactory = new DemolishFactory(StoryManager.city);
+                        if (demolishFactory.CanBuildOnto(tile, out _))
+                        {
+                            demolishFactory.BuildOnto(tile);
+                        }
                         yield return new WaitForSeconds(3);
                     }
                 }

@@ -35,6 +35,7 @@ namespace Game.Story
         private StoryEvent storyEvent;
         private Random random;
         private List<EventFactory.RandomEvents> eventPool;
+        private int chanceOfRandomEvent;
         
         public enum StoryEndings {TECH_ENDING, REVISIONIST_ENDING, NEUTRAL_ENDING}
 
@@ -43,10 +44,8 @@ namespace Game.Story
         {
             get => storyEnding;
             set => storyEnding = value;
-        } 
-//        private Dictionary<int, bool> storyChoices;
-
-
+        }
+        
         public Dictionary<int, bool> StoryChoices = new Dictionary<int, bool>();
 
         void Start()
@@ -92,11 +91,11 @@ namespace Game.Story
         {
             if (eventPool.Contains(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE))
             {
-                if (city.Stats.Population <= 10) eventPool.Remove(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
+                if (city.Stats.Population <= 30) eventPool.Remove(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
             }
             else
             {
-                if (city.Stats.Population > 10) eventPool.Add(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
+                if (city.Stats.Population > 30) eventPool.Add(EventFactory.RandomEvents.CONDITIONAL_REQUEST_HOUSE);
             }
             
         }
@@ -108,7 +107,7 @@ namespace Game.Story
 
         private void HandleTemperatureChangeEvent()
         {
-            
+            chanceOfRandomEvent = (int)(city.Stats.Temperature * 20);
         }
 
         private void HandleWealthChangeEvent()
@@ -135,6 +134,12 @@ namespace Game.Story
                     eventPool.Add(eventObj);
                 }
             }
+        }
+
+        public void GeneratePopupThroughEvent(EventFactory.RandomEvents randomEvent)
+        {
+            storyEvent = factory.CreateRandomEvent(randomEvent);
+            CreatePopUp();
         }
 
         /// <summary>
@@ -177,7 +182,7 @@ namespace Game.Story
             {
                 // Events have a 10% chance of popping up
                 // Check for penultimate turn to prevent buggy behaviour
-                if (random.Next(0, 10) == 1 && city.Turn != city.MaxTurns - 1)
+                if (random.Next(0, 100) <= chanceOfRandomEvent && city.Turn != city.MaxTurns - 1)
                 {
                     EventFactory.RandomEvents randomEvent = eventPool[random.Next(0,eventPool.Count)];
                     // Randomly spawn events from the event pool

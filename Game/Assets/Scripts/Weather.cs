@@ -14,9 +14,15 @@ namespace Game
         private float mapHeight;
         private bool isGenerating;
         private double triggerSecondsLeft;
+        private bool windy = false;
+        private GameObject sunFilter;
+        private GameObject darkFilter;
 
-        public Weather(GameObject gameObject)
+        public Weather(GameObject gameObject, GameObject sunFilter, GameObject darkFilter)
         {
+            this.sunFilter = sunFilter;
+            this.darkFilter = darkFilter;
+
             Tilemap map = gameObject.GetComponent<Tilemap>();
             mapWidth = map.size.x * map.cellSize.x;
             mapHeight = map.size.y * map.cellSize.y;
@@ -70,11 +76,48 @@ namespace Game
                 {
                     var shape = particles.shape;
                     shape.position = new Vector3(shape.position.x, (float)random.NextDouble() * mapHeight - mapHeight / 2.0f);
-                    emission.rateOverTime = 3;
+                    emission.rateOverTime = windy ? 7 : 3;
                     triggerSecondsLeft = random.Next(2, 5);
                     isGenerating = true;
                 }
             }
+        }
+
+        public void Normal()
+        {
+            var main = particles.main;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(1, 1.2f);
+            windy = false;
+            sunFilter.SetActive(false);
+            darkFilter.SetActive(false);
+        }
+
+        public void Windy()
+        {
+            var main = particles.main;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(4, 4.2f);
+            windy = true;
+            sunFilter.SetActive(false);
+            darkFilter.SetActive(true);
+        }
+
+        public void Stormy()
+        {
+            var main = particles.main;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(4, 4.2f);
+            windy = true;
+            sunFilter.SetActive(false);
+            darkFilter.SetActive(true);
+        }
+
+
+        public void Sunny()
+        {
+            var main = particles.main;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(0.5f, 0.6f);
+            windy = true;
+            sunFilter.SetActive(true);
+            darkFilter.SetActive(false);
         }
     }
 }

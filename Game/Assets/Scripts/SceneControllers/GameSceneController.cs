@@ -14,10 +14,15 @@ public class GameSceneController : MonoBehaviour
     public GameObject restartButton;
     public GameObject nextLevelButton;
 
+    private AudioClip winMusic;
+    private AudioClip loseMusic;
+
     // Start is called before the first frame update
     void Start()
     {
         endScreen.SetActive(false);
+        winMusic = Resources.Load<AudioClip>("Music/Win");
+        loseMusic = Resources.Load<AudioClip>("Music/Lose");
     }
 
     // Update is called once per frame
@@ -40,6 +45,8 @@ public class GameSceneController : MonoBehaviour
         endScoreText.text = "Score: " + score;
         restartButton.SetActive(true);
         nextLevelButton.SetActive(false);
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().StopMusic();
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().Play(loseMusic);
     }
 
     /// <summary>
@@ -56,6 +63,8 @@ public class GameSceneController : MonoBehaviour
         endScoreText.text = "Score: " + score;
         restartButton.SetActive(false);
         nextLevelButton.SetActive(true);
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().StopMusic();
+        GameObject.FindObjectOfType<Game.AudioBehaviour>().Play(winMusic);
     }
 
     /// <summary>

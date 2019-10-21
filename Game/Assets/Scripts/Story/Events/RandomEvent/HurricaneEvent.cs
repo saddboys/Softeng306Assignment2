@@ -186,6 +186,8 @@ namespace Story.Events.RandomEvent
             sizeOverLifetimeModule.x =  new ParticleSystem.MinMaxCurve(1, velocityCurveX);
             sizeOverLifetimeModule.y =  new ParticleSystem.MinMaxCurve(0, velocityCurveY);
             sizeOverLifetimeModule.z =  new ParticleSystem.MinMaxCurve(0, velocityCurveZ);
+
+            StoryManager.city.Weather.Windy();
         }
 
         /// <summary>
@@ -212,6 +214,7 @@ namespace Story.Events.RandomEvent
         {
             yield return new WaitForSeconds(2);
             Destroy(StoryManager.city.Map.gameObject.transform.Find("HurricaneParticle").gameObject);
+            StoryManager.city.Weather.Normal();
         }
     }
 }

@@ -184,23 +184,27 @@ namespace Game.Story.Events.RandomEvent
 
             ParticleSystem.MainModule mainParticle = particles.main;
             mainParticle.startLifetime = 2f;
-            mainParticle.startSpeed = 20;
+            mainParticle.startSpeed = 80;
+            mainParticle.startSize = 0.1f;
+            mainParticle.maxParticles = 2000;
 
             ParticleSystem.EmissionModule emissionModule = particles.emission;
-            emissionModule.rateOverTime = 50;
+            emissionModule.rateOverTime = 1000;
+
+            var trails = particles.trails;
+            trails.lifetime = 0.01f;
+            trails.enabled = true;
             
-            Renderer renderer =  particles.GetComponent<Renderer>();
+            var renderer =  particles.GetComponent<ParticleSystemRenderer>();
             renderer.sortingLayerName = "Terrain";
-            ParticleSystem.TextureSheetAnimationModule textureSheet =
-                particles.textureSheetAnimation;
-            textureSheet.enabled = true;
-            textureSheet.mode = ParticleSystemAnimationMode.Sprites;
-            textureSheet.AddSprite(Resources.Load<Sprite>("EventSprites/rainparticle"));
+            renderer.trailMaterial = new Material(renderer.material);
 
             ParticleSystem.ShapeModule shapeModule = particles.shape;
             shapeModule.shapeType = ParticleSystemShapeType.SingleSidedEdge;
             shapeModule.radius = 25;
             shapeModule.rotation = new Vector3(0,0,180);
+
+            StoryManager.city.Weather.Stormy();
         }
 
         /// <summary>
@@ -224,7 +228,7 @@ namespace Game.Story.Events.RandomEvent
             yield return new WaitForSeconds(2);
             Destroy(StoryManager.city.Map.gameObject.transform.Find("CustomParticleSystem").gameObject);
             Destroy(StoryManager.storyManagerGameObject.GetComponent<FloodEvent>());
-            
+            StoryManager.city.Weather.Normal();
         }
     }
 }

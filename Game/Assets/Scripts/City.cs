@@ -71,6 +71,12 @@ namespace Game
         [SerializeField]
         private Text turnText;
 
+        [SerializeField]
+        private GameObject darkFilter;
+
+        [SerializeField]
+        private GameObject sunFilter;
+
         /// <summary>
         /// Fires at the beginning of each new turn.
         /// Useful for spawning events and for updating structures.
@@ -81,11 +87,13 @@ namespace Game
         public event Action RestartGameEvent;
         public event Action EndGameEvent;
 
+        public Weather Weather { get => weather; private set => weather = value; }
+
         private Weather weather;
         // Start is called before the first frame update
         void Start()
         {
-            weather = new Weather(Map.map.gameObject);
+            weather = new Weather(Map.map.gameObject, sunFilter, darkFilter);
 
             endTurnButton.onClick.AddListener(EndTurn);
             
@@ -174,6 +182,7 @@ namespace Game
             EndTurnButton.interactable = true;
             Turn = 1;
             DestroyExistingParticles();
+            Weather.Normal();
             RestartGameEvent?.Invoke();
             Stats.Restart(Level);
             Map.Regenerate(Level);

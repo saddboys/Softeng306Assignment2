@@ -35,7 +35,19 @@ namespace Story.Events.RandomEvent
             FindWaterTerrain();
             StoryManager.city.Stats.Reputation -= 5;
             StoryManager.city.Stats.Temperature += 0.5;
-            
+
+            StoryManager.city.Weather.Sunny();
+            StoryManager.city.NextTurnEvent += StopSunnyWeather;
+            StoryManager.city.RestartGameEvent += StopSunnyWeather;
+            StoryManager.city.EndGameEvent += StopSunnyWeather;
+        }
+
+        private void StopSunnyWeather()
+        {
+            StoryManager.city.NextTurnEvent -= StopSunnyWeather;
+            StoryManager.city.RestartGameEvent -= StopSunnyWeather;
+            StoryManager.city.EndGameEvent -= StopSunnyWeather;
+            StoryManager.city.Weather.Normal();
         }
 
         /// <summary>

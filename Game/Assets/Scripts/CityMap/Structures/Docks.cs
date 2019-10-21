@@ -1,6 +1,4 @@
-﻿using Game;
-using Game.CityMap;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Game.CityMap
 {

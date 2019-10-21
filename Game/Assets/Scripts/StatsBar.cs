@@ -12,6 +12,9 @@ namespace Game
         private GameObject tooltipCanvas;
         public int RestartCount { get; private set; }
 
+        private float initialLevelScore = 0;
+        private int currentLevel;
+
         ForecastableStat co2Stat;
         ForecastableStat tempStat;
         ForecastableStat popStat;
@@ -166,15 +169,40 @@ namespace Game
             Wealth += stats.Wealth;
         }
 
-        public void Restart()
+        public void Restart(int level)
         {
-            co2Stat.Reset(0);
-            tempStat.Reset(0);
-            popStat.Reset(30); // TODO: Random - based on houses
-            elecStat.Reset(4); // TODO: Random
-            repStat.Reset(50);
-            scoreStat.Reset(0);
-            wealthStat.Reset(10000);
+            switch (level)
+            {
+                case 1:
+                    co2Stat.Reset(0);
+                    tempStat.Reset(0);
+                    popStat.Reset(30);
+                    elecStat.Reset(8);
+                    repStat.Reset(50);
+                    wealthStat.Reset(10000);
+                    break;
+                case 2:
+                    co2Stat.Reset(0);
+                    tempStat.Reset(0);
+                    popStat.Reset(30);
+                    elecStat.Reset(4);
+                    repStat.Reset(50);
+                    wealthStat.Reset(7000);
+                    break;
+                case 3:
+                    co2Stat.Reset(0);
+                    tempStat.Reset(1);
+                    popStat.Reset(10);
+                    elecStat.Reset(4);
+                    repStat.Reset(50);
+                    wealthStat.Reset(5000);
+                    break;
+            }
+            if (currentLevel == level)
+            {
+                scoreStat.Reset(initialLevelScore);
+            }
+            currentLevel = level;
 
             // This will magically destroy all active tooltips.
             RestartCount++;

@@ -52,7 +52,7 @@ namespace Game.CityMap
         void Start()
         {
             rotateSound = Resources.Load<AudioClip>("SoundEffects/CameraRotate");
-            Generate();
+            Generate(1);
         }
         // Update is called once per frame
         void Update()
@@ -149,7 +149,7 @@ namespace Game.CityMap
         /// Generates the Tilemap by randomly allocating terrains to tiles and sometimes
         /// adding structures to certain tiles.
         /// </summary>
-        private void Generate()
+        private void Generate(int level)
         {
 
             if (terrainMap == null)
@@ -229,7 +229,7 @@ namespace Game.CityMap
             return sum;
         }
 
-        public void Regenerate()
+        public void Regenerate(int level)
         {
             foreach (Vector3Int pos in map.cellBounds.allPositionsWithin)
             {
@@ -249,7 +249,7 @@ namespace Game.CityMap
             }
 
             DestroyRest();
-            Generate();
+            Generate(level);
         }
 
         private void DestroyRest()

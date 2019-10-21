@@ -50,9 +50,7 @@ namespace Game
                 return;
             }
             string sentence = sentences.Dequeue();
-            Debug.Log("next conversation!"+ sentence);
             dialogueText.text = sentence;
-            Debug.Log("counter:"+ counter);
             //this ensures the correct gameobject display on the correct dialgue
             if(counter == 5){
                  endTurn.interactable = false;

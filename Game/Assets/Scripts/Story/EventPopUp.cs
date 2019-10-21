@@ -257,7 +257,6 @@ public class EventPopUp : MonoBehaviour
     {
         int xIncrease = POP_UP_WIDTH / 5;
         int yIncrease = POP_UP_HEIGHT / 5;
-        Debug.Log("X INCREASE" + xIncrease);
         Vector2 currentSize = panel.GetComponent<RectTransform>().sizeDelta;
         while (currentSize.x <= POP_UP_WIDTH && currentSize.y <= POP_UP_HEIGHT)
         {

@@ -234,10 +234,11 @@ namespace Game.Story
                 dialog.sentences =   new String[] {"Congratulations! You made it to your second turn.", 
                 "As you just saw, your city has changed a bit. ",
                 "Once per turn, each and every building in your city earns or loses money, produces or reduces CO2 emissions, makes your people happier or sadder.",
-                "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city."}; 
+                "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city.",
+                "Well go now! You have 18 turns to reach the highest score possible. But be careful, don't let your resources become too low or else it's game over!'' "
+                }; 
                 IntroStory.SetActive(true);
                 FindObjectOfType<DialogueManager>().StartDialogue(dialog);
-                //FindObjectOfType<DialogueManager>().Finished += CreatePopUp;
             }
         }
 
@@ -253,14 +254,13 @@ namespace Game.Story
             if (city.Turn == city.MaxTurns)
             {
                 CheckNonFinalStoryEventEffect();
-                Debug.Log("End Story reached " + StoryEnding);
                 string reason = "";
                 
                 // Check which storyline we are on
                 switch (StoryEnding)
                 {
                     case (int) StoryEndings.TECH_ENDING:
-                        reason = "You keep the town\'s temperature under the threshold!\n" +
+                        reason = "You kept the town\'s temperature under the threshold!\n" +
                                  " People are happy and can keep living like they do, but outside the town, the world " +
                                  "continues to heat and go chaotic.\n However, with technology, we can survive " +
                                  "through it.\n If only everyone in the world had access to the technology...";
@@ -287,7 +287,6 @@ namespace Game.Story
             {
                 string reason = "You've run out of assets to support your city!";
                 Controller.GameOver(reason, city.Stats.Score);
-                 Debug.Log("reputation :"+ city.Stats.Reputation);
             } else if (city.Stats.Temperature > 2)
             {    
                 string reason = "Your actions have resulted in the earth overheating... our planet is now uninhabitable";

@@ -28,7 +28,7 @@ namespace Game
         }
 
         public void StartDialogue(Dialogue dialogue){
-            
+            endTurn.interactable = false;
             Debug.Log("start conversation!"+ dialogue.name);
             nameText.text = dialogue.name;
             sentences.Clear();

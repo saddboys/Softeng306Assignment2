@@ -248,7 +248,6 @@ namespace Game.CityMap
                 Destroy(t);
             }
 
-            occupiedBiomSpots.Clear();
             DestroyRest();
             Generate();
         }

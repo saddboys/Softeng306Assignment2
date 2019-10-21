@@ -28,7 +28,6 @@ namespace Game.CityMap
         private int[,] terrainMap;
         private readonly int WIDTH = 40;
         private readonly int HEIGHT = 40;
-        private Dictionary<int[], Terrain.TerrainTypes> occupiedBiomSpots = new Dictionary<int[], Terrain.TerrainTypes>();
         Random random = new Random();
 
 
@@ -147,8 +146,8 @@ namespace Game.CityMap
                 terrainMap = new int[WIDTH, HEIGHT];
             }
 
-            BiomeManager biomeManager = new BiomeManager(WIDTH, HEIGHT, map, parent, occupiedBiomSpots);
-            occupiedBiomSpots = biomeManager.occupiedBiomSpots;
+            BiomeManager biomeManager = new BiomeManager(WIDTH, HEIGHT, map, parent);
+            biomeManager.start();
 
             // Repeat factories to tune probabilities.
             StructureFactory[] factories =
@@ -233,7 +232,6 @@ namespace Game.CityMap
                 // Remove tile from object graph.
                 Destroy(t);
             }
-            occupiedBiomSpots = new Dictionary<int[], Terrain.TerrainTypes>();
             Generate();
         }
 

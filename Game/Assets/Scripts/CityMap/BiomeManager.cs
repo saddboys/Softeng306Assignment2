@@ -20,19 +20,25 @@ namespace Game.CityMap
         Random random = new Random();
         private int riverLength = 0;
 
-        public BiomeManager(int width, int height, Tilemap m, GameObject p, Dictionary<int[], Terrain.TerrainTypes> obs)
+        public BiomeManager(int width, int height, Tilemap m, GameObject p)
         {
             WIDTH = width;
             HEIGHT = height;
             map = m;
             parent = p;
-            occupiedBiomSpots = obs;
+            occupiedBiomSpots = new Dictionary<int[], Terrain.TerrainTypes>();
 
             // instantiate biomeAnchors so that there is always one anchor at (0, 0) to reserve
             // the cnetral area for the player's initial structures. This is purely for game 
             // balancing reasons
             biomeAnchors = newBiomeAnchorList();
+        }
 
+        /// <summary>
+        /// main method that should be called to populate biomes
+        /// </summary>
+        public void start()
+        {
             // create biomes
             int numBiomes = (int) Mathf.Max(WIDTH, HEIGHT) / 30;
             Debug.Log("Creating biomes");
@@ -394,7 +400,7 @@ namespace Game.CityMap
         private void createBiome(Terrain.TerrainTypes terrain)
         {   
             // calculate biome half length proportional to the map size
-            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 6);
+            int biomeLenghtValue = (int) (Mathf.Max(WIDTH, HEIGHT) / 7);
             int biomeHalfLength = random.Next(biomeLenghtValue - 2, biomeLenghtValue + 2);
 
             // random anchor spot for biome
@@ -451,9 +457,9 @@ namespace Game.CityMap
             float a = (float) 2.0f / Mathf.Log10(Mathf.Pow(k, 2) - 2.0f);
 
             // growing biom
-            for (int i = 0; i < biomHalfLength * 2; i++) 
+            for (int i = 0; i < biomHalfLength * 3; i++) 
             {
-                for (int j = 0; j < biomHalfLength * 2; j++)
+                for (int j = 0; j < biomHalfLength * 3; j++)
                 {
                     // current position array where index 0 is X and index 1 is Y coordinate
                     int[] curPos = new int[2];
@@ -619,7 +625,7 @@ namespace Game.CityMap
         /// The first 2 coordinates are for top right tile, and the subsequent indexes are clockwise to the central tile
         /// </summary>
         /// <returns> The neighbouring 2 * 6 array
-        private int[,] getNeighbouringTiles(int[] pos)
+        public int[,] getNeighbouringTiles(int[] pos)
         {
             int[,] adjPos = new int[6, 2];
             // when y coordinate is even

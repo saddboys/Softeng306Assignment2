@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Game.Story.Events;
 using UnityEngine;
 using UnityEngine.UI;
 using Random = System.Random;
@@ -69,7 +67,6 @@ namespace Game.Story
             city.Stats.ElectricCapacityChangeEvent += HandleElectricCapacityChangeEvent;
 
             city.EndGameEvent += HandleEndGame;
-//            city.EndGameEvent += ResetStory;
         }
 
         /// <summary>
@@ -157,7 +154,6 @@ namespace Game.Story
             //                CreatePopUp();   
             //            }
             //
-            // For tutorial event and further explaination
             if (city.Turn == 2)
             {
                CreateTutorial();
@@ -211,6 +207,9 @@ namespace Game.Story
             }
         }
 
+        /// <summary>
+        /// This function creates the dialog that will be displayed 
+        /// </summary>
         private void CreateDialog()
         {
             Dialogue dialog = new Dialogue(); 
@@ -225,6 +224,9 @@ namespace Game.Story
            
         }
 
+        /// <summary>
+        /// Creates the dialog for the tutorial continuation after the second turn
+        /// </summary>
         public void CreateTutorial(){
              Dialogue dialog = new Dialogue(); 
           
@@ -233,26 +235,25 @@ namespace Game.Story
                 dialog.name = "Secretary";
                 dialog.sentences =   new String[] {"Congratulations! You made it to your second turn.", 
                 "As you just saw, your city has changed a bit. ",
-                "Once per turn, each building in your city earns or loses money, produces or reduces CO2 emissions, makes your people happier or sadder.",
+                "Once per turn, each building in your city earns or loses money, produces or reduces CO2 "+
+                "emissions and makes your people happier or sadder.",
                 "It’s truly a beautiful sight; every little thing in this city counts. Click on a tile to learn more about what it brings to the city.",
                 "Well go now! You have 18 turns to reach the highest score possible. But be careful, don't let your resources become too low or else it's game over! "
-                }; 
+                };
                 IntroStory.SetActive(true);
                 FindObjectOfType<DialogueManager>().StartDialogue(dialog);
             }
         }
-
-    
         
         /// <summary>
         /// Determines the ending to show
         /// </summary>
         private void HandleEndGame()
-        { 
-            
-            // Check reason for ending game
-            if (city.Turn == city.MaxTurns)
+        {
+            // Check reason for game end
+            if (city.Turn == city.MaxTurns)                    // CASE 1: Game won
             {
+                // Determine if non-final story event has affected story route 
                 CheckNonFinalStoryEventEffect();
                 string reason = "";
                 
@@ -283,13 +284,14 @@ namespace Game.Story
                 }
                 Controller.GameWon(reason, city.Stats.Score);
 
-            } else if (city.Stats.Wealth <= 0)
+            } else if (city.Stats.Wealth <= 0)                // CASE 2: Game Lost due to lack to assets
             {
                 string reason = "You've run out of assets to support your city!";
                 Controller.GameOver(reason, city.Stats.Score);
-            } else if (city.Stats.Temperature > 2)
+            } else if (city.Stats.Temperature > 2)            // CASE 3: Game Lost due to exceeding temp limit
             {    
-                string reason = "Your actions have resulted in the earth overheating... our planet is now uninhabitable";
+                string reason = "Your actions have resulted in the our town overheating... " +
+                                "our planet is one step closer to becoming inhabitable";
                 Controller.GameOver(reason, city.Stats.Score);
             }
            

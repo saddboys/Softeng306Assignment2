@@ -1,12 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using Game.CityMap;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using UnityEngine.UI;
-using Random = System.Random;
-using Terrain = Game.CityMap.Terrain;
 
 namespace Game.CityMap
 {
@@ -91,6 +85,11 @@ namespace Game.CityMap
             }
         }
         
+        /// <summary>
+        /// Generates the particle effect when a demolision occurs
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
         IEnumerator GenerateDestructionParticles(MapTile tile)
         {
             GameObject copyOfGameObject = GameObject.Instantiate(tile.Structure.GameObject);

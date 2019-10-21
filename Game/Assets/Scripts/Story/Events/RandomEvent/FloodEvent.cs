@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Game.CityMap;
 using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 using Random = System.Random;
 using Terrain = Game.CityMap.Terrain;
 

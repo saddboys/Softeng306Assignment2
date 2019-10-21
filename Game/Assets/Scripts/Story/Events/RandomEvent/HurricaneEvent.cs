@@ -4,8 +4,6 @@ using Game;
 using Game.CityMap;
 using Game.Story;
 using UnityEngine;
-using UnityEngine.Tilemaps;
-using Random = System.Random;
 
 namespace Story.Events.RandomEvent
 {

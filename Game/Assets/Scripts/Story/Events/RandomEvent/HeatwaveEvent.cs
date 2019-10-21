@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Game.CityMap;
 using Game.Story;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using Random = System.Random;
 using Terrain = Game.CityMap.Terrain;
 

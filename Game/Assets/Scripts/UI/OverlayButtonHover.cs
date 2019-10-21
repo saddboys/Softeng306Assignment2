@@ -10,7 +10,8 @@ public class OverlayButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerE
     // Start is called before the first frame update
     void Start()
     {
-        
+        // Ensure button starts off at the correct, consistent colour.
+        OnPointerExit(null);
     }
 
     // Update is called once per frame
@@ -27,5 +28,11 @@ public class OverlayButtonHover : MonoBehaviour, IPointerEnterHandler, IPointerE
     public void OnPointerExit(PointerEventData eventData)
     {
         ButtonText.color = Color.black;
+    }
+
+    public void OnDisable()
+    {
+        // Prevent "stuck" hover states due to disabling the button.
+        OnPointerExit(null);
     }
 }

@@ -27,6 +27,8 @@ namespace Game
         private readonly int maxTurns = 20;
         public int MaxTurns => maxTurns;
 
+        public int Level { get; private set; } = 1;
+
         [SerializeField]
         private StatsBar stats;
 
@@ -81,9 +83,8 @@ namespace Game
 
             endTurnButton.onClick.AddListener(EndTurn);
             
-            //Restart();
             Turn = 1;
-            Stats.Restart();
+            Stats.Restart(Level);
 
             InvokeRepeating("UpdateForecast", 0, 0.1f);
 
@@ -168,8 +169,14 @@ namespace Game
             Turn = 1;
             DestroyExistingParticles();
             RestartGameEvent?.Invoke();
-            Stats.Restart();
-            Map.Regenerate();
+            Stats.Restart(Level);
+            Map.Regenerate(Level);
+        }
+
+        public void NextLevel()
+        {
+            Level++;
+            Restart();
         }
 
         private void DestroyExistingParticles()

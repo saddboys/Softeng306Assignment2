@@ -7,6 +7,7 @@ public class GameSceneController : MonoBehaviour
     public GameObject endScreen;
     public Text endStatusText;
     public Text endReasonText;
+    public Text endScoreText;
 
     public GameObject stats;
     public GameObject toolbar;

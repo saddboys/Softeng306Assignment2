@@ -8,6 +8,7 @@ namespace Game
 {
     public class DialogueManager : MonoBehaviour
     {
+        public GameObject container;
         public Text nameText;
         public Text dialogueText;
         public Queue<string> sentences;
@@ -29,6 +30,7 @@ namespace Game
 
         public void StartDialogue(Dialogue dialogue){
             endTurn.interactable = false;
+            container.SetActive(true);
             Debug.Log("start conversation!"+ dialogue.name);
             endTurn.interactable = false;
             nameText.text = dialogue.name;
@@ -121,8 +123,43 @@ namespace Game
                 "Well, that's it from me. I’ll be checking in from time to time. Good luck!",
             };
        
-            FindObjectOfType<DialogueManager>().StartDialogue(dialog);
+            StartDialogue(dialog);
         } 
+
+        public void IntroduceLevel2()
+        {
+            Dialogue dialog = new Dialogue();
+            dialog.name = "Secretary";
+            dialog.sentences = new String[]
+            {
+                "Welcome back, mayor!",
+                "Thanks to your successful run last year, you have now been elected as a mayor to a neighbouring town.",
+                "However, while this large town has become very wealthy, the pollution has become a dire situation "
+                    + "and large changes are need to be made immediately.",
+                "Do you have what it takes to save this town? Whose values will you stand by, and whose heart will you break?",
+                "Good luck!",
+            };
+
+            StartDialogue(dialog);
+        }
+
+        public void IntroduceLevel3()
+        {
+            Dialogue dialog = new Dialogue();
+            dialog.name = "Secretary";
+            dialog.sentences = new String[]
+            {
+                "Welcome back, mayor!",
+                "Your home country has been kept safe thanks to your role for the past years. However, not everyone in this "
+                    + "world had been too fortunate.",
+                "You have been invited to a remote town at the opposite side of the world to bring back the life it used to have.",
+                "As you can see, nothing much is left in this town, as the grass dries up and the sands sweep over the landscape.",
+                "Will you be able to prevent this town from disappearing?",
+                "Good luck!",
+            };
+
+            StartDialogue(dialog);
+        }
         
     }
 }

@@ -30,8 +30,8 @@ namespace Game.CityMap
         public GameObject parent;
         private int[,] terrainMap;
 
-        private readonly int WIDTH = 40;
-        private readonly int HEIGHT = 40;
+        private readonly int WIDTH = 30;
+        private readonly int HEIGHT = 30;
 
         Random random = new Random();
 
@@ -143,7 +143,7 @@ namespace Game.CityMap
 
             return null;
         }
-        
+
 
         /// <summary>
         /// Generates the Tilemap by randomly allocating terrains to tiles and sometimes
@@ -158,47 +158,52 @@ namespace Game.CityMap
             }
 
             BiomeManager biomeManager = new BiomeManager(WIDTH, HEIGHT, map, parent);
-            biomeManager.start();
+            biomeManager.start(level);
 
-            // Repeat factories to tune probabilities.
-            StructureFactory[] factories =
+            // Specification of what needs to be built.
+            (StructureFactory, int, Vector2Int)[] factories;
+            switch (level)
             {
-                new MountainFactory(),
-                new MountainFactory(), 
-                new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
-                new HouseFactory(),
-                new ForestFactory(),
-                new ForestFactory(),
-                new ForestFactory(),
-                new ForestFactory(),
-                new ForestFactory(),
-                new ForestFactory(),
-                new ForestFactory(),
-                new FactoryFactory(),
-                new FactoryFactory(),
-                new PowerPlantFactory(),
-            };
+                case 1:
+                case 3:
+                    factories = new (StructureFactory, int, Vector2Int)[]
+                    {
+                        (new PowerPlantFactory(), random.Next(2, 2), new Vector2Int(0, 0)),
+                        (new HouseFactory(), random.Next(4, 6), new Vector2Int(0, 0)),
+                        (new FactoryFactory(), random.Next(4, 6), new Vector2Int(0, 0)),
+                    };
+                    break;
+                case 2:
+                default:
+                    factories = new (StructureFactory, int, Vector2Int)[]
+                    {
+                        (new PowerPlantFactory(), random.Next(15, 20), new Vector2Int(0, 0)),
+                        (new HouseFactory(), random.Next(50, 70), new Vector2Int(-3, -5)),
+                        (new FactoryFactory(), random.Next(40, 50), new Vector2Int(5, 3)),
+                    };
+                    break;
+            }
 
-            for (int i = 0; i < 50; i++)
+            foreach (var (factory, count, pos) in factories)
             {
-                // Cluster them close to the centre.
-                int x = (int)(Mathf.Clamp(NextNormalRandom() * WIDTH, -WIDTH, WIDTH) / 2.0f);
-                int y = (int)(Mathf.Clamp(NextNormalRandom() * HEIGHT, -HEIGHT, HEIGHT) / 2.0f);
-
-                var tile = GetTileWithZ(new Vector3Int(x, y, 0));
-                if (tile == null)
+                var countLeft = count;
+                for (int i = 0; i < count * 10 && countLeft > 0; i++)
                 {
-                    continue;
-                }
+                    // Cluster them close to the centre.
+                    int x = (int)(Mathf.Clamp(NextNormalRandom() * WIDTH, -WIDTH, WIDTH) / 2.0f) + pos.x;
+                    int y = (int)(Mathf.Clamp(NextNormalRandom() * HEIGHT, -HEIGHT, HEIGHT) / 2.0f) + pos.y;
 
-                var randomFactory = factories[random.Next(0, factories.Length)];
-                if (randomFactory.CanBuildOnto(tile, out _))
-                {
-                    randomFactory.BuildOnto(tile);
+                    var tile = GetTileWithZ(new Vector3Int(x, y, 0));
+                    if (tile == null)
+                    {
+                        continue;
+                    }
+
+                    if (factory.CanBuildOnto(tile, out _))
+                    {
+                        factory.BuildOnto(tile);
+                        countLeft--;
+                    }
                 }
             }
 
@@ -359,7 +364,7 @@ namespace Game.CityMap
             {
                 sum += (float)random.NextDouble();
             }
-            return 5 * (sum / samples - 0.5f);
+            return Mathf.Sqrt(samples) * (sum / samples - 0.5f);
         }
     }
 }

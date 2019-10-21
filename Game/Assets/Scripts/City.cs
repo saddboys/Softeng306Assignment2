@@ -23,7 +23,16 @@ namespace Game
         private readonly int maxTurns = 20;
         public int MaxTurns => maxTurns;
 
-        public int Level { get; private set; } = 1;
+        public int Level
+        {
+            get => level;
+            set
+            {
+                level = value;
+                Restart();
+            }
+        }
+        private int level = 1;
 
         [SerializeField]
         private StatsBar stats;
@@ -168,6 +177,18 @@ namespace Game
             RestartGameEvent?.Invoke();
             Stats.Restart(Level);
             Map.Regenerate(Level);
+            switch (Level)
+            {
+                case 1:
+                    break;
+                case 2:
+                default:
+                    GameObject.FindObjectOfType<DialogueManager>().IntroduceLevel2();
+                    break;
+                case 3:
+                    GameObject.FindObjectOfType<DialogueManager>().IntroduceLevel3();
+                    break;
+            }
         }
 
         public void NextLevel()

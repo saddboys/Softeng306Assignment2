@@ -84,6 +84,10 @@ namespace Game
                 {
                     switch (parameters[0])
                     {
+                        case ("level"):
+                            Debug.Log("Jumping to level " + parameters[1]);
+                            city.Level = number;
+                            break;
                         case ("pops"):
                             Debug.Log("Increase pops by " + parameters[1]);
                             city.Stats.Population += number;

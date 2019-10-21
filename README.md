@@ -30,6 +30,7 @@ pops 100
 Add 100k workers to your city
 
 Commands:  
+
 | Command       | Effect        |
 | ------------- |:-------------:|
 | pops        | increase workers |

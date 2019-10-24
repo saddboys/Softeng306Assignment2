@@ -49,13 +49,11 @@ Commands:
 
 ## Recommended path to explore all mechanics
 
-0. Show the start menu
-1. Run through the tutorial to show the dialogue
-2. Build one of each building, demonstrating the information box for each and “ghost” for each building
-3. Selecting a few buildings to demonstrate selectable objects
-4. Rotation of the map
-5. Ending turn/using console to see stat changes
-6. Ending turns/using console continuously to see random events
+1. Look through the start menu, checking options, and then start the game
+2. Run through the tutorial to show the dialogue and gain an idea about the story
+3. Build one of each building, demonstrating the information box for each and “ghost” for each building as well as the effects each building has on the game.
+4. Select the buildings to observe their purpose on the bottom right.
+5. Rotation of the map using "R"
+6. Ending turn/using console to see stat changes, see random events and experience gameplane
 7. Using the console to give yourself different game-overs based on story (good end and bad ends)
-8. Using the console to demonstrate different types of events
-9. Use the Level command to see levels 2 and 3
+8. Use the Level command to see levels 2 and 3 and play through them to see difficulty increase
